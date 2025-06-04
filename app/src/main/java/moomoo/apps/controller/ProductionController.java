@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.SVGPath;
+import moomoo.apps.interfaces.UserAwareController;
 import moomoo.apps.model.ProductionRecord;
 import moomoo.apps.model.UserModel;
 import moomoo.apps.utils.DatabaseManager; 
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 // import java.util.stream.Collectors; // Tidak terpakai saat ini
 
-public class ProductionController {
+public class ProductionController implements UserAwareController{
 
     @FXML private ComboBox<String> kategoriComboBox;
     @FXML private DatePicker tanggalPicker;
@@ -73,6 +74,7 @@ public class ProductionController {
         tanggalPicker.setValue(LocalDate.now());
     }
 
+    @Override
     public void initData(UserModel user) {
         this.currentUser = user;
         System.out.println("ProductionController initData called for user: " + (user != null ? user.getUsername() : "null"));

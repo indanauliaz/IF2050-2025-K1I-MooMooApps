@@ -4,15 +4,15 @@ import java.time.LocalDate;
 
 public class ProductionRecord {
     private int id; 
-    private String kategori; // Cth: Susu, Daging
-    private double jumlah; // Cth: 420 (untuk liter/kg)
-    private String satuan; // Cth: L, Kg, Unit
+    private String kategori;
+    private double jumlah; 
+    private String satuan; 
     private LocalDate tanggal;
-    private String lokasi; // Cth: Kandang 1, Kandang 2
-    private String kualitas; // Cth: A, B, C, Baik, Cukup
-    private String catatan; // Catatan tambahan
+    private String lokasi;
+    private String kualitas; 
+    private String catatan; 
 
-    // Konstruktor untuk membuat record baru (tanpa ID)
+
     public ProductionRecord(String kategori, double jumlah, String satuan, LocalDate tanggal, String lokasi, String kualitas, String catatan) {
         this.kategori = kategori;
         this.jumlah = jumlah;
