@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox; // Import VBox
 import javafx.scene.shape.SVGPath;
 // import javafx.stage.FileChooser;
-
+import moomoo.apps.interfaces.UserAwareController;
 import moomoo.apps.model.TransactionModel;
 import moomoo.apps.model.UserModel;
 import moomoo.apps.utils.DatabaseManager;
@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.Locale; 
 import java.util.Optional;
 
-public class KeuanganController {
+public class KeuanganController implements UserAwareController {
 
     @FXML private VBox keuanganRootPane; 
 
@@ -180,6 +180,7 @@ public class KeuanganController {
         keuanganTabPane.getSelectionModel().select(pemasukanTab);
     }
 
+    @Override
     public void initData(UserModel user) {
         this.currentUser = user;
         pemasukanManager.loadData();
@@ -236,7 +237,7 @@ public class KeuanganController {
                         transaction.setId(generatedKeys.getInt(1));
                     }
                 }
-                listToUpdate.add(transaction); // Add to the correct list
+                listToUpdate.add(transaction); 
                 showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Data " + transaction.getTransactionType().toLowerCase() + " berhasil ditambahkan.");
             }
 

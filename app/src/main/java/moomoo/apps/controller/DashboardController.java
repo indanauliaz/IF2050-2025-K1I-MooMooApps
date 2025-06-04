@@ -1,4 +1,4 @@
-package moomoo.apps.controller; // Sesuaikan dengan package Anda
+package moomoo.apps.controller; 
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,8 +13,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import moomoo.apps.model.UserModel; // Asumsi Anda memiliki UserModel
-// import moomoo.apps.utils.UserSession; // Jika Anda menggunakan UserSession
+import moomoo.apps.interfaces.UserAwareController;
+import moomoo.apps.model.UserModel; 
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +38,9 @@ public class DashboardController {
 
     @FXML
     private ToggleButton tugasButton;
+
+    @FXML
+    private ToggleButton produksiButton;
     
     @FXML
     private Button settingsButton;
@@ -100,42 +103,55 @@ public class DashboardController {
 
     // INI NANTI DIGANTI YAA
     private void handleSidebarNavigation(ToggleButton selectedButton) {
-        mainContentArea.getChildren().clear(); 
+
+        String viewPath = null;
 
         if (selectedButton == dashboardButton) {
-            System.out.println("Dashboard selected");
+            System.out.println("DEBUG: Dashboard selected");
             loadDashboardContent();
+            return;
         } else if (selectedButton == laporanButton) {
-            System.out.println("Laporan selected");
-            Label laporanLabel = new Label("Ini Halaman Laporan (Belum Diimplementasikan)");
-            laporanLabel.setStyle("-fx-font-size: 18px;");
-            mainContentArea.getChildren().add(laporanLabel);
+            System.out.println("DEBUG: Laporan selected");
+            showPlaceholderView("Laporan"); 
         } else if (selectedButton == keuanganButton) {
-            System.out.println("Keuangan selected");
-            loadView("/moomoo/apps/view/FinanceView.fxml", currentUser); 
+            System.out.println("DEBUG: Keuangan selected");
+            viewPath = "/moomoo/apps/view/FinanceView.fxml"; 
         } else if (selectedButton == tugasButton) {
-            System.out.println("Tugas selected");
-             Label tugasLabel = new Label("Ini Halaman Tugas (Belum Diimplementasikan)");
-            tugasLabel.setStyle("-fx-font-size: 18px;");
-            mainContentArea.getChildren().add(tugasLabel);
+            System.out.println("DEBUG: Tugas selected");
+           viewPath = "/moomoo/apps/view/TaskManagement.fxml";
+        } else if (selectedButton == produksiButton) { 
+            System.out.println("DEBUG: Produksi selected. Path: /moomoo/apps/view/ProductionView.fxml");
+            viewPath = "/moomoo/apps/view/ProductionView.fxml"; 
         }
-       
+
+        if (viewPath != null) {
+            System.out.println("DEBUG: Attempting to load view: " + viewPath);
+            loadView(viewPath, this.currentUser); 
+        } else if (selectedButton != dashboardButton) {
+            System.out.println("DEBUG: No FXML path defined for button: " + selectedButton.getText());
+            showPlaceholderView("Konten untuk " + selectedButton.getText());
+        }
     }
     
     private void loadDashboardContent() {
+        System.out.println("DEBUG: Loading dashboard content.");
+        VBox dashboardContent = new VBox(10);
+        dashboardContent.setPadding(new javafx.geometry.Insets(20));
+        dashboardContent.getStyleClass().add("main-content-area");
 
-         mainContentArea.getChildren().clear();
-         Label title = new Label("Dashboard");
-         title.getStyleClass().add("dashboard-title");
-         
-         Label welcome = new Label();
-         welcome.getStyleClass().add("welcome-message");
-         if (currentUser != null) {
-             welcome.setText("Selamat Datang, " + currentUser.getUsername() + "!");
-         } else {
-             welcome.setText("Selamat Datang!");
-         }
-         mainContentArea.getChildren().addAll(title, welcome);
+        Label title = new Label("Dashboard");
+        title.getStyleClass().add("dashboard-title");
+
+        Label welcome = new Label();
+        welcome.getStyleClass().add("welcome-message");
+        if (currentUser != null) {
+            welcome.setText("Selamat Datang, " + currentUser.getUsername() + "!");
+        } else {
+            welcome.setText("Selamat Datang!");
+        }
+        dashboardContent.getChildren().addAll(title, welcome);
+        mainContentScrollPane.setContent(dashboardContent); 
+        System.out.println("DEBUG: Dashboard content loaded into ScrollPane.");
     }
 
 
@@ -167,24 +183,57 @@ public class DashboardController {
     }
 
     private void loadView(String fxmlPath, UserModel user) {
+        System.out.println("DEBUG: loadView called with FXML path: " + fxmlPath);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent view = loader.load();
+            URL resourceUrl = getClass().getResource(fxmlPath);
+            if (resourceUrl == null) {
+                System.err.println("ERROR: FXML Resource not found: " + fxmlPath);
+                Label errorLabel = new Label("File FXML tidak ditemukan: " + fxmlPath);
+                errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16px;");
+                mainContentScrollPane.setContent(errorLabel); 
+                return;
+            }
+            System.out.println("DEBUG: FXML Resource URL: " + resourceUrl.toExternalForm());
 
-         
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            Parent view = loader.load(); 
+            System.out.println("DEBUG: FXML loaded successfully: " + fxmlPath);
+
             Object controller = loader.getController();
-            if (user != null && controller instanceof KeuanganController) { 
-                ((KeuanganController) controller).initData(user);
+            if (user != null && controller instanceof UserAwareController) {
+                System.out.println("DEBUG: Initializing controller (" + controller.getClass().getSimpleName() + ") with user data.");
+                ((UserAwareController) controller).initData(user);
+            } else {
+                System.out.println("DEBUG: UserModel is null, not calling initData on loaded controller.");
             }
 
-            mainContentScrollPane.setContent(view); 
+            mainContentScrollPane.setContent(view);
+            mainContentScrollPane.setFitToWidth(true);
+            mainContentScrollPane.setFitToHeight(true);
+            System.out.println("DEBUG: Content set to ScrollPane for: " + fxmlPath);
 
         } catch (IOException e) {
+            System.err.println("ERROR: IOException while loading FXML: " + fxmlPath);
+            e.printStackTrace(); 
+            Label errorLabel = new Label("Gagal memuat tampilan: " + fxmlPath.substring(fxmlPath.lastIndexOf('/') + 1) + "\nError: " + e.getMessage());
+            errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16px;");
+            mainContentScrollPane.setContent(errorLabel); 
+        } catch (Exception e) {
+            System.err.println("ERROR: Unexpected exception in loadView for " + fxmlPath);
             e.printStackTrace();
-         
-            Label errorLabel = new Label("Gagal memuat tampilan: " + fxmlPath);
-
+            Label errorLabel = new Label("Terjadi kesalahan tidak terduga saat memuat: " + fxmlPath.substring(fxmlPath.lastIndexOf('/') + 1));
+            errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16px;");
             mainContentScrollPane.setContent(errorLabel);
         }
+    }
+    private void showPlaceholderView(String pageName) {
+        VBox placeholderContent = new VBox();
+        placeholderContent.setPadding(new javafx.geometry.Insets(20));
+        placeholderContent.setAlignment(javafx.geometry.Pos.CENTER); 
+        Label placeholderLabel = new Label("Ini Halaman " + pageName + " (Belum Diimplementasikan)");
+        placeholderLabel.setStyle("-fx-font-size: 18px;");
+        placeholderContent.getChildren().add(placeholderLabel);
+        mainContentScrollPane.setContent(placeholderContent);
+        System.out.println("DEBUG: Placeholder view shown for: " + pageName);
     }
 }
