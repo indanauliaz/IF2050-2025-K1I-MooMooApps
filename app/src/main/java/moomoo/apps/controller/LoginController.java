@@ -170,11 +170,11 @@ public class LoginController implements Initializable {
         String role = user.getRole();
 
         switch (role.toLowerCase()) {
-            case "pemilik":
-                fxmlFile = "/moomoo/apps/view/OwnerDashboardView.fxml"; 
+            case "manajer":
+                fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; 
                 break;
-            case "kasir":
-                fxmlFile = "/moomoo/apps/view/CashierDashboardView.fxml"; 
+            case "pemilik":
+                fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; 
                 break;
             default:
                 showAlert(Alert.AlertType.ERROR, "Navigasi Gagal", "Role '" + role + "' tidak dikenal, tidak dapat melanjutkan.");
