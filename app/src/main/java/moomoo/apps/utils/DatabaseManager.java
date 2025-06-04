@@ -59,6 +59,27 @@ public static void initializeDatabase() {
                                         + "catatan TEXT"
                                         + ");";
 
+        String createEmployeesTableSQL = "CREATE TABLE IF NOT EXISTS employees ("
+                                       + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                       + "nama_lengkap TEXT NOT NULL,"
+                                       + "posisi TEXT,"
+                                       + "tim TEXT"
+                                       + ");";
+
+        String createTasksTableSQL = "CREATE TABLE IF NOT EXISTS tasks ("
+                                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                + "nama_tugas TEXT NOT NULL,"         
+                                + "deskripsi_tugas TEXT,"              
+                                + "employee_id INTEGER,"               
+                                + "tanggal_tugas TEXT NOT NULL,"     
+                                + "waktu_tugas TEXT,"                  
+                                + "prioritas TEXT,"                  
+                                + "status TEXT NOT NULL,"
+                                + "tanggal_selesai TEXT,"           
+                                + "catatan_manajer TEXT,"            
+                                + "FOREIGN KEY (employee_id) REFERENCES employees(id)"
+                                + ");";
+
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             
@@ -72,8 +93,62 @@ public static void initializeDatabase() {
             stmt.execute(createProductionsTableSQL);
             System.out.println("Tabel 'productions' siap atau sudah ada.");
 
+            stmt.execute(createEmployeesTableSQL);
+            System.out.println("Tabel 'employees' siap atau sudah ada.");
+            
+            stmt.execute(createTasksTableSQL);
+            System.out.println("Tabel 'tasks' siap atau sudah ada.");
+
+            addInitialEmployeeData(conn);
+
         } catch (SQLException e) {
             System.err.println("Error saat inisialisasi database: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void addInitialEmployeeData(Connection conn) {
+
+        String checkEmptySQL = "SELECT COUNT(*) AS count FROM employees";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(checkEmptySQL)) {
+            if (rs.next() && rs.getInt("count") == 0) {
+                System.out.println("Menambahkan data karyawan awal...");
+                String insertSQL = "INSERT INTO employees (nama_lengkap, posisi, tim) VALUES (?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+                    
+                    // Karyawan 1
+                    pstmt.setString(1, "Budi Santoso");
+                    pstmt.setString(2, "Staf Kandang Senior");
+                    pstmt.setString(3, "Tim A");
+                    pstmt.addBatch();
+
+                    // Karyawan 2
+                    pstmt.setString(1, "Siti Aminah");
+                    pstmt.setString(2, "Staf Pemerahan");
+                    pstmt.setString(3, "Tim B");
+                    pstmt.addBatch();
+
+                    // Karyawan 3
+                    pstmt.setString(1, "Agus Wijaya");
+                    pstmt.setString(2, "Staf Kebersihan");
+                    pstmt.setString(3, "Umum");
+                    pstmt.addBatch();
+                    
+                    // Karyawan 4
+                    pstmt.setString(1, "Dewi Lestari");
+                    pstmt.setString(2, "Operator Pakan");
+                    pstmt.setString(3, "Logistik");
+                    pstmt.addBatch();
+
+                    pstmt.executeBatch();
+                    System.out.println("Data karyawan awal berhasil ditambahkan.");
+                }
+            } else {
+                System.out.println("Data karyawan sudah ada atau gagal memeriksa tabel.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error saat menambahkan data karyawan awal: " + e.getMessage());
             e.printStackTrace();
         }
     }

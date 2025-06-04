@@ -13,6 +13,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import moomoo.apps.interfaces.UserAwareController;
 import moomoo.apps.model.UserModel; 
 
 import java.io.IOException;
@@ -117,7 +118,7 @@ public class DashboardController {
             viewPath = "/moomoo/apps/view/FinanceView.fxml"; 
         } else if (selectedButton == tugasButton) {
             System.out.println("DEBUG: Tugas selected");
-            showPlaceholderView("Tugas"); 
+           viewPath = "/moomoo/apps/view/TaskManagement.fxml";
         } else if (selectedButton == produksiButton) { 
             System.out.println("DEBUG: Produksi selected. Path: /moomoo/apps/view/ProductionView.fxml");
             viewPath = "/moomoo/apps/view/ProductionView.fxml"; 
@@ -199,12 +200,9 @@ public class DashboardController {
             System.out.println("DEBUG: FXML loaded successfully: " + fxmlPath);
 
             Object controller = loader.getController();
-            if (user != null) { 
-                if (controller instanceof ProductionController) {
-                    System.out.println("DEBUG: Initializing ProductionController with user data.");
-                    ((ProductionController) controller).initData(user);
-                }
-
+            if (user != null && controller instanceof UserAwareController) {
+                System.out.println("DEBUG: Initializing controller (" + controller.getClass().getSimpleName() + ") with user data.");
+                ((UserAwareController) controller).initData(user);
             } else {
                 System.out.println("DEBUG: UserModel is null, not calling initData on loaded controller.");
             }
