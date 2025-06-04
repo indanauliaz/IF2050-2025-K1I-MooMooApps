@@ -1,82 +1,128 @@
 package moomoo.apps.model;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class TaskModel {
-    private int id;
-    private String namaTugas;
-    private String deskripsiTugas;
-    private Integer employeeId;
-    private String namaKaryawanPenanggungJawab;
-    private LocalDate tanggalTugas;
-    private LocalTime waktuTugas;
-    private String prioritas;
-    private String status;
-    private LocalDate tanggalSelesai;
+    private final IntegerProperty id;
+    private final StringProperty namaTugas;
+    private final StringProperty deskripsiTugas;
+    private final ObjectProperty<Integer> employeeId;
+    private final StringProperty namaKaryawanPenanggungJawab;
+    private final ObjectProperty<LocalDate> tanggalTugas;
+    private final ObjectProperty<LocalTime> waktuTugas;
+    private final StringProperty prioritas;
+    private final StringProperty status;
+    private final ObjectProperty<LocalDate> tanggalSelesai;
 
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm"); // Dijadikan public static final
 
+    // Konstruktor Utama (Lengkap)
     public TaskModel(int id, String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab,
-                     LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status, LocalDate tanggalSelesai) { 
-        this.id = id;
-        this.namaTugas = namaTugas;
-        this.deskripsiTugas = deskripsiTugas;
-        this.employeeId = employeeId;
-        this.namaKaryawanPenanggungJawab = namaKaryawanPenanggungJawab;
-        this.tanggalTugas = tanggalTugas;
-        this.waktuTugas = waktuTugas;
-        this.prioritas = prioritas;
-        this.status = status;
-        this.tanggalSelesai = tanggalSelesai; 
+                     LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status, LocalDate tanggalSelesai) {
+        this.id = new SimpleIntegerProperty(id);
+        this.namaTugas = new SimpleStringProperty(namaTugas);
+        this.deskripsiTugas = new SimpleStringProperty(deskripsiTugas);
+        this.employeeId = new SimpleObjectProperty<>(employeeId);
+        this.namaKaryawanPenanggungJawab = new SimpleStringProperty(namaKaryawanPenanggungJawab);
+        this.tanggalTugas = new SimpleObjectProperty<>(tanggalTugas);
+        this.waktuTugas = new SimpleObjectProperty<>(waktuTugas);
+        this.prioritas = new SimpleStringProperty(prioritas);
+        this.status = new SimpleStringProperty(status);
+        this.tanggalSelesai = new SimpleObjectProperty<>(tanggalSelesai);
     }
 
+    // Konstruktor untuk TUGAS BARU (sesuai format yang kamu minta)
+    // ID akan di-set default ke 0 (atau bisa di-handle saat insert ke DB)
+    // Tanggal Selesai default null
     public TaskModel(String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab,
                      LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status) {
-        this.namaTugas = namaTugas;
-        this.deskripsiTugas = deskripsiTugas;
-        this.employeeId = employeeId;
-        this.namaKaryawanPenanggungJawab = namaKaryawanPenanggungJawab;
-        this.tanggalTugas = tanggalTugas;
-        this.waktuTugas = waktuTugas;
-        this.prioritas = prioritas;
-        this.status = status;
-        this.tanggalSelesai = null; // Default null untuk tugas baru
+        // Memanggil konstruktor utama dengan ID default 0 dan tanggalSelesai null
+        this(0, // ID default untuk tugas baru
+             namaTugas,
+             deskripsiTugas,
+             employeeId,
+             namaKaryawanPenanggungJawab,
+             tanggalTugas,
+             waktuTugas,
+             prioritas,
+             status,
+             null); // tanggalSelesai default null untuk tugas baru
+    }
+    
+    // Konstruktor untuk dummy data yang dipakai di TaskManagementController sebelumnya
+    // (Mengkonversi waktu String ke LocalTime)
+    public TaskModel(int id, String namaTugas, String deskripsi, String ditugaskanKe, 
+                     LocalDate tanggal, String waktuStr, String prioritas, String status) {
+        this(id, 
+             namaTugas, 
+             deskripsi, 
+             null, // employeeId sementara null untuk dummy data ini
+             ditugaskanKe, 
+             tanggal, 
+             (waktuStr != null && !waktuStr.trim().isEmpty() ? LocalTime.parse(waktuStr, TIME_FORMATTER) : null), // Konversi String ke LocalTime
+             prioritas, 
+             status, 
+             ("Selesai".equals(status) ? tanggal : null)); // Jika status "Selesai", set tanggalSelesai sama dengan tanggalTugas
     }
 
-    // Getters and Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
 
-    public String getNamaTugas() { return namaTugas; }
-    public void setNamaTugas(String namaTugas) { this.namaTugas = namaTugas; }
+    // --- Getters untuk JavaFX Properties ---
+    public IntegerProperty idProperty() { return id; }
+    public StringProperty namaTugasProperty() { return namaTugas; }
+    public StringProperty deskripsiTugasProperty() { return deskripsiTugas; }
+    public ObjectProperty<Integer> employeeIdProperty() { return employeeId; }
+    public StringProperty namaKaryawanPenanggungJawabProperty() { return namaKaryawanPenanggungJawab; }
+    public ObjectProperty<LocalDate> tanggalTugasProperty() { return tanggalTugas; }
+    public ObjectProperty<LocalTime> waktuTugasProperty() { return waktuTugas; }
+    public StringProperty prioritasProperty() { return prioritas; }
+    public StringProperty statusProperty() { return status; }
+    public ObjectProperty<LocalDate> tanggalSelesaiProperty() { return tanggalSelesai; }
 
-    public String getDeskripsiTugas() { return deskripsiTugas; }
-    public void setDeskripsiTugas(String deskripsiTugas) { this.deskripsiTugas = deskripsiTugas; }
+    // --- Getters Standar ---
+    public int getId() { return id.get(); }
+    public String getNamaTugas() { return namaTugas.get(); }
+    public String getDeskripsiTugas() { return deskripsiTugas.get(); }
+    public Integer getEmployeeId() { return employeeId.get(); }
+    public String getNamaKaryawanPenanggungJawab() { return namaKaryawanPenanggungJawab.get(); }
+    public LocalDate getTanggalTugas() { return tanggalTugas.get(); }
+    public LocalTime getWaktuTugas() { return waktuTugas.get(); }
+    public String getPrioritas() { return prioritas.get(); }
+    public String getStatus() { return status.get(); }
+    public LocalDate getTanggalSelesai() { return tanggalSelesai.get(); }
 
-    public Integer getEmployeeId() { return employeeId; }
-    public void setEmployeeId(Integer employeeId) { this.employeeId = employeeId; }
+    // --- Setters Standar ---
+    public void setId(int id) { this.id.set(id); }
+    public void setNamaTugas(String namaTugas) { this.namaTugas.set(namaTugas); }
+    public void setDeskripsiTugas(String deskripsiTugas) { this.deskripsiTugas.set(deskripsiTugas); }
+    public void setEmployeeId(Integer employeeId) { this.employeeId.set(employeeId); }
+    public void setNamaKaryawanPenanggungJawab(String namaKaryawanPenanggungJawab) { this.namaKaryawanPenanggungJawab.set(namaKaryawanPenanggungJawab); }
+    public void setTanggalTugas(LocalDate tanggalTugas) { this.tanggalTugas.set(tanggalTugas); }
+    public void setWaktuTugas(LocalTime waktuTugas) { this.waktuTugas.set(waktuTugas); }
+    public void setPrioritas(String prioritas) { this.prioritas.set(prioritas); }
+    public void setStatus(String status) { this.status.set(status); }
+    public void setTanggalSelesai(LocalDate tanggalSelesai) { this.tanggalSelesai.set(tanggalSelesai); }
 
-    public String getNamaKaryawanPenanggungJawab() { return namaKaryawanPenanggungJawab; }
-    public void setNamaKaryawanPenanggungJawab(String namaKaryawanPenanggungJawab) { this.namaKaryawanPenanggungJawab = namaKaryawanPenanggungJawab; }
-
-    public LocalDate getTanggalTugas() { return tanggalTugas; }
-    public void setTanggalTugas(LocalDate tanggalTugas) { this.tanggalTugas = tanggalTugas; }
-
-    public LocalTime getWaktuTugas() { return waktuTugas; }
-    public void setWaktuTugas(LocalTime waktuTugas) { this.waktuTugas = waktuTugas; }
-
-    public String getPrioritas() { return prioritas; }
-    public void setPrioritas(String prioritas) { this.prioritas = prioritas; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public LocalDate getTanggalSelesai() { return tanggalSelesai; }
-    public void setTanggalSelesai(LocalDate tanggalSelesai) { this.tanggalSelesai = tanggalSelesai; }
-
+    // Metode format waktu yang sudah ada
     public String getWaktuTugasFormatted() {
-        return waktuTugas != null ? waktuTugas.format(TIME_FORMATTER) : "-";
+        LocalTime wt = getWaktuTugas(); // Ambil nilai dari property
+        return wt != null ? wt.format(TIME_FORMATTER) : "-";
+    }
+
+    @Override
+    public String toString() {
+        return "TaskModel{" +
+               "id=" + getId() +
+               ", namaTugas='" + getNamaTugas() + '\'' +
+               ", status='" + getStatus() + '\'' +
+               '}';
     }
 }
