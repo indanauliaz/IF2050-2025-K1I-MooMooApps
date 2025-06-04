@@ -28,14 +28,15 @@
                   <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
                </padding>
                <children>
-                  <ImageView fx:id="logoView" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="logoView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/cow_logo.png" />
+                        <Image url="@/images/cow_logo.png" />
                      </image>
+                     <VBox.margin>
+                        <Insets bottom="10.0"/>
+                     </VBox.margin>
                   </ImageView>
-                  <Label styleClass="app-name-text" text="Moo Moo Apps" />
-
-                  <Label styleClass="register-title-text" text="Register">
+                  <Label styleClass="register-title-text" text="REGISTER">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
@@ -61,7 +62,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
                               <Label styleClass="form-label-text" text="Password" HBox.hgrow="ALWAYS" />
-                              <Label fx:id="hideLabel" styleClass="hide-password-label" text="Show" onMouseClicked="#togglePasswordVisibility" style="-fx-cursor: hand;"/>
+                              <Label fx:id="hideLabel" styleClass="hide-password-label" text="Show" onMouseClicked="#togglePasswordVisibility" style="-fx-cursor: hand;" />
                            </children>
                         </HBox>
                         <StackPane>
@@ -80,7 +81,7 @@
                      </children>
                   </VBox>
 
-                  <Button fx:id="registerButton" onAction="#handleRegisterButtonAction" styleClass="daftar-button" text="Daftar" maxWidth="Infinity">
+                  <Button fx:id="registerButton" onAction="#handleRegisterButtonAction" styleClass="button-primary" text="Daftar" maxWidth="Infinity">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>

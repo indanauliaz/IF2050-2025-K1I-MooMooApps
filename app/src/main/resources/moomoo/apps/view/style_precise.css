@@ -1,4 +1,4 @@
-/* styles_precise.css */
+/* style_precise.css */
 
 /* Definisikan warna utama dari palet Anda */
 .root {
@@ -13,6 +13,87 @@
     -input-focus-border-color: #4A7C7A; /* Warna border saat input field fokus */
 }
 
+@font-face {
+    font-family: "Poppins Bold";
+    src: url("../fonts/Poppins-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Poppins BoldItalic";
+    src: url("../fonts/Poppins-BoldItalic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins ExtraBold";
+    src: url("../fonts/Poppins-ExtraBold.ttf");
+}
+
+@font-face {
+    font-family: "Poppins ExtraBoldItalic";
+    src: url("../fonts/Poppins-ExtraBoldItalic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins ExtraLight";
+    src: url("../fonts/Poppins-ExtraLight.ttf");
+}
+
+@font-face {
+    font-family: "Poppins ExtraLightItalic";
+    src: url("../fonts/Poppins-ExtraLightItalic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins Italic";
+    src: url("../fonts/Poppins-Italic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins Light";
+    src: url("../fonts/Poppins-Light.ttf");
+}
+
+@font-face {
+    font-family: "Poppins LightItalic";
+    src: url("../fonts/Poppins-LightItalic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins Medium";
+    src: url("../fonts/Poppins-Medium.ttf");
+}
+
+@font-face {
+    font-family: "Poppins MediumItalic";
+    src: url("../fonts/Poppins-MediumItalic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins Regular";
+    src: url("../fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Poppins SemiBold";
+    src: url("../fonts/Poppins-SemiBold.ttf");
+}
+
+@font-face {
+    font-family: "Poppins SemiBoldItalic";
+    src: url("../fonts/Poppins-SemiBoldItalic.ttf");
+}
+
+@font-face {
+    font-family: "Poppins Thin";
+    src: url("../fonts/Poppins-Thin.ttf");
+}
+
+@font-face {
+    font-family: "Poppins ThinItalic";
+    src: url("../fonts/Poppins-ThinItalic.ttf");
+}
+
+
 .main-background {
     -fx-background-color: -background-cream;
     -fx-font-family: "Poppins Regular"; /* Default font, akan di-override */
@@ -20,6 +101,9 @@
 
 .left-sidebar {
     -fx-background-color: -primary-green;
+    -fx-background-image: url("/images/bg_pattern.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
     /* Untuk pola gelombang, Anda perlu menggunakan -fx-background-image dengan path ke gambar/SVG */
 }
 
@@ -29,20 +113,20 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5); /* Bayangan halus */
 }
 
-.app-name-text {
+.app-name-text, .app-name-text-login {
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 20px; /* Content/S */
     -fx-text-fill: -text-dark-gray;
 }
 
-.register-title-text {
-    -fx-font-family: "Poppins Medium";
-    -fx-font-size: 22px; /* Content/M */
-    -fx-text-fill: -text-dark-gray; /* Di gambar terlihat gelap */
-    -fx-font-weight: 600; /* SemiBold atau Medium, tergantung ketersediaan */
+.register-title-text, .login-title-text {
+    -fx-font-family: "Poppins ExtraBold";
+    -fx-font-size: 24px; /* Content/M */
+    -fx-text-fill: -input-focus-border-color; /* Di gambar terlihat gelap */
+    -fx-letter-spacing: 1.2px;
 }
 
-.register-subtitle-text {
+.register-subtitle-text, .login-subtitle-text {
     -fx-font-family: "Poppins Regular"; /* Atau Poppins X-Small jika tersedia */
     -fx-font-size: 15px; /* Sedikit di bawah Content/XS */
     -fx-text-fill: -text-light-gray;
@@ -89,7 +173,6 @@
     -fx-font-size: 15px;
 }
 
-
 .hide-password-label {
     -fx-font-family: "Poppins Regular";
     -fx-font-size: 14px;
@@ -99,7 +182,6 @@
 .hide-password-label:hover {
     -fx-underline: true;
 }
-
 
 .daftar-button {
     -fx-background-color: -primary-green;
@@ -141,22 +223,11 @@
     -fx-background-color: -text-medium-gray;
 }
 
-/* styles_precise.css */
-
-/* ... (Definisi warna root dan style lain yang sudah ada seperti .main-background, .left-sidebar, .form-panel) ... */
-
 .app-name-text-login { /* Style jika nama aplikasi di halaman login berbeda dari registrasi */
     -fx-font-family: "Poppins Medium";
     -fx-font-size: 18px; /* Sedikit lebih kecil atau sesuai gambar */
     -fx-text-fill: -text-dark-gray;
     -fx-padding-bottom: 5px; /* Sedikit jarak ke judul Login */
-}
-
-.login-title-text { /* Bisa sama dengan .register-title-text jika font dan ukuran sama */
-    -fx-font-family: "Poppins Medium";
-    -fx-font-size: 22px; /* Content/M */
-    -fx-text-fill: -text-dark-gray;
-    -fx-font-weight: 600; 
 }
 
 .login-subtitle-text { /* Bisa sama dengan .register-subtitle-text */
@@ -165,8 +236,6 @@
     -fx-text-fill: -text-light-gray;
     -fx-line-spacing: 3px;
 }
-
-/* Style untuk form-label-text, form-text-field, form-combo-box, hide-password-label sudah ada dan bisa digunakan kembali */
 
 .form-checkbox {
     -fx-font-family: "Poppins Regular";
@@ -189,7 +258,6 @@
      -fx-border-color: -primary-green; /* Border kotak saat tercentang */
 }
 
-
 /* Ganti nama .daftar-button menjadi .button-primary agar lebih generik */
 .button-primary { 
     -fx-background-color: -primary-green;
@@ -203,10 +271,14 @@
 }
 .button-primary:hover {
     -fx-background-color: derive(-primary-green, -10%);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 2);
 }
 
 /* Style untuk link sekunder jika diperlukan (misal, "Daftar" dari halaman login) */
-/* .button-secondary-link { 
+/*
+.button-secondary-link { 
     -fx-background-color: -accent-brown;
     -fx-text-fill: -panel-white; 
     -fx-font-family: "Poppins Medium";
@@ -219,6 +291,5 @@
 }
 .button-secondary-link:hover {
     -fx-background-color: derive(-accent-brown, -10%);
-} */
-
-/* ... (style lain yang sudah ada seperti .login-link-label) ... */
+}
+*/
