@@ -42,7 +42,7 @@ public class RegisterController implements Initializable {
 
     private boolean isPasswordVisible = false;
 
-    @Override // Added Override annotation
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         roleComboBox.setItems(FXCollections.observableArrayList("Pemilik", "Manajer")); 
         roleComboBox.setValue("Pegawai Biasa"); 

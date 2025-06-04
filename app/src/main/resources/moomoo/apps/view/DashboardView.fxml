@@ -59,6 +59,11 @@
                               <SVGPath content="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2l-.01-12zM4 16V6h16v10.01L4 16zm10-4H7v2h7v-2zm3-4H7v2h10V8z" styleClass="sidebar-icon"/>
                            </graphic>
                         </ToggleButton>
+                        <ToggleButton fx:id="produksiButton" mnemonicParsing="false" text="Produksi" styleClass="sidebar-button" toggleGroup="$menuToggleGroup">
+                           <graphic>
+                              <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" styleClass="sidebar-icon"/>
+                           </graphic>
+                        </ToggleButton>
                         <ToggleButton fx:id="tugasButton" mnemonicParsing="false" text="Tugas" styleClass="sidebar-button" toggleGroup="$menuToggleGroup">
                            <graphic>
                               <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" styleClass="sidebar-icon"/>
