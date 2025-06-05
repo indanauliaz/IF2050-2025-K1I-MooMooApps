@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" styleClass="main-background" stylesheets="@style_precise.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.LoginController">
+   <children>
+      <Pane styleClass="left-sidebar" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      
+      <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
+         </padding>
+         <children>
+            <VBox styleClass="form-panel" alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="480.0" spacing="18.0" VBox.vgrow="NEVER">
+               <padding>
+                  <Insets bottom="35.0" left="40.0" right="40.0" top="35.0" />
+               </padding>
+               <children>
+                  <ImageView fx:id="logoView" fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/cow_logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label styleClass="app-name-text-login" text="Moo Moo Apps" />
+                  <Label styleClass="login-title-text" text="Login">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label styleClass="login-subtitle-text" text="Masukkan kredensial Anda untuk mengakses akun" textAlignment="CENTER" wrapText="true" />
+
+                  <VBox spacing="5.0" styleClass="form-field-container">
+                     <children>
+                        <Label styleClass="form-label-text" text="Email atau Username" />
+                        <TextField fx:id="usernameEmailField" styleClass="form-text-field" promptText="Contoh: user@example.com atau pengguna123" />
+                     </children>
+                  </VBox>
+
+                  <VBox spacing="5.0" styleClass="form-field-container">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                           <children>
+                              <Label styleClass="form-label-text" text="Password" HBox.hgrow="ALWAYS" />
+                              <Label fx:id="hideLabel" styleClass="hide-password-label" text="Show" onMouseClicked="#togglePasswordVisibility" style="-fx-cursor: hand;"/>
+                           </children>
+                        </HBox>
+                        <PasswordField fx:id="passwordField" styleClass="form-text-field" promptText="Masukkan password" />
+                        <TextField fx:id="visiblePasswordField" styleClass="form-text-field" promptText="Masukkan password" managed="false" visible="false"/>
+                     </children>
+                  </VBox>
+                  
+                  <CheckBox fx:id="rememberMeCheckBox" styleClass="form-checkbox" text="Ingat Saya" selected="true">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </CheckBox>
+
+                  <VBox spacing="5.0" styleClass="form-field-container">
+                     <children>
+                        <Label styleClass="form-label-text" text="Role" />
+                        <ComboBox fx:id="roleComboBoxLogin" prefWidth="Infinity" styleClass="form-combo-box" promptText="Pilih Role Anda" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </VBox>
+
+                  <Button fx:id="loginButton" onAction="#handleLoginButtonAction" styleClass="button-primary" text="Login" maxWidth="Infinity">
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </Button>
+                  <HBox alignment="CENTER" spacing="5.0" style="-fx-padding-top: 10;">
+                     <children>
+                        <Label text="Belum punya akun?"/>
+                        <Hyperlink fx:id="registerLink" text="Daftar di sini" onAction="#handleRegisterLinkAction" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
