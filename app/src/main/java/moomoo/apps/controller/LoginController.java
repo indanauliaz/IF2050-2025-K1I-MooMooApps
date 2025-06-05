@@ -13,8 +13,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -58,6 +60,9 @@ public class LoginController implements Initializable {
 
     @FXML
     private Hyperlink registerLink;
+
+    @FXML 
+    private Label errorMessageLabel;
 
     private boolean passwordVisible = false;
     private UserModel loggedInUser; 
@@ -103,15 +108,42 @@ public class LoginController implements Initializable {
         String selectedRole = roleComboBoxLogin.getValue();
         boolean rememberMe = rememberMeCheckBox.isSelected();
 
-        if (usernameOrEmail.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Login Gagal", "Username/Email dan Password tidak boleh kosong.");
+        boolean hasError = false;
+
+        // Reset styles
+        usernameEmailField.getStyleClass().remove("error-field");
+        passwordField.getStyleClass().remove("error-field");
+        visiblePasswordField.getStyleClass().remove("error-field");
+        roleComboBoxLogin.getStyleClass().remove("error-field");
+
+        // Validasi kosong
+        if (usernameOrEmail.isEmpty()) {
+            usernameEmailField.getStyleClass().add("error-field");
+            hasError = true;
+        }
+        if (password.isEmpty()) {
+            if (passwordVisible) {
+                visiblePasswordField.getStyleClass().add("error-field");
+            } else {
+                passwordField.getStyleClass().add("error-field");
+            }
+            hasError = true;
+        }
+        if (selectedRole == null || selectedRole.isEmpty()) {
+            roleComboBoxLogin.getStyleClass().add("error-field");
+            hasError = true;
+        }
+
+        if (hasError) {
+            errorMessageLabel.setText("Harap isi semua kolom dengan benar.");
+            errorMessageLabel.setVisible(true);
+            errorMessageLabel.setManaged(true);
             return;
         }
-        
-        if (selectedRole == null || selectedRole.isEmpty()){
-            showAlert(Alert.AlertType.ERROR, "Login Gagal", "Role harus dipilih.");
-            return;
-        }
+
+        // Hide error if all good
+        errorMessageLabel.setVisible(false);
+        errorMessageLabel.setManaged(false);
 
         System.out.println("Attempting login for: " + usernameOrEmail);
         System.out.println("Selected Role: " + selectedRole);
@@ -230,10 +262,8 @@ public class LoginController implements Initializable {
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        errorMessageLabel.setText(message);
+        errorMessageLabel.setVisible(true);
+        errorMessageLabel.setManaged(true);
     }
 }

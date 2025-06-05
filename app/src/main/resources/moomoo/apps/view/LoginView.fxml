@@ -7,138 +7,113 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1000.0"
-            styleClass="main-background"
-            stylesheets="@style_precise.css"
-            xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="moomoo.apps.controller.LoginController">
+             styleClass="main-background"
+             stylesheets="@style_precise.css"
+             xmlns="http://javafx.com/javafx/17"
+             xmlns:fx="http://javafx.com/fxml/1"
+             fx:controller="moomoo.apps.controller.LoginController">
+
     <children>
         <!-- Sidebar Kiri -->
         <Pane styleClass="left-sidebar"
               prefWidth="300.0"
               AnchorPane.topAnchor="0.0"
               AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0"/>
+              AnchorPane.leftAnchor="0.0" />
 
-        <!-- Panel Login -->
-        <VBox alignment="CENTER" spacing="20.0"
+        <!-- Form Login -->
+        <VBox alignment="CENTER"
+              spacing="20.0"
               AnchorPane.topAnchor="0.0"
               AnchorPane.bottomAnchor="0.0"
               AnchorPane.leftAnchor="300.0"
               AnchorPane.rightAnchor="0.0">
             <padding>
-                <Insets top="30.0" right="50.0" bottom="30.0" left="50.0"/>
+                <Insets top="30.0" bottom="30.0" left="50.0" right="50.0"/>
             </padding>
             <children>
-                <VBox alignment="TOP_CENTER" spacing="18.0" maxWidth="480.0"
+                <VBox alignment="TOP_CENTER"
+                      maxWidth="480.0"
+                      spacing="15.0"
                       styleClass="form-panel">
                     <padding>
-                        <Insets top="35.0" right="40.0" bottom="35.0" left="40.0"/>
+                        <Insets top="30.0" bottom="30.0" left="40.0" right="40.0" />
                     </padding>
                     <children>
-                        <ImageView fx:id="logoView"
-                                   fitWidth="150.0"
-                                   fitHeight="150.0"
-                                   preserveRatio="true"
-                                   pickOnBounds="true">
+                        <ImageView fitHeight="150.0" fitWidth="150.0" preserveRatio="true" pickOnBounds="true">
                             <image>
                                 <Image url="@/images/cow_logo.png"/>
                             </image>
                             <VBox.margin>
-                              <Insets bottom="10.0"/>
-                           </VBox.margin>
+                                <Insets bottom="10.0"/>
+                            </VBox.margin>
                         </ImageView>
 
-                        <Label text="LOGIN" styleClass="login-title-text">
-                            <VBox.margin>
-                                <Insets top="10.0"/>
-                            </VBox.margin>
-                        </Label>
+                        <Label text="Login" styleClass="register-title-text"/>
+                        <Label text="Masukkan kredensial Anda untuk masuk" styleClass="register-subtitle-text" wrapText="true" textAlignment="CENTER"/>
 
-                        <Label text="Masukkan kredensial Anda untuk mengakses akun"
-                               wrapText="true"
-                               textAlignment="CENTER"
-                               styleClass="login-subtitle-text"/>
-
-                        <!-- Email / Username -->
+                        <!-- Username -->
                         <VBox spacing="5.0" styleClass="form-field-container">
                             <children>
-                                <Label text="Email atau Username" styleClass="form-label-text"/>
-                                <TextField fx:id="usernameEmailField"
-                                           styleClass="form-text-field"
-                                           promptText="Contoh: user@example.com atau pengguna123"/>
+                                <Label text="Username atau Email" styleClass="form-label-text"/>
+                                <TextField fx:id="usernameEmailField" promptText="Masukkan username/email" styleClass="form-text-field"/>
                             </children>
                         </VBox>
 
                         <!-- Password -->
                         <VBox spacing="5.0" styleClass="form-field-container">
                             <children>
-                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                <HBox spacing="5.0" alignment="BASELINE_LEFT">
                                     <children>
-                                        <Label text="Password" styleClass="form-label-text" HBox.hgrow="ALWAYS"/>
+                                        <Label text="Password" styleClass="form-label-text" />
+                                        <Region HBox.hgrow="ALWAYS"/>
                                         <Label fx:id="hideLabel"
                                                text="Show"
                                                styleClass="hide-password-label"
                                                onMouseClicked="#togglePasswordVisibility"/>
                                     </children>
                                 </HBox>
-                                <PasswordField fx:id="passwordField"
-                                               styleClass="form-text-field"
-                                               promptText="Masukkan password"/>
-                                <TextField fx:id="visiblePasswordField"
-                                           styleClass="form-text-field"
-                                           promptText="Masukkan password"
-                                           visible="false"
-                                           managed="false"/>
+                                <StackPane>
+                                    <children>
+                                        <PasswordField fx:id="passwordField" promptText="Masukkan password" styleClass="form-text-field"/>
+                                        <TextField fx:id="visiblePasswordField" promptText="Masukkan password" styleClass="form-text-field" visible="false" managed="false"/>
+                                    </children>
+                                </StackPane>
                             </children>
                         </VBox>
-
-                        <!-- Checkbox Ingat Saya -->
-                        <CheckBox fx:id="rememberMeCheckBox"
-                                  text="Ingat Saya"
-                                  selected="true"
-                                  styleClass="form-checkbox">
-                            <VBox.margin>
-                                <Insets top="5.0"/>
-                            </VBox.margin>
-                        </CheckBox>
 
                         <!-- Role -->
                         <VBox spacing="5.0" styleClass="form-field-container">
                             <children>
                                 <Label text="Role" styleClass="form-label-text"/>
-                                <ComboBox fx:id="roleComboBoxLogin"
-                                          styleClass="form-combo-box"
-                                          promptText="Pilih Role Anda"
-                                          prefWidth="Infinity"/>
+                                <ComboBox fx:id="roleComboBoxLogin" promptText="Pilih Role" styleClass="form-combo-box" maxWidth="Infinity"/>
                             </children>
-                            <VBox.margin>
-                                <Insets top="5.0"/>
-                            </VBox.margin>
                         </VBox>
 
-                        <!-- Tombol Login -->
-                        <Button fx:id="loginButton"
-                                text="Login"
-                                onAction="#handleLoginButtonAction"
-                                styleClass="button-primary"
-                                maxWidth="Infinity">
-                            <VBox.margin>
-                                <Insets top="15.0"/>
-                            </VBox.margin>
-                        </Button>
+                        <CheckBox fx:id="rememberMeCheckBox" text="Remember Me" styleClass="form-checkbox"/>
 
-                        <!-- Link ke Register -->
-                        <HBox alignment="CENTER" spacing="5.0">
-                            <children>
-                                <Label text="Belum punya akun?"/>
-                                <Hyperlink fx:id="registerLink"
-                                           text="Daftar di sini"
-                                           onAction="#handleRegisterLinkAction"/>
-                            </children>
-                        </HBox>
+                        <!-- Tombol Login -->
+                        <Button fx:id="loginButton" text="Login" styleClass="button-primary" onAction="#handleLoginButtonAction" maxWidth="Infinity"/>
+
+                        <!-- Label error inline -->
+                        <Label fx:id="errorMessageLabel"
+                               text=""
+                               visible="false"
+                               managed="false"
+                               styleClass="error-label"
+                               wrapText="true"
+                               textAlignment="CENTER"
+                               maxWidth="360"/>
                     </children>
                 </VBox>
+
+                <!-- Switch ke register -->
+                <HBox alignment="CENTER" spacing="5.0">
+                    <children>
+                        <Label text="Belum punya akun?" styleClass="login-link-label"/>
+                        <Hyperlink fx:id="registerLink" text="Daftar di sini" onAction="#handleRegisterLinkAction" styleClass="button-secondary"/>
+                    </children>
+                </HBox>
             </children>
         </VBox>
     </children>
