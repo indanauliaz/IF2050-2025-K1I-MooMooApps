@@ -23,7 +23,7 @@
     <Label text="Tetapkan dan lacak tugas peternakan harian" style="-fx-font-size: 14px; -fx-text-fill: #777777;" />
     <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 10 0 10 0;">
         <Label text="Tampilkan Tugas Untuk Tanggal:" style="-fx-text-fill: #555;"/>
-        <DatePicker fx:id="tanggalFilterPicker" prefWidth="130.0"/>
+        <DatePicker fx:id="tanggalFilterPicker" prefWidth="130.0" onAction="#onTanggalFilterChanged"/>
         <Button fx:id="hariIniButton" text="Hari Ini" styleClass="button-outline-laporan" onAction="#handleFilterHariIniTugas"/>
         <Button fx:id="semuaTugasButton" text="Semua Tugas" styleClass="button-outline-laporan" onAction="#handleFilterSemuaTugas"/>
         <Region HBox.hgrow="ALWAYS" />

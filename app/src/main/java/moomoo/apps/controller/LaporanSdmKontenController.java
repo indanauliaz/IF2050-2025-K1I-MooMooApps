@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent; // Pastikan import ini ada
 import javafx.fxml.FXML;
 import javafx.geometry.Pos; // Untuk Pos.CENTER pada placeholder
-import javafx.geometry.Side; // Pastikan import ini ada
+
 import javafx.scene.Node; // Untuk menyimpan referensi ke node UI
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -20,15 +20,12 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.layout.HBox; // Untuk menyimpan node statistik dan grafik
+
 import javafx.scene.layout.VBox; // Untuk menyimpan node tabel dan dynamicReportContentArea
-import javafx.scene.Node; // Untuk menyimpan Node UI
+
 import java.util.List;   // Untuk menyimpan daftar Node
 import java.util.ArrayList; // Untuk implementasi List
 import moomoo.apps.model.EmployeeModel;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random; // Untuk variasi data dummy
 import java.util.stream.Collectors;
@@ -125,13 +122,11 @@ public class LaporanSdmKontenController {
     private void setupTampilanAwal() {
         setTabAktif(sdmTabButton);
 
-        // Atur filter chart (misalnya, "Absen" aktif by default sesuai FXML)
         setFilterChartAktif(filterAbsenButton);
 
         filterPeriodeComboBox.setItems(FXCollections.observableArrayList("Bulan Ini", "Minggu Ini", "Hari Ini", "Tahun Ini"));
         filterPeriodeComboBox.setValue(currentPeriodeFilter);
 
-        // Setup kolom tabel
         karyawanColumn.setCellValueFactory(cellData -> cellData.getValue().namaLengkapProperty());
         departemenColumn.setCellValueFactory(cellData -> cellData.getValue().departemenProperty());
         kehadiranKolomTabel.setCellValueFactory(cellData ->
@@ -160,7 +155,6 @@ public class LaporanSdmKontenController {
         });
     }
 
-    // Membuat Node UI untuk konten SDM sekali saja
     private void buatNodeKontenSdm() {
         // Asumsi dari FXML:
         // Kartu statistik ada di dalam HBox pertama di dynamicReportContentArea (jika struktur FXMLmu begitu)

@@ -33,7 +33,7 @@ public class AttendanceRecordModel {
         this.catatan = new SimpleStringProperty(catatan);
     }
     
-    // Konstruktor lebih simpel untuk data baru atau dummy
+
     public AttendanceRecordModel(EmployeeModel karyawan, LocalDate tanggalAbsen, String statusKehadiran, 
                                  String waktuMasukStr, String waktuKeluarStr, String catatan) {
         this.id = new SimpleIntegerProperty(0); // ID default, bisa di-generate DB

@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="moomoo.apps.controller.TaskManagementController"
+      fx:controller="moomoo.apps.controller.HRManagementController"
       spacing="15.0" style="-fx-background-color: #FDFBF6; -fx-padding: 20;">
 
     <!-- Judul Utama & Filter Tanggal & Tombol +Tugas Baru (Sama seperti sebelumnya) -->

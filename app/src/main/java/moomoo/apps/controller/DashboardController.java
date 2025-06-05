@@ -81,20 +81,15 @@ public class DashboardController {
             }
         });
 
-        // Set dashboard sebagai default saat pertama kali load
+
         dashboardButton.setSelected(true);
-        // Panggil handleSidebarNavigation agar konten dashboard langsung dimuat
-        // atau panggil loadDashboardContent() secara eksplisit jika itu behavior yang diinginkan
-        loadDashboardContent(); // Memuat konten dashboard awal
+       
+        loadDashboardContent(); 
     }
     
     public void initData(UserModel user) {
         this.currentUser = user;
         updateUserInfo(user);
-        // welcomeMessageLabel mungkin tidak ada lagi di FXML utama dashboard, 
-        // karena konten dashboard dibuat dinamis di loadDashboardContent()
-        // Jika ada Label di FXML utama yang mau diupdate, pastikan fx:id nya benar.
-        // Jika tidak, pesan selamat datang sudah dihandle di loadDashboardContent().
     }
 
     private void updateUserInfo(UserModel user) {
@@ -113,9 +108,7 @@ public class DashboardController {
             return; 
         } else if (selectedButton == laporanButton) {
             System.out.println("DEBUG: Laporan selected");
-            // === MODIFIKASI DI SINI ===
-            viewPath = "/moomoo/apps/view/LaporanSdmKonten.fxml"; // Path ke FXML Laporan SDM
-            // =========================
+            viewPath = "/moomoo/apps/view/LaporanSdmKonten.fxml"; 
         } else if (selectedButton == keuanganButton) {
             System.out.println("DEBUG: Keuangan selected");
             viewPath = "/moomoo/apps/view/FinanceView.fxml"; 
@@ -138,32 +131,31 @@ public class DashboardController {
     
     private void loadDashboardContent() {
         System.out.println("DEBUG: Loading dashboard content.");
-        VBox dashboardContent = new VBox(10); // Parent untuk konten dashboard
+        VBox dashboardContent = new VBox(10); 
         dashboardContent.setPadding(new javafx.geometry.Insets(20));
-        dashboardContent.setAlignment(Pos.TOP_CENTER); // Pusatkan konten di VBox
+        dashboardContent.setAlignment(Pos.TOP_CENTER); 
         // dashboardContent.getStyleClass().add("main-content-area"); // Beri style jika perlu
 
         Label title = new Label("Dashboard");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;"); // Contoh style
-        // title.getStyleClass().add("dashboard-title"); // Atau via CSS
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;"); 
+        // title.getStyleClass().add("dashboard-title"); 
 
         Label welcome = new Label();
-        welcome.setStyle("-fx-font-size: 18px;"); // Contoh style
-        // welcome.getStyleClass().add("welcome-message"); // Atau via CSS
+        welcome.setStyle("-fx-font-size: 18px;"); 
+        // welcome.getStyleClass().add("welcome-message"); 
         if (currentUser != null) {
             welcome.setText("Selamat Datang kembaliii, " + currentUser.getUsername() + "!");
         } else {
             welcome.setText("Selamat Datang!");
         }
-        
-        // Tambahkan elemen lain ke dashboard jika perlu
+    
         // Label infoLain = new Label("Ini adalah halaman utama aplikasi Moo Moo.");
         
         dashboardContent.getChildren().addAll(title, welcome /*, infoLain */);
         
         mainContentScrollPane.setContent(dashboardContent); 
-        mainContentScrollPane.setFitToWidth(true); // Pastikan konten VBox melebar
-        mainContentScrollPane.setFitToHeight(true); // Pastikan konten VBox memanjang
+        mainContentScrollPane.setFitToWidth(true); 
+        mainContentScrollPane.setFitToHeight(true); 
         System.out.println("DEBUG: Dashboard content loaded into ScrollPane.");
     }
 
@@ -177,12 +169,10 @@ public class DashboardController {
                 System.err.println("LoginView.fxml not found!");
                 return;
             }
-            // Menggunakan FXMLLoader.load() secara statis tidak memberikan akses ke controller jika diperlukan sebelum show
-            // Jika tidak perlu akses controller LoginView sebelum show, ini oke.
+           
             Parent loginRoot = FXMLLoader.load(fxmlLocation); 
             Scene loginScene = new Scene(loginRoot);
 
-            // Pastikan CSS juga diterapkan ke scene login jika ada global CSS
             // String css = getClass().getResource("/moomoo/apps/view/style_precise.css").toExternalForm();
             // loginScene.getStylesheets().add(css);
 
@@ -210,7 +200,7 @@ public class DashboardController {
             System.out.println("DEBUG: FXML loaded successfully: " + fxmlPath);
 
             Object controller = loader.getController();
-            // Jika LaporanSdmKontenController atau controller lain perlu initData
+           
             if (user != null && controller instanceof UserAwareController) {
                 System.out.println("DEBUG: Initializing controller (" + controller.getClass().getSimpleName() + ") with user data.");
                 ((UserAwareController) controller).initData(user);
@@ -223,7 +213,7 @@ public class DashboardController {
             }
 
             mainContentScrollPane.setContent(view);
-            // Fit to width/height penting agar ScrollPane menyesuaikan ukuran konten FXML yang dimuat
+           
             mainContentScrollPane.setFitToWidth(true); 
             mainContentScrollPane.setFitToHeight(true);
             System.out.println("DEBUG: Content set to ScrollPane for: " + fxmlPath);

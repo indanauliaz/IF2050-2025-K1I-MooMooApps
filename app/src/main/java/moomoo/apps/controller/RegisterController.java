@@ -1,7 +1,6 @@
 package moomoo.apps.controller;
 
-import moomoo.apps.model.*; // Assuming UserModel is here
-import moomoo.apps.utils.*; // Assuming DatabaseManager and PasswordUtils are here
+import moomoo.apps.utils.*;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
