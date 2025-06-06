@@ -363,8 +363,6 @@ public class HRManagementController {
             Parent root = loader.load();
             TambahPresensiController controller = loader.getController();
             
-            // Pass all employees and current date to the dialog
-            // Filter `semuaKaryawanList` to exclude those already having attendance for `tanggalKehadiranSaatIni`
             List<Integer> employeeIdsWithAttendance = daftarKehadiranList.stream()
                                                                 .map(ar -> ar.getKaryawan().getId())
                                                                 .collect(Collectors.toList());
@@ -393,7 +391,7 @@ public class HRManagementController {
             if (newRecord != null) {
                 if (DatabaseManager.addAttendanceRecord(newRecord)) {
                     System.out.println("Presensi baru disimpan untuk: " + newRecord.getKaryawan().getNamaLengkap());
-                    muatDataKehadiran(tanggalKehadiranSaatIni); // Refresh table
+                    muatDataKehadiran(tanggalKehadiranSaatIni); 
                 } else {
                     showPlaceholderDialog("Error Simpan", "Gagal menyimpan data presensi ke database.");
                 }
