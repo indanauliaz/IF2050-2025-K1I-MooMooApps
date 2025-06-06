@@ -390,8 +390,6 @@
     -fx-font-size: 0.8em; /* Ukuran font label sumbu */
 }
 
-/* ... (CSS yang sudah ada sebelumnya seperti .tab-button-laporan, .tab-button-laporan-active, dll.) ... */
-
 /* Styling untuk peringkat di TableView */
 .peringkat-a-plus {
     -fx-text-fill: #2E7D32; /* Hijau tua */
@@ -558,23 +556,3 @@
     -fx-padding: 10;
     -fx-background-radius: 8;
 }
-
-
-
-/* Style untuk link sekunder jika diperlukan (misal, "Daftar" dari halaman login) */
-/* .button-secondary-link { 
-    -fx-background-color: -accent-brown;
-    -fx-text-fill: -panel-white; 
-    -fx-font-family: "Poppins Medium";
-    -fx-font-size: 15px;
-    -fx-font-weight: 500;
-    -fx-pref-height: 38px;
-    -fx-padding: 0 20px;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
-}
-.button-secondary-link:hover {
-    -fx-background-color: derive(-accent-brown, -10%);
-} */
-
-/* ... (style lain yang sudah ada seperti .login-link-label) ... */

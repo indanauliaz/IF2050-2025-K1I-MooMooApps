@@ -17,6 +17,7 @@ public class TaskModel {
     private final StringProperty deskripsiTugas;
     private final ObjectProperty<Integer> employeeId;
     private final StringProperty namaKaryawanPenanggungJawab;
+    private final StringProperty departemen; // Properti baru
     private final ObjectProperty<LocalDate> tanggalTugas;
     private final ObjectProperty<LocalTime> waktuTugas;
     private final StringProperty prioritas;
@@ -26,13 +27,13 @@ public class TaskModel {
     public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm"); // Dijadikan public static final
 
     // Konstruktor Utama (Lengkap)
-    public TaskModel(int id, String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab,
-                     LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status, LocalDate tanggalSelesai) {
+    public TaskModel(int id, String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab, String departemen, LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status, LocalDate tanggalSelesai) {
         this.id = new SimpleIntegerProperty(id);
         this.namaTugas = new SimpleStringProperty(namaTugas);
         this.deskripsiTugas = new SimpleStringProperty(deskripsiTugas);
         this.employeeId = new SimpleObjectProperty<>(employeeId);
         this.namaKaryawanPenanggungJawab = new SimpleStringProperty(namaKaryawanPenanggungJawab);
+        this.departemen = new SimpleStringProperty(departemen);
         this.tanggalTugas = new SimpleObjectProperty<>(tanggalTugas);
         this.waktuTugas = new SimpleObjectProperty<>(waktuTugas);
         this.prioritas = new SimpleStringProperty(prioritas);
@@ -43,7 +44,7 @@ public class TaskModel {
     // Konstruktor untuk TUGAS BARU (sesuai format yang kamu minta)
     // ID akan di-set default ke 0 (atau bisa di-handle saat insert ke DB)
     // Tanggal Selesai default null
-    public TaskModel(String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab,
+    public TaskModel(String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab, String departemen,
                      LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status) {
         // Memanggil konstruktor utama dengan ID default 0 dan tanggalSelesai null
         this(0, // ID default untuk tugas baru
@@ -51,6 +52,7 @@ public class TaskModel {
              deskripsiTugas,
              employeeId,
              namaKaryawanPenanggungJawab,
+             departemen,
              tanggalTugas,
              waktuTugas,
              prioritas,
@@ -60,13 +62,14 @@ public class TaskModel {
     
     // Konstruktor untuk dummy data yang dipakai di TaskManagementController sebelumnya
     // (Mengkonversi waktu String ke LocalTime)
-    public TaskModel(int id, String namaTugas, String deskripsi, String ditugaskanKe, 
+    public TaskModel(int id, String namaTugas, String deskripsi, String ditugaskanKe, String departemen,
                      LocalDate tanggal, String waktuStr, String prioritas, String status) {
         this(id, 
              namaTugas, 
              deskripsi, 
              null, // employeeId sementara null untuk dummy data ini
              ditugaskanKe, 
+             departemen,
              tanggal, 
              (waktuStr != null && !waktuStr.trim().isEmpty() ? LocalTime.parse(waktuStr, TIME_FORMATTER) : null), // Konversi String ke LocalTime
              prioritas, 
@@ -81,6 +84,7 @@ public class TaskModel {
     public StringProperty deskripsiTugasProperty() { return deskripsiTugas; }
     public ObjectProperty<Integer> employeeIdProperty() { return employeeId; }
     public StringProperty namaKaryawanPenanggungJawabProperty() { return namaKaryawanPenanggungJawab; }
+    public StringProperty departemenProperty() { return departemen; } // Getter untuk departemen
     public ObjectProperty<LocalDate> tanggalTugasProperty() { return tanggalTugas; }
     public ObjectProperty<LocalTime> waktuTugasProperty() { return waktuTugas; }
     public StringProperty prioritasProperty() { return prioritas; }
@@ -93,6 +97,7 @@ public class TaskModel {
     public String getDeskripsiTugas() { return deskripsiTugas.get(); }
     public Integer getEmployeeId() { return employeeId.get(); }
     public String getNamaKaryawanPenanggungJawab() { return namaKaryawanPenanggungJawab.get(); }
+    public String getDepartemen() { return departemen.get(); }
     public LocalDate getTanggalTugas() { return tanggalTugas.get(); }
     public LocalTime getWaktuTugas() { return waktuTugas.get(); }
     public String getPrioritas() { return prioritas.get(); }

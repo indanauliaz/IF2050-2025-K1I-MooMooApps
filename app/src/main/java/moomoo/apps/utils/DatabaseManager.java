@@ -124,6 +124,7 @@ public class DatabaseManager {
 
 
             addInitialEmployeeData(conn);
+            addInitialTaskData(conn); // Tambahkan data tugas awal jika diperlukan
 
         } catch (SQLException e) {
             System.err.println("Error saat inisialisasi database: " + e.getMessage());
@@ -180,11 +181,121 @@ public class DatabaseManager {
     private static final String DB_FILE_NAME = "moomoo_apps.db"; 
 
 
+    // public static List<TaskModel> getAllTasks() {
+    //     List<TaskModel> tasks = new ArrayList<>();
+    //     String sql = "SELECT t.id, t.nama_tugas, t.deskripsi_tugas, t.employee_id, e.nama_lengkap AS nama_karyawan, " +
+    //                  "t.tanggal_tugas, t.waktu_tugas, t.prioritas, t.status, t.tanggal_selesai " +
+    //                  "FROM tasks t LEFT JOIN employees e ON t.employee_id = e.id ORDER BY t.tanggal_tugas, t.waktu_tugas";
+
+    //     try (Connection conn = getConnection();
+    //          PreparedStatement pstmt = conn.prepareStatement(sql);
+    //          ResultSet rs = pstmt.executeQuery()) {
+
+    //         while (rs.next()) {
+    //             int id = rs.getInt("id");
+    //             String namaTugas = rs.getString("nama_tugas");
+    //             String deskripsiTugas = rs.getString("deskripsi_tugas");
+    //             Integer employeeId = (Integer) rs.getObject("employee_id"); // Handle NULL employee_id
+    //             String namaKaryawan = rs.getString("nama_karyawan");
+                
+    //             LocalDate tanggalTugas = null;
+    //             String tanggalTugasStr = rs.getString("tanggal_tugas");
+    //             if (tanggalTugasStr != null) tanggalTugas = LocalDate.parse(tanggalTugasStr, DATE_FORMATTER);
+
+    //             LocalTime waktuTugas = null;
+    //             String waktuTugasStr = rs.getString("waktu_tugas");
+    //             if (waktuTugasStr != null && !waktuTugasStr.isEmpty()) waktuTugas = LocalTime.parse(waktuTugasStr, TIME_FORMATTER);
+                
+    //             String prioritas = rs.getString("prioritas");
+    //             String status = rs.getString("status");
+
+    //             LocalDate tanggalSelesai = null;
+    //             String tanggalSelesaiStr = rs.getString("tanggal_selesai");
+    //             if (tanggalSelesaiStr != null) tanggalSelesai = LocalDate.parse(tanggalSelesaiStr, DATE_FORMATTER);
+
+    //             tasks.add(new TaskModel(id, namaTugas, deskripsiTugas, employeeId, namaKaryawan, tanggalTugas, waktuTugas, prioritas, status, tanggalSelesai));
+    //         }
+    //     } catch (SQLException e) {
+    //         System.err.println("Error getting all tasks: " + e.getMessage());
+    //         e.printStackTrace();
+    //     }
+    //     return tasks;
+    // }
+
+    private static void addInitialTaskData(Connection conn) {
+        String checkEmptySQL = "SELECT COUNT(*) AS count FROM tasks";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(checkEmptySQL)) {
+            
+            if (rs.next() && rs.getInt("count") == 0) {
+                System.out.println("Menambahkan data tugas awal...");
+                String insertSQL = "INSERT INTO tasks (nama_tugas, deskripsi_tugas, employee_id, tanggal_tugas, waktu_tugas, prioritas, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+                    
+                    // Data tugas sesuai mockup
+                    pstmt.setString(1, "Pemerahan Pagi");
+                    pstmt.setString(2, "Sesi pemerahan susu pagi");
+                    pstmt.setInt(3, 1); // ID Budi Santoso
+                    pstmt.setString(4, "2025-05-09");
+                    pstmt.setString(5, "08:00");
+                    pstmt.setString(6, "Tinggi");
+                    pstmt.setString(7, "Selesai");
+                    pstmt.addBatch();
+                    
+                    pstmt.setString(1, "Distribusi Pakan");
+                    pstmt.setString(2, "Memberi makan sapi di kandang A");
+                    pstmt.setInt(3, 2); // ID Siti Aminah
+                    pstmt.setString(4, "2025-05-09");
+                    pstmt.setString(5, "09:00");
+                    pstmt.setString(6, "Sedang");
+                    pstmt.setString(7, "Selesai");
+                    pstmt.addBatch();
+                    
+                    pstmt.setString(1, "Pembersihan Kandang");
+                    pstmt.setString(2, "Membersihkan seluruh area kandang B");
+                    pstmt.setInt(3, 3); // ID Agus Wijaya
+                    pstmt.setString(4, "2025-05-09");
+                    pstmt.setString(5, "10:00");
+                    pstmt.setString(6, "Normal");
+                    pstmt.setString(7, "Sedang Dikerjakan");
+                    pstmt.addBatch();
+                    
+                    pstmt.setString(1, "Pemeriksaan Kesehatan");
+                    pstmt.setString(2, "Cek kesehatan sapi indukan");
+                    pstmt.setInt(3, 1); // ID Budi Santoso
+                    pstmt.setString(4, "2025-05-09");
+                    pstmt.setString(5, "14:00");
+                    pstmt.setString(6, "Tinggi");
+                    pstmt.setString(7, "Tertunda");
+                    pstmt.addBatch();
+
+                    pstmt.setString(1, "Stok Pakan");
+                    pstmt.setString(2, "Inventarisasi stok pakan di gudang");
+                    pstmt.setInt(3, 4); // ID Dewi Lestari
+                    pstmt.setString(4, "2025-05-09");
+                    pstmt.setString(5, "15:00");
+                    pstmt.setString(6, "Tinggi");
+                    pstmt.setString(7, "Tertunda");
+                    pstmt.addBatch();
+
+                    pstmt.executeBatch();
+                    System.out.println("Data tugas awal berhasil ditambahkan.");
+                }
+            } else {
+                System.out.println("Data tugas sudah ada atau gagal memeriksa tabel.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error saat menambahkan data tugas awal: " + e.getMessage());
+        }
+    }
+
+    // METHOD getAllTasks() YANG SUDAH DIPERBARUI
     public static List<TaskModel> getAllTasks() {
         List<TaskModel> tasks = new ArrayList<>();
         String sql = "SELECT t.id, t.nama_tugas, t.deskripsi_tugas, t.employee_id, e.nama_lengkap AS nama_karyawan, " +
+                     "e.tim AS departemen, " +
                      "t.tanggal_tugas, t.waktu_tugas, t.prioritas, t.status, t.tanggal_selesai " +
-                     "FROM tasks t LEFT JOIN employees e ON t.employee_id = e.id ORDER BY t.tanggal_tugas, t.waktu_tugas";
+                     "FROM tasks t LEFT JOIN employees e ON t.employee_id = e.id ORDER BY t.tanggal_tugas DESC, t.waktu_tugas";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -194,29 +305,19 @@ public class DatabaseManager {
                 int id = rs.getInt("id");
                 String namaTugas = rs.getString("nama_tugas");
                 String deskripsiTugas = rs.getString("deskripsi_tugas");
-                Integer employeeId = (Integer) rs.getObject("employee_id"); // Handle NULL employee_id
+                Integer employeeId = (Integer) rs.getObject("employee_id");
                 String namaKaryawan = rs.getString("nama_karyawan");
-                
-                LocalDate tanggalTugas = null;
-                String tanggalTugasStr = rs.getString("tanggal_tugas");
-                if (tanggalTugasStr != null) tanggalTugas = LocalDate.parse(tanggalTugasStr, DATE_FORMATTER);
-
-                LocalTime waktuTugas = null;
-                String waktuTugasStr = rs.getString("waktu_tugas");
-                if (waktuTugasStr != null && !waktuTugasStr.isEmpty()) waktuTugas = LocalTime.parse(waktuTugasStr, TIME_FORMATTER);
-                
+                String departemen = rs.getString("departemen");
+                LocalDate tanggalTugas = LocalDate.parse(rs.getString("tanggal_tugas"), DATE_FORMATTER);
+                LocalTime waktuTugas = rs.getString("waktu_tugas") != null ? LocalTime.parse(rs.getString("waktu_tugas"), TIME_FORMATTER) : null;
                 String prioritas = rs.getString("prioritas");
                 String status = rs.getString("status");
+                LocalDate tanggalSelesai = rs.getString("tanggal_selesai") != null ? LocalDate.parse(rs.getString("tanggal_selesai"), DATE_FORMATTER) : null;
 
-                LocalDate tanggalSelesai = null;
-                String tanggalSelesaiStr = rs.getString("tanggal_selesai");
-                if (tanggalSelesaiStr != null) tanggalSelesai = LocalDate.parse(tanggalSelesaiStr, DATE_FORMATTER);
-
-                tasks.add(new TaskModel(id, namaTugas, deskripsiTugas, employeeId, namaKaryawan, tanggalTugas, waktuTugas, prioritas, status, tanggalSelesai));
+                tasks.add(new TaskModel(id, namaTugas, deskripsiTugas, employeeId, namaKaryawan, departemen, tanggalTugas, waktuTugas, prioritas, status, tanggalSelesai));
             }
         } catch (SQLException e) {
             System.err.println("Error getting all tasks: " + e.getMessage());
-            e.printStackTrace();
         }
         return tasks;
     }
