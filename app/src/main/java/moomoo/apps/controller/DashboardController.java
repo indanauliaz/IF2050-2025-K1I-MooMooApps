@@ -11,14 +11,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.VBox; // Pastikan ini VBox dari javafx.scene.layout
+import javafx.scene.layout.VBox; 
 import javafx.stage.Stage;
 import moomoo.apps.interfaces.UserAwareController;
 import moomoo.apps.model.UserModel; 
 
 import java.io.IOException;
 import java.net.URL;
-import javafx.geometry.Pos; // Tambahkan import untuk Pos
+import javafx.geometry.Pos; 
 
 public class DashboardController {
 
@@ -59,20 +59,15 @@ public class DashboardController {
     private Label userRoleLabel;
 
     @FXML
-    private ScrollPane mainContentScrollPane; // Ini adalah target utama kita
+    private ScrollPane mainContentScrollPane; 
 
-    // @FXML // mainContentArea sepertinya tidak terpakai jika kita langsung set content ke ScrollPane
-    // private VBox mainContentArea; 
-
-    // @FXML // welcomeMessageLabel sepertinya bagian dari dashboard content yang dibuat manual
-    // private Label welcomeMessageLabel;
     
     private UserModel currentUser; 
 
     public void initialize() {
         menuToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
-                // Mencegah deseleksi, selalu ada satu tombol yang aktif
+   
                 if (oldValue != null) {
                     oldValue.setSelected(true); 
                 }
@@ -104,11 +99,11 @@ public class DashboardController {
 
         if (selectedButton == dashboardButton) {
             System.out.println("DEBUG: Dashboard selected");
-            loadDashboardContent(); // Memuat konten dashboard dinamis
+            loadDashboardContent(); 
             return; 
         } else if (selectedButton == laporanButton) {
             System.out.println("DEBUG: Laporan selected");
-            viewPath = "/moomoo/apps/view/LaporanSdmKonten.fxml"; 
+            viewPath = "/moomoo/apps/view/LaporanView.fxml"; 
         } else if (selectedButton == keuanganButton) {
             System.out.println("DEBUG: Keuangan selected");
             viewPath = "/moomoo/apps/view/FinanceView.fxml"; 
@@ -149,9 +144,9 @@ public class DashboardController {
             welcome.setText("Selamat Datang!");
         }
     
-        // Label infoLain = new Label("Ini adalah halaman utama aplikasi Moo Moo.");
+
         
-        dashboardContent.getChildren().addAll(title, welcome /*, infoLain */);
+        dashboardContent.getChildren().addAll(title, welcome);
         
         mainContentScrollPane.setContent(dashboardContent); 
         mainContentScrollPane.setFitToWidth(true); 

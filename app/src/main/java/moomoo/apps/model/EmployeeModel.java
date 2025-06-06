@@ -7,13 +7,13 @@ import javafx.beans.property.SimpleStringProperty;
 public class EmployeeModel {
     private final SimpleIntegerProperty id;
     private final SimpleStringProperty namaLengkap;
-    private final SimpleStringProperty posisi; // Jabatan spesifik
-    private final SimpleStringProperty departemen; // Untuk pengelompokan di laporan
+    private final SimpleStringProperty posisi; 
+    private final SimpleStringProperty departemen;
     private final SimpleDoubleProperty persentaseKehadiran;
     private final SimpleDoubleProperty persentaseProduktivitas;
     private final SimpleStringProperty peringkatKinerja;
 
-    // Konstruktor lengkap
+
     public EmployeeModel(int id, String namaLengkap, String posisi, String departemen,
                          double persentaseKehadiran, double persentaseProduktivitas, String peringkatKinerja) {
         this.id = new SimpleIntegerProperty(id);
@@ -25,21 +25,19 @@ public class EmployeeModel {
         this.peringkatKinerja = new SimpleStringProperty(peringkatKinerja);
     }
 
-    // Konstruktor sederhana (nilai kinerja bisa diisi default atau di-set nanti)
     public EmployeeModel(int id, String namaLengkap, String posisi, String departemen) {
-        this(id, namaLengkap, posisi, departemen, 0.0, 0.0, "N/A"); // Nilai default
+        this(id, namaLengkap, posisi, departemen, 0.0, 0.0, "N/A"); 
     }
     
-    // Konstruktor yang mungkin sudah kamu pakai (dengan penyesuaian departemen)
+
     public EmployeeModel(int id, String namaLengkap, String posisi) {
         this(id, namaLengkap, posisi, determineDepartemenFromPosisi(posisi), 0.0, 0.0, "N/A");
     }
 
     public EmployeeModel(String namaLengkap, String posisi) {
-        this(0, namaLengkap, posisi, determineDepartemenFromPosisi(posisi), 0.0, 0.0, "N/A"); // ID 0 untuk karyawan baru
+        this(0, namaLengkap, posisi, determineDepartemenFromPosisi(posisi), 0.0, 0.0, "N/A"); 
     }
     
-    // Helper sederhana untuk menentukan departemen dari posisi (bisa kamu sesuaikan)
     private static String determineDepartemenFromPosisi(String posisi) {
         if (posisi == null) return "Lainnya";
         String lowerPosisi = posisi.toLowerCase();
@@ -48,10 +46,10 @@ public class EmployeeModel {
         if (lowerPosisi.contains("peternakan")) return "Peternakan";
         if (lowerPosisi.contains("keuangan")) return "Keuangan";
         if (lowerPosisi.contains("administrasi")) return "Administrasi";
-        return "Lainnya"; // Default
+        return "Lainnya"; 
     }
 
-    // --- Getters untuk JavaFX Properties (PENTING untuk TableView) ---
+
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty namaLengkapProperty() { return namaLengkap; }
     public SimpleStringProperty posisiProperty() { return posisi; }
@@ -60,7 +58,7 @@ public class EmployeeModel {
     public SimpleDoubleProperty persentaseProduktivitasProperty() { return persentaseProduktivitas; }
     public SimpleStringProperty peringkatKinerjaProperty() { return peringkatKinerja; }
 
-    // --- Getters standar ---
+
     public int getId() { return id.get(); }
     public String getNamaLengkap() { return namaLengkap.get(); }
     public String getPosisi() { return posisi.get(); }
@@ -69,7 +67,7 @@ public class EmployeeModel {
     public double getPersentaseProduktivitas() { return persentaseProduktivitas.get(); }
     public String getPeringkatKinerja() { return peringkatKinerja.get(); }
 
-    // --- Setters (jika data bisa diubah setelah objek dibuat) ---
+
     public void setId(int id) { this.id.set(id); }
     public void setNamaLengkap(String namaLengkap) { this.namaLengkap.set(namaLengkap); }
     public void setPosisi(String posisi) { 

@@ -327,10 +327,13 @@ public class HRManagementController {
             modalStage.showAndWait();
 
             AttendanceRecordModel newRecord = controller.getAttendanceRecord();
-            if (newRecord != null && DatabaseManager.addAttendanceRecord(newRecord)) {
-                muatDataKehadiran(tanggalKehadiranSaatIni);
-            } else if (newRecord != null) {
-                showPlaceholderDialog("Error Simpan", "Gagal menyimpan data presensi ke database.");
+            if (newRecord != null) {
+                if (DatabaseManager.addAttendanceRecord(newRecord)) {
+                    System.out.println("Presensi baru disimpan untuk: " + newRecord.getKaryawan().getNamaLengkap());
+                    muatDataKehadiran(tanggalKehadiranSaatIni); 
+                } else {
+                    showPlaceholderDialog("Error Simpan", "Gagal menyimpan data presensi ke database.");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
