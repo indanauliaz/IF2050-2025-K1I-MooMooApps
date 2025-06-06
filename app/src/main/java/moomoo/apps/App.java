@@ -1,10 +1,6 @@
 
 package moomoo.apps;
-
-import moomoo.apps.model.*;
 import moomoo.apps.utils.*;
-// import moomoo.apps.view.*;
-import moomoo.apps.controller.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
