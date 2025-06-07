@@ -1,156 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" stylesheets="@dashboard_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.DashboardController">
-   <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-            <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="260.0" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="80.0" spacing="10.0" styleClass="logo-container">
-                     <padding>
-                        <Insets left="20.0" right="20.0" />
-                     </padding>
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../images/cow_logo_white.png" /> 
-                           </image>
-                        </ImageView>
-                        <Label text="Moo Moo Apps" styleClass="app-name-sidebar" />
-                     </children>
-                  </HBox>
-                  
-                  <VBox spacing="5.0" VBox.vgrow="ALWAYS">
-                     <padding>
-                        <Insets top="10.0" bottom="10.0" left="15.0" right="15.0"/>
-                     </padding>
-                     <children>
-                        <ToggleButton fx:id="dashboardButton" mnemonicParsing="false" text="Dashboard" styleClass="sidebar-button" selected="true">
-                           <graphic>
-                              <SVGPath content="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" styleClass="sidebar-icon"/>
-                           </graphic>
-                           <toggleGroup>
-                              <ToggleGroup fx:id="menuToggleGroup" />
-                           </toggleGroup>
-                        </ToggleButton>
-                        <ToggleButton fx:id="laporanButton" mnemonicParsing="false" text="Laporan" styleClass="sidebar-button" toggleGroup="$menuToggleGroup">
-                            <graphic>
-                              <SVGPath content="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" styleClass="sidebar-icon"/>
-                           </graphic>
-                        </ToggleButton>
-                        <ToggleButton fx:id="keuanganButton" mnemonicParsing="false" text="Keuangan" styleClass="sidebar-button" toggleGroup="$menuToggleGroup">
-                           <graphic>
-                              <SVGPath content="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2l-.01-12zM4 16V6h16v10.01L4 16zm10-4H7v2h7v-2zm3-4H7v2h10V8z" styleClass="sidebar-icon"/>
-                           </graphic>
-                        </ToggleButton>
-                        <ToggleButton fx:id="produksiButton" mnemonicParsing="false" text="Produksi" styleClass="sidebar-button" toggleGroup="$menuToggleGroup">
-                           <graphic>
-                              <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" styleClass="sidebar-icon"/>
-                           </graphic>
-                        </ToggleButton>
-                        <ToggleButton fx:id="tugasButton" mnemonicParsing="false" text="HR Management" styleClass="sidebar-button" toggleGroup="$menuToggleGroup">
-                           <graphic>
-                              <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" styleClass="sidebar-icon"/>
-                           </graphic>
-                        </ToggleButton>
-                     </children>
-                  </VBox>
-                  
-                  <VBox spacing="5.0" >
-                     <padding>
-                        <Insets top="10.0" bottom="20.0" left="15.0" right="15.0"/>
-                     </padding>
-                     <children>
-                        <Button fx:id="settingsButton" mnemonicParsing="false" text="Settings" styleClass="sidebar-button-util">
-                            <graphic>
-                              <SVGPath content="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.25 C14.34,2.09,14.17,2,14,2h-4c-0.17,0-0.34,0.09-0.4,0.25l-0.54,2.54c-0.59,0.24-1.13,0.57-1.62,0.94l-2.39-0.96 c-0.22-0.08-0.47,0-0.59,0.22L2.94,8.81c-0.11,0.2-0.06,0.47,0.12,0.61l2.03,1.58C5.02,11.36,5,11.68,5,12 c0,0.32,0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96 c0.5,0.38,1.03,0.7,1.62,0.94l0.54,2.54c0.06,0.16,0.23,0.25,0.4,0.25h4c0.17,0,0.34-0.09,0.4-0.25l0.54-2.54 c0.59-0.24,1.13-0.57,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59,0.22l1.92-3.32c0.11-0.2,0.06-0.47-0.12-0.61 L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" styleClass="sidebar-icon"/>
-                           </graphic>
-                        </Button>
-                        <Button fx:id="logoutButton" mnemonicParsing="false" text="Logout" styleClass="sidebar-button-util" onAction="#handleLogoutAction">
-                           <graphic>
-                              <SVGPath content="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" styleClass="sidebar-icon"/>
-                           </graphic>
-                        </Button>
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-         </left>
-         <center>
-            <VBox styleClass="main-area-container" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="80.0" styleClass="top-bar">
-                     <padding>
-                        <Insets left="20.0" right="20.0" />
-                     </padding>
-                     <children>
-                        <Button mnemonicParsing="false" styleClass="hamburger-button">
-                            <graphic>
-                                <SVGPath content="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-                            </graphic>
-                        </Button>
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <HBox alignment="CENTER_LEFT" styleClass="search-bar-container" spacing="5.0">
-                           <children>
-                              <SVGPath content="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" styleClass="search-icon"/>
-                              <TextField fx:id="searchField" promptText="Search" styleClass="search-field" />
-                           </children>
-                        </HBox>
-                        <Pane HBox.hgrow="SOMETIMES" prefWidth="20.0"/>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="profile-section">
-                           <children>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../images/default_avatar.png" />
-                                 </image>
-                              </ImageView>
-                              <VBox>
-                                 <children>
-                                    <Label fx:id="userNameLabel" text="Tuan Jones" styleClass="user-name" />
-                                    <Label fx:id="userRoleLabel" text="Pemilik" styleClass="user-role" />
-                                 </children>
-                              </VBox>
-                               <Button mnemonicParsing="false" styleClass="transparent-button">
-                                   <graphic>
-                                       <SVGPath content="M7 10l5 5 5-5z"/>
-                                   </graphic>
-                               </Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </HBox>
-                  <ScrollPane fx:id="mainContentScrollPane" fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" styleClass="main-content-scrollpane">
-                     <content>
-                        <VBox fx:id="mainContentArea" spacing="20.0" styleClass="main-content-area">
-                           <padding>
-                              <Insets top="20.0" right="30.0" bottom="30.0" left="30.0" />
-                           </padding>
-                           <children>
-                              <Label text="Dashboard" styleClass="dashboard-title" />
-                              <Label fx:id="welcomeMessageLabel" text="Selamat Datang, Tuan Jones!" styleClass="welcome-message" />
-                              </children>
+<AnchorPane prefHeight="750.0" prefWidth="1200.0"
+             stylesheets="@dashboard_style.css"
+             xmlns="http://javafx.com/javafx/17"
+             xmlns:fx="http://javafx.com/fxml/1"
+             fx:controller="moomoo.apps.controller.DashboardController">
+
+    <children>
+        <BorderPane AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+            <!-- SIDEBAR -->
+            <left>
+                <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="260.0">
+                    <children>
+                        <!-- Logo Centered -->
+                        <VBox alignment="CENTER" spacing="10.0" prefHeight="120.0">
+                            <padding>
+                                <Insets top="30.0" bottom="20.0"/>
+                            </padding>
+                            <children>
+                                <ImageView fitHeight="74.0" fitWidth="148.0" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/images/logo.png"/>
+                                    </image>
+                                </ImageView>
+                            </children>
                         </VBox>
-                     </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-         </center>
-      </BorderPane>
-   </children>
+
+                        <fx:define>
+                            <ToggleGroup fx:id="menuToggleGroup"/>
+                        </fx:define>
+
+                        <!-- Menu Buttons -->
+                        <VBox spacing="8.0" styleClass="menu-section">
+                            <ToggleButton fx:id="dashboardButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                                <graphic>
+                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                        <image>
+                                            <Image url="@/icons/dashboard.png"/>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <text>Dashboard</text>
+                            </ToggleButton>
+
+                            <ToggleButton fx:id="laporanButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                                <graphic>
+                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                        <image>
+                                            <Image url="@/icons/report.png"/>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <text>Laporan</text>
+                            </ToggleButton>
+
+                            <ToggleButton fx:id="produksiButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                                <graphic>
+                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                        <image>
+                                            <Image url="@/icons/milk.png"/>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <text>Produksi</text>
+                            </ToggleButton>
+
+                            <ToggleButton fx:id="keuanganButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                                <graphic>
+                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                        <image>
+                                            <Image url="@/icons/money.png"/>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <text>Keuangan</text>
+                            </ToggleButton>
+
+                            <ToggleButton fx:id="tugasButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                                <graphic>
+                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                        <image>
+                                            <Image url="@/icons/tasks.png"/>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <text>Tugas</text>
+                            </ToggleButton>
+                        </VBox>
+
+                        <!-- Spacer -->
+                        <Region VBox.vgrow="ALWAYS"/>
+
+                        <!-- Settings & Logout as Buttons -->
+                        <VBox spacing="8.0" alignment="CENTER_LEFT">
+                           <padding>
+                              <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                           </padding>
+                           <Button fx:id="settingsButton" styleClass="menu-button-icon">
+                              <graphic>
+                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                       <image>
+                                          <Image url="@/icons/settings.png"/>
+                                       </image>
+                                    </ImageView>
+                              </graphic>
+                              <text>Settings</text>
+                           </Button>
+
+                           <Button fx:id="logoutButton" styleClass="menu-button-icon">
+                              <graphic>
+                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                       <image>
+                                          <Image url="@/icons/logout.png"/>
+                                       </image>
+                                    </ImageView>
+                              </graphic>
+                              <text>Logout</text>
+                           </Button>
+                        </VBox>
+                    </children>
+                </VBox>
+            </left>
+
+            <!-- MAIN CONTENT -->
+            <center>
+                <ScrollPane fx:id="mainContentScrollPane" fitToWidth="true" fitToHeight="true">
+                    <content>
+                        <VBox spacing="20.0" styleClass="main-content">
+                            <padding>
+                                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                            </padding>
+
+                            <!-- Header -->
+                            <Label text="Dashboard" styleClass="dashboard-title"/>
+                            <Label text="Selamat Datang, Manager" styleClass="welcome-label"/>
+
+                            <!-- Cards -->
+                            <HBox spacing="15.0">
+                                <VBox styleClass="card">
+                                    <Label text="Total Produksi" styleClass="card-title"/>
+                                    <Label text="2,345 L" styleClass="card-value"/>
+                                    <Label text="+52% dari bulan lalu" styleClass="card-sub"/>
+                                    <ProgressBar progress="0.52" styleClass="progress-green"/>
+                                </VBox>
+                                <VBox styleClass="card">
+                                    <Label text="Pendapatan" styleClass="card-title"/>
+                                    <Label text="Rp 200,736,000" styleClass="card-value"/>
+                                    <Label text="+3.1% dari bulan lalu" styleClass="card-sub"/>
+                                    <ProgressBar progress="0.31" styleClass="progress-green"/>
+                                </VBox>
+                                <VBox styleClass="card">
+                                    <Label text="Tugas Selesai" styleClass="card-title"/>
+                                    <Label text="24/30" styleClass="card-value"/>
+                                    <Label text="80% tingkat penyelesaian" styleClass="card-sub"/>
+                                    <ProgressBar progress="0.8" styleClass="progress-green"/>
+                                </VBox>
+                                <VBox styleClass="card">
+                                    <Label text="Kehadiran Karyawan" styleClass="card-title"/>
+                                    <Label text="18/20" styleClass="card-value"/>
+                                    <Label text="90% tingkat kehadiran" styleClass="card-sub"/>
+                                    <ProgressBar progress="0.9" styleClass="progress-green"/>
+                                </VBox>
+                            </HBox>
+
+                            <!-- Chart -->
+                            <VBox styleClass="chart-card">
+                                <Label text="Produksi susu harian selama 7 hari" styleClass="section-title"/>
+                                <AreaChart fx:id="milkChart" title="" prefHeight="250.0" prefWidth="880.0">
+                                    <xAxis>
+                                        <CategoryAxis label="Hari"/>
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis label="Liter"/>
+                                    </yAxis>
+                                </AreaChart>
+                            </VBox>
+
+                            <!-- Task List -->
+                           <VBox spacing="10.0" styleClass="task-list-card">
+                              <Label text="Tugas Hari Ini" styleClass="section-title"/>
+                              
+                              <VBox spacing="8.0">
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                       <Label text="Pemerahan Pagi" styleClass="task-label"/>
+                                       <Region HBox.hgrow="ALWAYS"/>
+                                       <Label text="Selesai" styleClass="status-done"/>
+                                 </HBox>
+
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                       <Label text="Distribusi Pakan" styleClass="task-label"/>
+                                       <Region HBox.hgrow="ALWAYS"/>
+                                       <Label text="Selesai" styleClass="status-done"/>
+                                 </HBox>
+
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                       <Label text="Pemeriksaan Kesehatan" styleClass="task-label"/>
+                                       <Region HBox.hgrow="ALWAYS"/>
+                                       <Label text="Sedang dikerjakan" styleClass="status-progress"/>
+                                 </HBox>
+
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                       <Label text="Pemerahan Sore" styleClass="task-label"/>
+                                       <Region HBox.hgrow="ALWAYS"/>
+                                       <Label text="Tertunda" styleClass="status-pending"/>
+                                 </HBox>
+
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                       <Label text="Pembersihan Peralatan" styleClass="task-label"/>
+                                       <Region HBox.hgrow="ALWAYS"/>
+                                       <Label text="Tertunda" styleClass="status-pending"/>
+                                 </HBox>
+                              </VBox>
+                           </VBox>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </center>
+        </BorderPane>
+    </children>
 </AnchorPane>
