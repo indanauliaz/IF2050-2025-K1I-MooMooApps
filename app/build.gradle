@@ -21,7 +21,7 @@ dependencies {
     // JavaFX dependencies - dihapus karena akan di-handle oleh plugin javafx
     // implementation "org.openjfx:javafx-controls:${javafx.version}"
     // implementation "org.openjfx:javafx-fxml:${javafx.version}"
-    // implementation "org.openjfx:javafx-graphics:${javafx.version}" // Tambahkan modul lain jika perlu
+    // implementation "org.openjfx:javafx-graphics:${javafx.version}"
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
