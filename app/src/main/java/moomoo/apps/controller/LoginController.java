@@ -205,7 +205,7 @@ public class LoginController implements Initializable {
             case "pemilik":
                 fxmlFile = "/moomoo/apps/view/OwnerDashboardView.fxml"; 
                 break;
-            case "kasir":
+            case "manajer":
                 fxmlFile = "/moomoo/apps/view/CashierDashboardView.fxml"; 
                 break;
             default:
