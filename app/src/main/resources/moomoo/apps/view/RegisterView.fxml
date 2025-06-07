@@ -123,7 +123,7 @@
                 <!-- Switch ke login -->
                 <HBox alignment="CENTER" spacing="8.0">
                     <children>
-                        <Label text="Sudah punya akun?" styleClass="login-link-label"/>
+                        <Label text="Sudah punya akun?" styleClass="auth-switch-label"/>
                         <Button fx:id="loginLinkButton" text="Login" styleClass="button-secondary" onAction="#handleLoginLinkAction"/>
                     </children>
                 </HBox>
