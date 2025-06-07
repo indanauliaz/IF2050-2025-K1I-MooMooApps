@@ -5,6 +5,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 public class PasswordUtils {
 
     private static final int SALT_LENGTH = 16;
@@ -20,16 +23,17 @@ public class PasswordUtils {
 
     public static String hashPassword(String password, byte[] salt) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(salt);
-            byte[] hashedPassword = md.digest(password.getBytes());
+            int iterations = 10000; // Secure iteration count
+            int keyLength = 256; // Key length in bits
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, keyLength);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] hashedPassword = skf.generateSecret(spec).getEncoded();
 
-          
             String encodedSalt = Base64.getEncoder().encodeToString(salt);
             String encodedHashedPassword = Base64.getEncoder().encodeToString(hashedPassword);
             
             return encodedSalt + ":" + encodedHashedPassword; 
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error hashing password", e);
         }
     }

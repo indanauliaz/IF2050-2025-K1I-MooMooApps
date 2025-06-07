@@ -12,7 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label; // Changed from Text to Label
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -39,13 +41,14 @@ public class RegisterController implements Initializable {
     @FXML private Button registerButton; 
     @FXML private Label hideLabel;      
     @FXML private Button loginLinkButton; 
+    @FXML private Label errorMessageLabel; 
 
     private boolean isPasswordVisible = false;
 
     @Override // Added Override annotation
     public void initialize(URL url, ResourceBundle resourceBundle){
         roleComboBox.setItems(FXCollections.observableArrayList("Pemilik", "Manajer")); 
-        roleComboBox.setValue("Pegawai Biasa"); 
+        roleComboBox.setValue("Pemilik"); 
 
         passwordTextField.managedProperty().bind(passwordTextField.visibleProperty());
         passwordTextField.visibleProperty().bind(passwordField.visibleProperty().not()); 
@@ -66,21 +69,47 @@ public class RegisterController implements Initializable {
         String password = passwordField.getText();
         String role = roleComboBox.getValue();
 
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || role == null){
-            showAlert(Alert.AlertType.ERROR, "Form Error!", "Harap isi semua kolom");
-            return;
-        }
- 
-        if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-            showAlert(Alert.AlertType.ERROR, "Email Error!", "Format email tidak valid.");
-            return;
-        }
-        if (password.length() < 6){ 
-            showAlert(Alert.AlertType.ERROR,"Password error!","Password minimal 6 karakter.");
-            return;
-        }
-        if (isUserExists(username, email)){
+        // Reset state dulu
+        resetFieldStyles();
 
+        boolean hasError = false;
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (username.isEmpty()) {
+            usernameField.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+        if (email.isEmpty()) {
+            emailField.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+        if (password.isEmpty()) {
+            passwordField.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+        if (role == null || role.isEmpty()) {
+            roleComboBox.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+
+        if (hasError) {
+            showInlineError("Harap isi semua kolom dengan benar.");
+            return;
+        }
+
+        if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            emailField.setStyle("-fx-border-color: red;");
+            showInlineError("Format email tidak valid.");
+            return;
+        }
+
+        if (password.length() < 6) {
+            passwordField.setStyle("-fx-border-color: red;");
+            showInlineError("Password minimal 6 karakter.");
+            return;
+        }
+
+        if (isUserExists(username, email)) {
             return;
         }
 
@@ -166,6 +195,8 @@ public class RegisterController implements Initializable {
         if (!roleComboBox.getItems().isEmpty()) {
             roleComboBox.setValue(roleComboBox.getItems().get(0)); 
         }
+
+        resetFieldStyles();
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -173,8 +204,45 @@ public class RegisterController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("""
+            -fx-background-color: #FAF8F0;
+            -fx-background-radius: 10px;
+            -fx-font-family: 'Poppins Medium';
+            -fx-font-size: 14px;
+        """);
+
+        Button okButton = (Button) dialogPane.lookupButton(ButtonType.OK);
+        okButton.setStyle("""
+            -fx-background-color: #4A7C7A;
+            -fx-text-fill: white;
+            -fx-font-weight: bold;
+            -fx-font-size: 13px;
+            -fx-background-radius: 8px;
+            -fx-cursor: hand;
+        """);
+
         alert.showAndWait();
     }
+
+    private void showInlineError(String message) {
+        errorMessageLabel.setText(message);
+        errorMessageLabel.setVisible(true);
+        errorMessageLabel.setManaged(true);
+    }
+
+    private void resetFieldStyles() {
+        errorMessageLabel.setVisible(false);
+        errorMessageLabel.setManaged(false);
+        errorMessageLabel.setText("");
+
+        usernameField.setStyle(null);
+        emailField.setStyle(null);
+        passwordField.setStyle(null);
+        roleComboBox.setStyle(null);
+    }
+
     
     @FXML
     void togglePasswordVisibility(MouseEvent event) {
