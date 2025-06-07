@@ -222,3 +222,69 @@
 } */
 
 /* ... (style lain yang sudah ada seperti .login-link-label) ... */
+
+/* In your application's CSS file */
+.summary-card {
+    -fx-background-color: #FFFFFF; /* Or your card color */
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    /* Add more padding/margin as needed internally or via VBox/HBox spacing */
+}
+
+.summary-card-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: normal;
+}
+
+.summary-card-value {
+    -fx-font-size: 20px; /* Or larger as in image */
+    -fx-font-weight: bold;
+    -fx-text-fill: #222222;
+    -fx-padding-top: 2px;
+}
+.summary-card-percentage {
+    -fx-font-size: 11px;
+    -fx-text-fill: #008000; /* Green for positive, red for negative */
+    -fx-padding-top: 2px;
+}
+.summary-card-date {
+    -fx-font-size: 11px;
+    -fx-text-fill: #777777;
+    -fx-padding-top: 2px;
+}
+
+
+.chart-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.section-title-medium {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding-bottom: 10px;
+}
+
+.legend-dot-pemasukan:before {
+    -fx-content: "●"; /* Unicode circle */
+    -fx-text-fill: #4CAF50; /* Example color for Pemasukan */
+    -fx-padding-right: 5px;
+}
+
+.legend-dot-pengeluaran:before {
+    -fx-content: "●"; /* Unicode circle */
+    -fx-text-fill: #F44336; /* Example color for Pengeluaran */
+    -fx-padding-right: 5px;
+}
+
+/* Bar Chart Customization (Example - match your image's colors) */
+.default-color0.chart-bar { -fx-bar-fill: #4CAF50; } /* Pemasukan */
+.default-color1.chart-bar { -fx-bar-fill: #F44336; } /* Pengeluaran */
+
+/* Pie Chart Customization (Example) */
+.default-color0.chart-pie { -fx-pie-color: #FF9800; } /* Category 1 */
+.default-color1.chart-pie { -fx-pie-color: #2196F3; } /* Category 2 */
+/* ... add more for other categories */
