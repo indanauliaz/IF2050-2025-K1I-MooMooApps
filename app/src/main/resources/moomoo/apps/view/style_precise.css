@@ -1,0 +1,193 @@
+@font-face {
+    font-family: "Poppins Regular";
+    src: url("/fonts/Poppins-Regular.ttf");
+}
+@font-face {
+    font-family: "Poppins Medium";
+    src: url("/fonts/Poppins-Medium.ttf");
+}
+@font-face {
+    font-family: "Poppins ExtraBold";
+    src: url("/fonts/Poppins-ExtraBold.ttf");
+}
+
+.root {
+    -fx-font-family: "Poppins Regular";
+    -fx-background-color: #FAF8F0;
+}
+
+.main-background {
+    -fx-background-color: #FAF8F0;
+}
+
+.left-sidebar {
+    -fx-background-color: #4A7C7A;
+    -fx-background-image: url("/images/bg_pattern.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.form-panel {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 4);
+    -fx-padding: 30px 35px;
+}
+
+.app-name-text {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 20px;
+    -fx-text-fill: #3F3F3F;
+}
+
+.register-title-text, .login-title-text {
+    -fx-font-family: "Poppins ExtraBold";
+    -fx-font-size: 22px;
+    -fx-text-fill: #4A7C7A;
+    -fx-padding: 10px 0 5px 0;
+}
+
+.register-subtitle-text, .login-subtitle-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #788490;
+}
+
+.form-label-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #5D6976;
+    -fx-padding: 6px 0 2px 0;
+}
+
+.form-text-field {
+    -fx-background-color: white;
+    -fx-border-color: #D0D5DD;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 0 10px;
+    -fx-pref-height: 42px;
+    -fx-font-size: 14px;
+}
+
+.form-text-field:focused {
+    -fx-border-color: #4A7C7A;
+    -fx-border-width: 1.5px;
+}
+
+.form-text-field.error {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+}
+
+.error-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: red;
+    -fx-padding: 2px 0 4px 0;
+}
+
+.form-combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #D0D5DD;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-pref-height: 42px;
+    -fx-padding: 0 10px;
+}
+
+.form-combo-box .list-cell {
+    -fx-font-size: 14px;
+}
+
+.form-checkbox {
+    -fx-font-size: 14px;
+    -fx-text-fill: #3F3F3F;
+}
+
+.form-checkbox .box {
+    -fx-border-color: #D0D5DD;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.form-checkbox:selected .box {
+    -fx-border-color: #4A7C7A;
+}
+
+.form-checkbox:selected .mark {
+    -fx-background-color: #4A7C7A;
+}
+
+.hide-password-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #5D6976;
+    -fx-cursor: hand;
+    -fx-padding: 7 0 0 0;
+}
+
+.hide-password-label:hover {
+    -fx-underline: true;
+}
+
+.button-primary {
+    -fx-background-color: #4A7C7A;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-family: "Poppins Medium";
+    -fx-pref-height: 44px;
+    -fx-background-radius: 20px;
+    -fx-cursor: hand;
+}
+
+.button-primary:hover {
+    -fx-background-color: derive(#4A7C7A, -10%);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+.button-secondary {
+    -fx-background-color: #C8A57C;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins Medium";
+    -fx-background-radius: 16px;
+    -fx-padding: 6px 18px;
+    -fx-cursor: hand;
+}
+.button-secondary:hover {
+    -fx-background-color: derive(#C8A57C, -10%);
+}
+
+.auth-switch-container {
+    -fx-alignment: center;
+    -fx-padding: 20px 0 0 0;
+}
+
+.auth-switch-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #3F3F3F;
+}
+
+.auth-switch-button {
+    -fx-font-size: 13px;
+    -fx-text-fill: #C8A57C;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+.auth-switch-button:hover {
+    -fx-underline: true;
+}
+
+.error-label {
+    -fx-text-fill: #D94141;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 0 0;
+}
+
+.error-field {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+
