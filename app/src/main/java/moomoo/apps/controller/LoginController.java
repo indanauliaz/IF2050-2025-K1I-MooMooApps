@@ -10,7 +10,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -23,15 +32,35 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-    @FXML private ImageView logoView;
-    @FXML private TextField usernameEmailField;
-    @FXML private PasswordField passwordField;
-    @FXML private TextField visiblePasswordField;
-    @FXML private Label hideLabel;
-    @FXML private CheckBox rememberMeCheckBox;
-    @FXML private ComboBox<String> roleComboBoxLogin;
-    @FXML private Button loginButton;
-    @FXML private Hyperlink registerLink;
+    @FXML
+    private ImageView logoView;
+
+    @FXML
+    private TextField usernameEmailField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private TextField visiblePasswordField;
+
+    @FXML
+    private Label hideLabel;
+
+    @FXML
+    private CheckBox rememberMeCheckBox;
+
+    @FXML
+    private ComboBox<String> roleComboBoxLogin;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Hyperlink registerLink;
+
+    @FXML 
+    private Label errorMessageLabel;
 
     private boolean passwordVisible = false;
     private UserModel loggedInUser; 
@@ -71,15 +100,48 @@ public class LoginController implements Initializable {
         String usernameOrEmail = usernameEmailField.getText();
         String password = passwordVisible ? visiblePasswordField.getText() : passwordField.getText();
         String selectedRole = roleComboBoxLogin.getValue();
-        
-        if (usernameOrEmail.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Login Gagal", "Username/Email dan Password tidak boleh kosong.");
+        boolean rememberMe = rememberMeCheckBox.isSelected();
+
+        boolean hasError = false;
+
+        // Reset styles
+        usernameEmailField.getStyleClass().remove("error-field");
+        passwordField.getStyleClass().remove("error-field");
+        visiblePasswordField.getStyleClass().remove("error-field");
+        roleComboBoxLogin.getStyleClass().remove("error-field");
+
+        // Validasi kosong
+        if (usernameOrEmail.isEmpty()) {
+            usernameEmailField.getStyleClass().add("error-field");
+            hasError = true;
+        }
+        if (password.isEmpty()) {
+            if (passwordVisible) {
+                visiblePasswordField.getStyleClass().add("error-field");
+            } else {
+                passwordField.getStyleClass().add("error-field");
+            }
+            hasError = true;
+        }
+        if (selectedRole == null || selectedRole.isEmpty()) {
+            roleComboBoxLogin.getStyleClass().add("error-field");
+            hasError = true;
+        }
+
+        if (hasError) {
+            errorMessageLabel.setText("Harap isi semua kolom dengan benar.");
+            errorMessageLabel.setVisible(true);
+            errorMessageLabel.setManaged(true);
             return;
         }
-        if (selectedRole == null || selectedRole.isEmpty()){
-            showAlert(Alert.AlertType.ERROR, "Login Gagal", "Role harus dipilih.");
-            return;
-        }
+
+        // Hide error if all good
+        errorMessageLabel.setVisible(false);
+        errorMessageLabel.setManaged(false);
+
+        System.out.println("Attempting login for: " + usernameOrEmail);
+        System.out.println("Selected Role: " + selectedRole);
+        System.out.println("Remember Me: " + rememberMe);
 
         String sql = "SELECT id, username, email, password_hash, role FROM users WHERE (username = ? OR email = ?) AND role = ?";
         
@@ -121,7 +183,10 @@ public class LoginController implements Initializable {
                 fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; // FXML untuk manajer
                 break;
             case "pemilik":
-                fxmlFile = "/moomoo/apps/view/DashboardPemilikView.fxml"; // FXML baru untuk pemilik
+                fxmlFile = "/moomoo/apps/view/OwnerDashboardView.fxml"; 
+                break;
+            case "manajer":
+                fxmlFile = "/moomoo/apps/view/CashierDashboardView.fxml"; 
                 break;
             default:
                 showAlert(Alert.AlertType.ERROR, "Navigasi Gagal", "Role '" + role + "' tidak dikenal.");
@@ -157,10 +222,8 @@ public class LoginController implements Initializable {
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        errorMessageLabel.setText(message);
+        errorMessageLabel.setVisible(true);
+        errorMessageLabel.setManaged(true);
     }
 }
