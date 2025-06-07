@@ -185,9 +185,6 @@ public class LoginController implements Initializable {
             case "pemilik":
                 fxmlFile = "/moomoo/apps/view/OwnerDashboardView.fxml"; 
                 break;
-            case "manajer":
-                fxmlFile = "/moomoo/apps/view/CashierDashboardView.fxml"; 
-                break;
             default:
                 showAlert(Alert.AlertType.ERROR, "Navigasi Gagal", "Role '" + role + "' tidak dikenal.");
                 return;
