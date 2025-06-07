@@ -177,23 +177,32 @@ public class LaporanSdmController implements ILaporanKontenController {
         produktivitasKolomTabel.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("%.1f%%", cellData.getValue().getPersentaseProduktivitas() * 100)));
         peringkatColumn.setCellValueFactory(cellData -> cellData.getValue().peringkatKinerjaProperty());
         
-        peringkatColumn.setCellFactory(column -> new TableCell<>() {
+        peringkatColumn.setCellFactory(column -> new TableCell<EmployeeModel, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty ? null : item);
-                getStyleClass().removeAll("peringkat-a-plus", "peringkat-a", "peringkat-b", "peringkat-c", "peringkat-default");
-                if (item != null && !empty) {
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
                     switch (item) {
-                        case "A+": getStyleClass().add("peringkat-a-plus"); break;
-                        case "A": getStyleClass().add("peringkat-a"); break;
-                        case "B": getStyleClass().add("peringkat-b"); break;
-                        case "C": getStyleClass().add("peringkat-c"); break;
-                        default: getStyleClass().add("peringkat-default"); break;
+                        case "A":
+                            setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                            break;
+                        case "B":
+                            setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+                            break;
+                        case "C":
+                            setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                            break;
+                        default:
+                            setStyle("-fx-text-fill: black;");
                     }
                 }
             }
         });
+
     }
     
     private void updateGrafikDistribusi(List<EmployeeModel> karyawanList) {
