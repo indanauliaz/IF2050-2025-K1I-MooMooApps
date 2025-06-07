@@ -79,6 +79,7 @@ public class TaskCardController {
         tundaButton.setManaged(true);
 
         switch (status) {
+            case "Belum Dimulai":
             case "Akan Dilakukan":
                 selesaikanButton.setText("Mulai"); // Lebih singkat
                 if (rootTaskCardVBox != null) rootTaskCardVBox.getStyleClass().add("status-akan-dilakukan");
@@ -127,9 +128,9 @@ public class TaskCardController {
         String statusTargetBaru = "";
         LocalDate tanggalSelesai = currentTask.getTanggalSelesai();
 
-        if ("Akan Dilakukan".equals(statusLama)) {
+        if ("Akan Dilakukan".equals(statusLama) || "Belum Dimulai".equals(statusLama)) { // <-- UBAH DI BARIS INI
             statusTargetBaru = "Sedang Dikerjakan";
-            tanggalSelesai = null; 
+            tanggalSelesai = null;
         } else if ("Sedang Dikerjakan".equals(statusLama)) {
             statusTargetBaru = "Selesai";
             tanggalSelesai = LocalDate.now(); 
