@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true" styleClass="main-background" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.LaporanSdmController">
+    <content>
+        <VBox spacing="20.0" style="-fx-background-color: #FCFBEF;">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+
+            <!-- Judul Halaman -->
+            <Label text="Laporan" style="-fx-font-size: 24px; -fx-font-weight: 800; -fx-font-family: 'Poppins'; -fx-text-fill: #8B5E3C;" />
+
+            <!-- Statistik Card -->
+            <GridPane hgap="20.0" vgap="10.0">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="25.0"/>
+                    <ColumnConstraints percentWidth="25.0"/>
+                    <ColumnConstraints percentWidth="25.0"/>
+                    <ColumnConstraints percentWidth="25.0"/>
+                </columnConstraints>
+                <children>
+                    <VBox styleClass="card" GridPane.columnIndex="0">
+                        <Label text="Total Karyawan" styleClass="card-title-brown"/>
+                        <Label fx:id="totalKaryawanLabel" text="0" styleClass="card-value"/>
+                        <ProgressBar fx:id="totalKaryawanProgressBar" progress="0.0" maxWidth="Infinity"/>
+                        <Label fx:id="totalKaryawanDescLabel" styleClass="card-sub"/>
+                    </VBox>
+                    <VBox styleClass="card" GridPane.columnIndex="1">
+                        <Label text="Tingkat Kehadiran" styleClass="card-title-brown"/>
+                        <Label fx:id="tingkatKehadiranLabel" text="0%" styleClass="card-value"/>
+                        <ProgressBar fx:id="kehadiranProgressBar" progress="0.0" maxWidth="Infinity"/>
+                        <Label fx:id="tingkatKehadiranDescLabel" styleClass="card-sub"/>
+                    </VBox>
+                    <VBox styleClass="card" GridPane.columnIndex="2">
+                        <Label text="Produktivitas" styleClass="card-title-brown"/>
+                        <Label fx:id="produktivitasLabel" text="0%" styleClass="card-value"/>
+                        <ProgressBar fx:id="produktivitasProgressBar" progress="0.0" maxWidth="Infinity"/>
+                        <Label fx:id="produktivitasDescLabel" styleClass="card-sub"/>
+                    </VBox>
+                    <VBox styleClass="card" GridPane.columnIndex="3">
+                        <Label text="Biaya SDM" styleClass="card-title-brown"/>
+                        <Label fx:id="biayaSdmLabel" text="Rp 0" styleClass="card-value"/>
+                        <ProgressBar fx:id="biayaSdmProgressBar" progress="0.0" maxWidth="Infinity"/>
+                        <Label fx:id="biayaSdmDescLabel" styleClass="card-sub"/>
+                    </VBox>
+                </children>
+            </GridPane>
+
+            <!-- Grafik -->
+            <HBox spacing="20.0">
+                <VBox styleClass="chart-card" HBox.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <Label text="Kehadiran" styleClass="section-title"/>
+                        <HBox spacing="5.0" HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
+                            <Button fx:id="filterHadirButton" text="Hadir" onAction="#handleFilterChartButton" styleClass="chart-filter-button"/>
+                            <Button fx:id="filterTerlambatButton" text="Terlambat" onAction="#handleFilterChartButton" styleClass="chart-filter-button"/>
+                            <Button fx:id="filterAbsenButton" text="Absen" onAction="#handleFilterChartButton" styleClass="chart-filter-button"/>
+                        </HBox>
+                    </HBox>
+                    <BarChart fx:id="kehadiranChart" animated="false" prefHeight="250.0">
+                        <xAxis><CategoryAxis fx:id="kehadiranXAxis" side="BOTTOM"/></xAxis>
+                        <yAxis><NumberAxis fx:id="kehadiranYAxis" side="LEFT"/></yAxis>
+                    </BarChart>
+                </VBox>
+                <VBox prefWidth="350.0" spacing="10.0" style="-fx-background-color: #FFFFFF; -fx-padding: 15; -fx-background-radius: 8;">
+                    <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Distribusi Karyawan per Departemen"/>
+                    <PieChart fx:id="distribusiKaryawanChart" animated="false" prefHeight="250.0"/>
+                </VBox>
+            </HBox>
+
+            <!-- Tabel -->
+            <VBox spacing="10.0" styleClass="table-card">
+                <Label text="Ringkasan Kinerja Karyawan" styleClass="section-title"/>
+                <TableView fx:id="kinerjaTableView" prefHeight="200.0">
+                    <columns>
+                        <TableColumn fx:id="karyawanColumn" prefWidth="175.0" text="Karyawan"/>
+                        <TableColumn fx:id="departemenColumn" prefWidth="120.0" text="Departemen"/>
+                        <TableColumn fx:id="kehadiranKolomTabel" text="Kehadiran"/>
+                        <TableColumn fx:id="produktivitasKolomTabel" text="Produktivitas"/>
+                        <TableColumn fx:id="peringkatColumn" text="Peringkat"/>
+                    </columns>
+                </TableView>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <Label fx:id="tableSummaryLabel" text="Menampilkan 0 dari 0 catatan"/>
+                    <Button fx:id="sebelumnyaButton" text="Sebelumnya"/>
+                    <Button fx:id="selanjutnyaButton" text="Selanjutnya"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

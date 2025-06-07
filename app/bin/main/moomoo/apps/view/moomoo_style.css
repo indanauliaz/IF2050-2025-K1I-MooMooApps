@@ -1,0 +1,150 @@
+/* ==========================================================================
+   WARNA UTAMA (ROOT) - Berdasarkan referensi CSS dari kamu
+   ========================================================================== */
+.root {
+    -primary-green: #4A7C7A;
+    -background-cream: #FAF8F0;
+    -panel-white: #FFFFFF;
+    -accent-brown: #C8A57C;
+    -text-dark-gray: #3F3F3F;
+    -text-medium-gray: #5D6976;
+    -text-light-gray: #788490;
+    -input-border-color: #D0D5DD;
+    -success-green: #2E7D32;
+    -warning-orange: #E65100;
+    -danger-red: #B71C1C;
+    -info-blue: #0277BD;
+    
+    /* Warna latar untuk status di tabel */
+    -success-bg: #E8F5E9;
+    -warning-bg: #FFF3E0;
+    -danger-bg: #FFEBEE;
+    -info-bg: #E1F5FE;
+}
+
+/* ==========================================================================
+   Struktur Utama (Dashboard Frame)
+   ========================================================================== */
+.sidebar {
+    -fx-background-color: -primary-green;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #EAEAEA;
+    -fx-font-family: "System";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+}
+.sidebar-button:hover {
+    -fx-background-color: derive(-primary-green, -10%);
+}
+.sidebar-button-active {
+    -fx-background-color: -background-cream;
+    -fx-text-fill: -primary-green;
+}
+
+.header-pane {
+    -fx-background-color: -panel-white;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 0 1px 0;
+}
+.header-title {
+    -fx-font-family: "System";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-dark-gray;
+}
+
+/* ==========================================================================
+   Konten Halaman (Tugas & Laporan)
+   ========================================================================== */
+.content-background {
+    -fx-background-color: -background-cream;
+}
+
+.page-title {
+    -fx-font-size: 22px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: -text-dark-gray;
+}
+.page-subtitle {
+    -fx-font-size: 14px; 
+    -fx-text-fill: -text-light-gray;
+}
+
+.filter-box {
+    -fx-border-color: -input-border-color;
+    -fx-border-radius: 8; 
+    -fx-padding: 5 12 5 12; 
+    -fx-background-color: -panel-white;
+    -fx-background-radius: 8;
+}
+.filter-box .label { 
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-medium-gray;
+}
+.filter-box .combo-box { 
+    -fx-background-color: transparent; 
+}
+
+
+/* Kartu KPI */
+.kpi-card {
+    -fx-background-color: -panel-white;
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(140, 140, 140, 0.1), 15, 0, 0, 4);
+    -fx-spacing: 8;
+}
+.kpi-title { 
+    -fx-font-size: 14px; 
+    -fx-text-fill: -text-medium-gray; 
+}
+.kpi-value { 
+    -fx-font-size: 32px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: -text-dark-gray; 
+}
+.kpi-value-green { -fx-text-fill: -success-green; }
+.kpi-value-orange { -fx-text-fill: -warning-orange; }
+.kpi-value-blue { -fx-text-fill: -info-blue; }
+
+
+/* Kontainer untuk Chart dan Tabel */
+.chart-container, .table-container {
+    -fx-background-color: -panel-white;
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(140, 140, 140, 0.1), 15, 0, 0, 4);
+    -fx-spacing: 5;
+}
+.chart-title, .table-title {
+    -fx-font-size: 16px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: -text-dark-gray;
+}
+.chart-subtitle, .table-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-light-gray;
+}
+
+/* Status di dalam Tabel */
+.table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 10px;
+}
+.status-selesai .text { -fx-fill: -success-green; -fx-font-weight: bold; }
+.table-cell.status-selesai { -fx-background-color: -success-bg; -fx-background-radius: 8; -fx-alignment: CENTER; }
+
+.status-dikerjakan .text { -fx-fill: -warning-orange; -fx-font-weight: bold; }
+.table-cell.status-dikerjakan { -fx-background-color: -warning-bg; -fx-background-radius: 8; -fx-alignment: CENTER; }
+
+.status-tertunda .text { -fx-fill: -danger-red; -fx-font-weight: bold; }
+.table-cell.status-tertunda { -fx-background-color: -danger-bg; -fx-background-radius: 8; -fx-alignment: CENTER; }
+
+.status-default .text { -fx-fill: -text-medium-gray; -fx-font-weight: bold;}
+.table-cell.status-default { -fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-alignment: CENTER;}

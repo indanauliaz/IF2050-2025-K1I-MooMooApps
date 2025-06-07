@@ -3,7 +3,6 @@ package moomoo.apps.controller;
 import moomoo.apps.model.UserModel;
 import moomoo.apps.utils.DatabaseManager;
 import moomoo.apps.utils.PasswordUtils;
-
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,7 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -69,11 +67,7 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        roleComboBoxLogin.setItems(FXCollections.observableArrayList(
-                "Pemilik", "Manajer"
-        ));
-
-
+        roleComboBoxLogin.setItems(FXCollections.observableArrayList("Pemilik", "Manajer"));
         passwordField.setVisible(true);
         passwordField.setManaged(true);
         visiblePasswordField.setVisible(false);
@@ -151,11 +145,7 @@ public class LoginController implements Initializable {
 
         String sql = "SELECT id, username, email, password_hash, role FROM users WHERE (username = ? OR email = ?) AND role = ?";
         
-        this.loggedInUser = null; 
-
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, usernameOrEmail);
             pstmt.setString(2, usernameOrEmail);
             pstmt.setString(3, selectedRole); 
@@ -183,9 +173,6 @@ public class LoginController implements Initializable {
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal mengambil data pengguna: " + e.getMessage());
             e.printStackTrace();
-        } catch (Exception e) { 
-            showAlert(Alert.AlertType.ERROR, "System Error", "Terjadi kesalahan sistem: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -195,66 +182,47 @@ public class LoginController implements Initializable {
             return;
         }
 
-        String fxmlFile = "";
+        String fxmlFile;
         String role = user.getRole();
 
+        // --- INI PERUBAHAN PENTING ---
         switch (role.toLowerCase()) {
             case "manajer":
-                fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; 
+                fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; // FXML untuk manajer
                 break;
             case "pemilik":
                 fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; 
                 break;
             default:
-                showAlert(Alert.AlertType.ERROR, "Navigasi Gagal", "Role '" + role + "' tidak dikenal, tidak dapat melanjutkan.");
+                showAlert(Alert.AlertType.ERROR, "Navigasi Gagal", "Role '" + role + "' tidak dikenal.");
                 return;
         }
 
         try {
-            URL fxmlLocation = getClass().getResource(fxmlFile);
-            if (fxmlLocation == null) {
-                System.err.println("FXML file not found: " + fxmlFile);
-                showAlert(Alert.AlertType.ERROR, "Error Navigasi", "File dashboard untuk role '" + role + "' tidak ditemukan.");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent dashboardRoot = loader.load();
-
-
             Stage stage = (Stage) loginButton.getScene().getWindow();
             Scene scene = new Scene(dashboardRoot);
+            // Hubungkan stylesheet
+            scene.getStylesheets().add(getClass().getResource("/moomoo/apps/view/dashboard_style.css").toExternalForm());
             stage.setScene(scene);
             stage.setTitle(role + " Dashboard - Moo Moo Apps");
-            stage.centerOnScreen(); 
+            stage.centerOnScreen();
             stage.show();
-
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error Memuat UI", "Gagal memuat halaman dashboard: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error Memuat UI", "Gagal memuat halaman dashboard: " + fxmlFile + "\nPastikan file ada dan path sudah benar.");
         }
     }
-
 
     @FXML
     void handleRegisterLinkAction(ActionEvent event) {
         try {
-            URL fxmlLocation = getClass().getResource("/moomoo/apps/view/RegisterView.fxml");
-            if (fxmlLocation == null) {
-                System.err.println("File RegisterView.fxml tidak ditemukan untuk navigasi.");
-                showAlert(Alert.AlertType.ERROR, "Error Navigasi", "File halaman registrasi tidak ditemukan.");
-                return;
-            }
-            Parent root = FXMLLoader.load(fxmlLocation);
+            Parent root = FXMLLoader.load(getClass().getResource("/moomoo/apps/view/RegisterView.fxml"));
             Stage stage = (Stage) registerLink.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Registrasi Moo Moo Apps");
-            stage.centerOnScreen(); 
-            stage.show();
+            stage.setScene(new Scene(root));
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Gagal memuat halaman registrasi.");
         }
     }
 

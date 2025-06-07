@@ -53,7 +53,7 @@ public class LaporanController {
     private void handleKeuanganTabAction(ActionEvent event) {
         setTabAktif(keuanganTabButton);
 
-        switchContent("/moomoo/apps/view/LaporanFinance.fxml", "keuangan");
+        switchContent("/moomoo/apps/view/LaporanKeuanganView.fxml", "keuangan");
     }
 
     @FXML

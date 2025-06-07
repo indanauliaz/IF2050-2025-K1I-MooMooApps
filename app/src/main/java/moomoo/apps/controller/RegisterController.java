@@ -1,13 +1,12 @@
 package moomoo.apps.controller;
 
-import moomoo.apps.model.*; // Assuming UserModel is here
-import moomoo.apps.utils.*; // Assuming DatabaseManager and PasswordUtils are here
+import moomoo.apps.utils.*;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable; // Added for clarity
+import javafx.fxml.Initializable; 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,7 +17,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label; // Changed from Text to Label
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView; // Added for logoView, if needed by controller
+import javafx.scene.image.ImageView; 
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -45,7 +44,7 @@ public class RegisterController implements Initializable {
 
     private boolean isPasswordVisible = false;
 
-    @Override // Added Override annotation
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         roleComboBox.setItems(FXCollections.observableArrayList("Pemilik", "Manajer")); 
         roleComboBox.setValue("Pemilik"); 
