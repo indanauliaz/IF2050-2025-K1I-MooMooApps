@@ -171,10 +171,7 @@ public class LoginController implements Initializable {
                             rs.getString("role")
                     );
                     
-
                     showAlert(Alert.AlertType.INFORMATION, "Login Berhasil", "Selamat datang " + this.loggedInUser.getUsername() + "!");
-                    
-
                     navigateToDashboard(this.loggedInUser); 
 
                 } else {
