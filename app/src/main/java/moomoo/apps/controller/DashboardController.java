@@ -177,10 +177,11 @@ public class DashboardController {
             System.err.println("ERROR: Unexpected exception in loadView for " + fxmlPath);
             e.printStackTrace();
             showErrorInScrollPane("Gagal memuat tampilan: " + fxmlPath);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showErrorInScrollPane("Terjadi kesalahan saat memuat: " + fxmlPath);
         }
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        //     showErrorInScrollPane("Terjadi kesalahan saat memuat: " + fxmlPath);
+        // }
     }
 
     private void showPlaceholderView(String pageName) {
