@@ -1,7 +1,7 @@
 /* ==== GLOBAL ==== */
 .root {
     -fx-font-family: 'Poppins';
-    -fx-background-color: #F8FAEB;
+    -fx-background-color: linear-gradient(to bottom, #FDFBEC, #F7F5D8);
 }
 
 /* ==== SIDEBAR ==== */
@@ -45,11 +45,9 @@
     -fx-font-weight: bold;
 }
 
-/* ==== SETTINGS & LOGOUT (look like regular menu) ==== */
 .menu-button-icon.logout,
 .menu-button-icon.settings {
     -fx-text-fill: #F8FAE5;
-    -fx-font-weight: bold;
     -fx-background-color: transparent;
 }
 
@@ -65,13 +63,26 @@
     -fx-font-weight: bold;
 }
 
+/* ==== DASHBOARD TITLE ==== */
+.dashboard-title {
+    -fx-font-family: 'Poppins ExtraBold';
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #43766C;
+}
+
+.welcome-subtext {
+    -fx-font-size: 14px;
+    -fx-text-fill: #C28D4B;
+}
+
 /* ==== METRIC CARDS ==== */
 .card {
     -fx-background-color: white;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-padding: 10 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0.1, 0, 2);
     -fx-min-width: 200px;
     -fx-spacing: 5px;
 }
@@ -82,18 +93,50 @@
     -fx-font-size: 13px;
 }
 
+.card-title-brown {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5D4037;
+}
+
 .card-value {
     -fx-text-fill: #333333;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
-/* ==== CHART ==== */
+.card-sub, .card-subtext {
+    -fx-font-size: 11px;
+    -fx-text-fill: #7C9A92;
+}
+
+/* ==== CHARTS ==== */
 .chart-card, .table-card {
     -fx-background-color: white;
     -fx-padding: 15;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0.1, 0, 2);
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-text-fill: #37704C;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Poppins ExtraBold';
+}
+
+/* ==== TABEL ==== */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: #E5E5E5;
+}
+
+.table-column {
+    -fx-font-size: 12px;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #EEF5E6;
 }
 
 /* ==== TASK SECTION ==== */
@@ -103,13 +146,6 @@
     -fx-spacing: 10;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
-}
-
-.section-title {
-    -fx-font-size: 16px;
-    -fx-text-fill: #37704C;
-    -fx-font-weight: bold;
-    -fx-font-family: 'Poppins ExtraBold';
 }
 
 .task-label {
@@ -142,39 +178,7 @@
     -fx-text-fill: white;
 }
 
-.dashboard-title {
-    -fx-font-family: 'Poppins ExtraBold';
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #43766C;
-}
-
-.welcome-subtext {
-    -fx-font-size: 14px;
-    -fx-text-fill: #C28D4B;
-}
-
-.card-subtext {
-    -fx-font-size: 12px;
-    -fx-text-fill: #7C9A92;
-}
-
-.progress-bar .track {
-    -fx-background-color: #E0E0E0;
-    -fx-background-radius: 5;
-}
-
-.progress-bar .bar {
-    -fx-background-color: #43766C;
-    -fx-background-radius: 5;
-}
-
-.main-content {
-    -fx-background-color: #F8FAE5;
-    -fx-padding: 20;
-    -fx-background-radius: 10;
-}
-
+/* ==== STATUS TAG ==== */
 .status-done {
     -fx-background-color: #63B5AF;
     -fx-text-fill: white;
@@ -203,13 +207,7 @@
     -fx-font-weight: bold;
 }
 
-.card-title-brown {
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #5D4037; /* warna coklat earthy */
-}
-
-/* ==== FILTER BUTTONS FOR CHART ==== */
+/* ==== CHART FILTER BUTTONS ==== */
 .chart-filter-button {
     -fx-font-family: 'Poppins';
     -fx-font-size: 12px;
@@ -227,15 +225,32 @@
     -fx-background-color: #DADADA;
 }
 
-/* Jika ingin tombol aktif tampil beda */
 .chart-filter-button:focused {
     -fx-background-color: #B0BEC5;
     -fx-text-fill: white;
 }
 
-.card-sub {
-    -fx-font-size: 11px;
-    -fx-font-family: 'Poppins';
-    -fx-text-fill: #6B6B6B;
+/* ==== PROGRESS BAR ==== */
+.progress-bar .track {
+    -fx-background-color: #E0E0E0;
+    -fx-background-radius: 5;
 }
 
+.progress-bar .bar {
+    -fx-background-color: #43766C;
+    -fx-background-radius: 5;
+}
+
+/* ==== CONTAINER STYLING ==== */
+.laporan-container {
+    -fx-background-color: #FFF8DC;
+}
+
+.scroll-pane {
+    -fx-background: #FCFBEF;
+    -fx-background-color: #FCFBEF;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #FCFBEF;
+}

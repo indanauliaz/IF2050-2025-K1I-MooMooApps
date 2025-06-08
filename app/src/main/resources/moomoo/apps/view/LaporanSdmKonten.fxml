@@ -8,15 +8,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane fitToWidth="true" fitToHeight="true" styleClass="main-background" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.LaporanSdmController">
+<ScrollPane fitToWidth="true" fitToHeight="true"
+            styleClass="laporan-scroll"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="moomoo.apps.controller.LaporanSdmController">
     <content>
-        <VBox spacing="20.0" style="-fx-background-color: #FCFBEF;">
+        <VBox spacing="20.0" styleClass="laporan-background">
             <padding>
                 <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
             </padding>
 
-            <!-- Judul Halaman -->
-            <Label text="Laporan" style="-fx-font-size: 24px; -fx-font-weight: 800; -fx-font-family: 'Poppins'; -fx-text-fill: #8B5E3C;" />
+            <!-- Judul -->
+            <Label text="Laporan"
+                   styleClass="dashboard-title" />
 
             <!-- Statistik Card -->
             <GridPane hgap="20.0" vgap="10.0">
@@ -70,13 +75,14 @@
                         <yAxis><NumberAxis fx:id="kehadiranYAxis" side="LEFT"/></yAxis>
                     </BarChart>
                 </VBox>
-                <VBox prefWidth="350.0" spacing="10.0" style="-fx-background-color: #FFFFFF; -fx-padding: 15; -fx-background-radius: 8;">
-                    <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Distribusi Karyawan per Departemen"/>
+                <VBox prefWidth="350.0" spacing="10.0" styleClass="chart-card">
+                    <Label text="Distribusi Karyawan per Departemen"
+                           styleClass="section-title"/>
                     <PieChart fx:id="distribusiKaryawanChart" animated="false" prefHeight="250.0"/>
                 </VBox>
             </HBox>
 
-            <!-- Tabel -->
+            <!-- Tabel Kinerja -->
             <VBox spacing="10.0" styleClass="table-card">
                 <Label text="Ringkasan Kinerja Karyawan" styleClass="section-title"/>
                 <TableView fx:id="kinerjaTableView" prefHeight="200.0">
