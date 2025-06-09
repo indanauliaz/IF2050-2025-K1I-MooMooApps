@@ -191,7 +191,7 @@ public class LoginController implements Initializable {
                 fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; // FXML untuk manajer
                 break;
             case "pemilik":
-                fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; 
+                fxmlFile = "/moomoo/apps/view/DashboardPemilikView.fxml"; 
                 break;
             default:
                 showAlert(Alert.AlertType.ERROR, "Navigasi Gagal", "Role '" + role + "' tidak dikenal.");

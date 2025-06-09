@@ -8,6 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import moomoo.apps.interfaces.UserAwareController;
+import moomoo.apps.model.UserModel;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -19,10 +22,14 @@ public class DashboardPemilikController {
     
     // FXML untuk header dan tombol sidebar
     @FXML private Label headerTitleLabel;
+    @FXML private Label userNameLabel;
+    @FXML private Label userRoleLabel;
     @FXML private Button dashboardButton;
     @FXML private Button laporanButton;
     @FXML private Button keuanganButton;
     @FXML private Button tugasButton;
+
+    private UserModel currentUser;
 
     /**
      * Method initialize() akan otomatis dipanggil oleh JavaFX saat FXML dimuat.
@@ -30,8 +37,21 @@ public class DashboardPemilikController {
      */
     @FXML 
     public void initialize() {
-        // Secara default, muat halaman tugas saat pertama kali dibuka
-        handleTugasMenuClick(null);
+        javafx.application.Platform.runLater(() -> {
+            handleDashboardMenuClick(null);
+        });
+    }
+
+    public void initData(UserModel user) {
+        this.currentUser = user;
+        updateUserInfo();
+    }
+    
+    private void updateUserInfo() {
+        if (currentUser != null) {
+            userNameLabel.setText(currentUser.getUsername());
+            userRoleLabel.setText(currentUser.getRole());
+        }
     }
 
     /**
@@ -65,7 +85,7 @@ public class DashboardPemilikController {
     void handleLaporanMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Laporan");
         // Menampilkan konten placeholder
-        mainContentPane.setCenter(new VBox(new Label("Konten Laporan Pemilik akan Tampil di Sini")));
+        loadPage("/moomoo/apps/view/LaporanPemilikView.fxml");
         setActiveButton(laporanButton);
     }
 
@@ -76,7 +96,7 @@ public class DashboardPemilikController {
     void handleKeuanganMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Keuangan");
         // Menampilkan konten placeholder
-        mainContentPane.setCenter(new VBox(new Label("Konten Keuangan Pemilik akan Tampil di Sini")));
+        loadPage("/moomoo/apps/view/KeuanganPemilikView.fxml"); 
         setActiveButton(keuanganButton);
     }
 
@@ -88,16 +108,29 @@ public class DashboardPemilikController {
         try {
             URL resourceUrl = getClass().getResource(fxmlPath);
             if (resourceUrl == null) {
-                System.err.println("Error: Tidak dapat menemukan file FXML di -> " + fxmlPath);
-                mainContentPane.setCenter(new VBox(new Label("Error: File " + fxmlPath + " tidak ditemukan.")));
+                showErrorPage("Error: Tidak dapat menemukan file FXML di -> " + fxmlPath);
                 return;
             }
-            Node page = FXMLLoader.load(resourceUrl);
+            
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            Node page = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof UserAwareController) {
+                ((UserAwareController) controller).initData(currentUser);
+            }
+
             mainContentPane.setCenter(page);
         } catch (IOException e) {
             e.printStackTrace();
-            mainContentPane.setCenter(new VBox(new Label("Error memuat halaman. Cek konsol untuk detail.")));
+            showErrorPage("Error memuat halaman: " + fxmlPath + ". Cek konsol untuk detail.");
         }
+    }
+
+    private void showErrorPage(String message) {
+        VBox errorBox = new VBox(new Label(message));
+        errorBox.setStyle("-fx-alignment: center; -fx-font-size: 16px; -fx-text-fill: red;");
+        mainContentPane.setCenter(errorBox);
     }
     
     /**

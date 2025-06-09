@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="20.0" stylesheets="@moomoo_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.KeuanganPemilikController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <Label styleClass="content-title" text="Laporan Keuangan" />
+      <TabPane fx:id="keuanganTabPane" VBox.vgrow="ALWAYS">
+         <tabs>
+            <Tab closable="false" text="Pemasukan">
+               <content>
+                  <TableView fx:id="tabelPemasukan">
+                     <columns>
+                        <TableColumn fx:id="kolomDeskripsiPemasukan" prefWidth="250.0" text="Deskripsi" />
+                        <TableColumn fx:id="kolomKategoriPemasukan" prefWidth="150.0" text="Kategori" />
+                        <TableColumn fx:id="kolomTanggalPemasukan" prefWidth="120.0" text="Tanggal" />
+                        <TableColumn fx:id="kolomJumlahPemasukan" prefWidth="150.0" text="Jumlah (Rp)" />
+                        <TableColumn fx:id="kolomMetodePemasukan" prefWidth="120.0" text="Metode" />
+                        <TableColumn fx:id="kolomCatatanPemasukan" prefWidth="250.0" text="Catatan" />
+                     </columns>
+                  </TableView>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Pengeluaran">
+               <content>
+                  <TableView fx:id="tabelPengeluaran">
+                     <columns>
+                        <TableColumn fx:id="kolomDeskripsiPengeluaran" prefWidth="250.0" text="Deskripsi" />
+                        <TableColumn fx:id="kolomKategoriPengeluaran" prefWidth="150.0" text="Kategori" />
+                        <TableColumn fx:id="kolomTanggalPengeluaran" prefWidth="120.0" text="Tanggal" />
+                        <TableColumn fx:id="kolomJumlahPengeluaran" prefWidth="150.0" text="Jumlah (Rp)" />
+                        <TableColumn fx:id="kolomMetodePengeluaran" prefWidth="120.0" text="Metode" />
+                        <TableColumn fx:id="kolomCatatanPengeluaran" prefWidth="250.0" text="Catatan" />
+                     </columns>
+                  </TableView>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Penggajian">
+               <content>
+                  <TableView fx:id="tabelPenggajian">
+                     <columns>
+                        <TableColumn fx:id="kolomDeskripsiGaji" prefWidth="250.0" text="Deskripsi" />
+                        <TableColumn fx:id="kolomKategoriGaji" prefWidth="150.0" text="Kategori" />
+                        <TableColumn fx:id="kolomTanggalGaji" prefWidth="120.0" text="Tanggal" />
+                        <TableColumn fx:id="kolomJumlahGaji" prefWidth="150.0" text="Jumlah (Rp)" />
+                        <TableColumn fx:id="kolomMetodeGaji" prefWidth="120.0" text="Metode" />
+                        <TableColumn fx:id="kolomCatatanGaji" prefWidth="250.0" text="Catatan" />
+                     </columns>
+                  </TableView>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</VBox>
