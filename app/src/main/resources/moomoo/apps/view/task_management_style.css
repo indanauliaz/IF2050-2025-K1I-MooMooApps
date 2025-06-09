@@ -1,198 +1,238 @@
-/* task-management-styles.css */
+@font-face {
+    font-family: "Poppins Regular";
+    src: url("/fonts/Poppins-Regular.ttf");
+}
+@font-face {
+    font-family: "Poppins Medium";
+    src: url("/fonts/Poppins-Medium.ttf");
+}
+@font-face {
+    font-family: "Poppins ExtraBold";
+    src: url("/fonts/Poppins-ExtraBold.ttf");
+}
+
+/* === MAIN LAYOUT === */
 .main-content-area {
-    -fx-background-color: #FAF8F0; /* Background cream */
-    -fx-font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    -fx-background-color: #F8FAE5;
+    -fx-font-family: "Poppins Regular", sans-serif;
+    -fx-padding: 30px;
 }
 
+/* === JUDUL & SUBJUDUL === */
 .view-title {
-    -fx-font-size: 24px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
-    -fx-text-fill: #3F3F3F; /* text-dark-gray */
+    -fx-font-family: "Poppins ExtraBold";
+    -fx-text-fill: #43766C;
 }
-
 .view-subtitle {
     -fx-font-size: 14px;
-    -fx-text-fill: #5D6976; /* text-medium-gray */
+    -fx-font-family: "Poppins Medium";
+    -fx-text-fill: #B19470;
 }
 
+/* === FILTER BAR === */
 .filter-bar {
-    -fx-padding: 10px 0;
+    -fx-padding: 10 10 0 10;
 }
 .filter-bar Label {
     -fx-font-size: 13px;
     -fx-text-fill: #5D6976;
 }
-.filter-bar DatePicker, .filter-bar Button {
-    -fx-pref-height: 30px;
-    -fx-font-size: 12px;
-}
-.filter-bar Button {
-    -fx-background-color: #E0E0E0;
-    -fx-text-fill: #333;
-}
-.filter-bar Button:hover {
-    -fx-background-color: #D0D0D0;
-}
 
-
-.task-board-container {
-    /* Bisa ditambahkan background jika perlu */
-}
-
-.task-column {
-    -fx-background-color: #F0F2F5; /* Warna latar kolom yang sedikit berbeda */
-    -fx-padding: 10px;
-    -fx-background-radius: 8px;
-    -fx-min-width: 250px; /* Lebar minimum untuk setiap kolom */
-}
-
-.task-column-header {
-    -fx-padding: 0 0 10px 0;
-    -fx-spacing: 8px;
-}
-
-.column-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: 600; /* semi-bold */
-    -fx-text-fill: #3F3F3F;
-}
-
-.task-count-badge {
-    -fx-background-color: #D0D5DD; /* input-border-color */
-    -fx-text-fill: #3F3F3F;
-    -fx-font-size: 11px;
-    -fx-padding: 2px 6px;
-    -fx-background-radius: 8px;
+/* === BUTTON STYLE === */
+.tab-button {
+    -fx-background-color: #E5F0ED;
+    -fx-text-fill: #43766C;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 6px 14px;
+    -fx-font-family: "Poppins Medium";
 }
-
-
-.task-list-scrollpane {
-    -fx-background-color: transparent; /* Hapus background default scrollpane */
+.tab-button:hover {
+    -fx-background-color: #D4E8E4;
 }
-.task-list-scrollpane .viewport {
-     -fx-background-color: transparent;
-}
-
-
-.task-list {
-    /* -fx-background-color: #F0F2F5; */ /* Sudah di parent VBox task-column */
-}
-
-/* --- Styling untuk Kartu Tugas (Task Card) --- */
-.task-card {
-    -fx-background-color: #FFFFFF;
-    -fx-padding: 12px;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 5, 0, 0, 2);
-}
-
-.task-card-header {
-    -fx-alignment: center-left;
-    -fx-spacing: 8px;
-}
-
-.task-name {
-    -fx-font-size: 14px;
-    -fx-font-weight: 600; /* semi-bold */
-    -fx-text-fill: #3F3F3F;
-}
-
-.task-priority-badge {
-    -fx-font-size: 10px;
-    -fx-padding: 2px 6px;
-    -fx-background-radius: 4px;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-.task-priority-tinggi {
-    -fx-background-color: #E53E3E; /* Merah */
-}
-.task-priority-normal {
-    -fx-background-color: #ECC94B; /* Kuning */
-    -fx-text-fill: #4A5568; /* Teks lebih gelap untuk kontras */
-}
-.task-priority-rendah {
-    -fx-background-color: #48BB78; /* Hijau */
-}
-
-.task-description {
-    -fx-font-size: 12px;
-    -fx-text-fill: #5D6976;
-    -fx-wrap-text: true;
-}
-
-.task-footer {
-    -fx-padding: 8px 0 0 0;
-    -fx-alignment: center-left;
-    -fx-spacing: 8px;
-}
-
-.task-time, .task-assigned-to {
-    -fx-font-size: 11px;
-    -fx-text-fill: #788490; /* text-light-gray */
-}
-
-.task-actions Button {
-    -fx-background-color: #E9ECEF; /* Warna tombol aksi yang netral */
-    -fx-text-fill: #495057;
-    -fx-font-size: 11px;
-    -fx-padding: 4px 8px;
-    -fx-pref-height: 26px;
-}
-.task-actions Button:hover {
-    -fx-background-color: #DEE2E6;
-}
-.task-actions .button-selesai {
-    -fx-background-color: #28a745; /* Hijau */
+.tab-button:focused {
+    -fx-background-color: #43766C;
     -fx-text-fill: white;
 }
-.task-actions .button-selesai:hover {
-    -fx-background-color: #218838;
-}
-
-.task-card-done {
-    -fx-opacity: 0.7; /* Atau ubah background */
-    /* -fx-border-color: #48BB78;
-    -fx-border-width: 0 0 0 4px;  Garis hijau di kiri sebagai tanda selesai */
-}
-.task-card-done .task-name {
-    -fx-strikethrough: true;
-}
-.task-status-icon {
-    -fx-fill: #48BB78; /* Warna ikon centang */
-}
-
-
-/* Tombol Tambah Tugas Baru */
 .button-accent {
-    -fx-background-color: #4A7C7A; /* primary-green */
+    -fx-background-color: #43766C;
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-pref-height: 38px;
-    -fx-padding: 0 15px;
+    -fx-font-family: "Poppins Medium";
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 10px;
 }
 .button-accent:hover {
-    -fx-background-color: derive(#4A7C7A, -10%);
+    -fx-background-color: derive(#43766C, -10%);
 }
 
-/* Styling untuk Dialog Tambah/Edit Tugas */
-.dialog-pane .label {
-    -fx-font-size: 13px;
-    -fx-padding-bottom: 3px;
+/* === KANBAN BOARD === */
+.task-board-container {
+    -fx-padding: 20 10 30 10;
 }
-.dialog-pane .text-field,
-.dialog-pane .text-area,
-.dialog-pane .date-picker,
-.dialog-pane .combo-box {
-    -fx-pref-height: 35px;
-    -fx-font-size: 13px;
-    -fx-min-width: 250px; /* Agar input field di dialog tidak terlalu kecil */
+.task-column {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 20;
+    -fx-background-radius: 20px;
+    -fx-spacing: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);
 }
-.dialog-pane .text-area {
-    -fx-pref-height: 80px; /* Untuk deskripsi yang lebih panjang */
-    -fx-wrap-text: true;
+.task-column-header {
+    -fx-spacing: 8px;
+    -fx-padding: 0 0 10 0;
+}
+.column-title {
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 16px;
+    -fx-text-fill: #1E1E1E;
+}
+.task-count-badge {
+    -fx-background-color: #B59B7E;
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 8px;
+    -fx-font-family: "Poppins Medium";
+}
+
+/* === TASK LIST SCROLL === */
+.task-list-scrollpane {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+.task-list-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* === TAB PANE BEAUTY FIX === */
+.tab-pane {
+    -fx-padding: 10;
+    -fx-tab-min-width: 100px;
+    -fx-tab-max-width: 200px;
+    -fx-tab-min-height: 36px;
+    -fx-background-color: transparent;
+}
+.tab-pane .tab-header-area {
+    -fx-background-color: transparent;
+    -fx-padding: 10 0 10 0;
+}
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #D0D5DD transparent;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Poppins Medium";
+    -fx-text-fill: #43766C;
+    -fx-padding: 6px 16px;
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-style: solid;
+}
+.tab-pane .tab:selected {
+    -fx-background-color: #43766C;
+    -fx-text-fill: white;
+    -fx-border-color: transparent transparent #43766C transparent;
+}
+.tab-pane .tab-label {
+    -fx-text-fill: inherit;
+}
+
+/* === TASK CARD STYLING === */
+.task-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 5, 0, 0, 1);
+}
+
+/* === TASK CARD TEXTS === */
+.task-name {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Poppins Medium";
+    -fx-text-fill: #333;
+}
+.task-description {
+    -fx-font-size: 12px;
+    -fx-font-family: "Poppins Regular";
+    -fx-text-fill: #666;
+}
+.task-time {
+    -fx-font-size: 11px;
+    -fx-text-fill: #888;
+}
+.task-assigned-to {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Poppins Medium";
+    -fx-text-fill: #555;
+}
+
+/* === PRIORITAS BADGE === */
+.task-priority-badge {
+    -fx-font-size: 11px;
+    -fx-font-family: "Poppins Medium";
+    -fx-text-fill: white;
+    -fx-padding: 2 6;
+    -fx-background-radius: 5px;
+}
+.task-priority-tinggi { -fx-background-color: #EF5350; }
+.task-priority-normal { -fx-background-color: #FFB74D; -fx-text-fill: #333; }
+.task-priority-rendah { -fx-background-color: #81C784; }
+
+/* === STATUS CLASS EFFECT (opsional visual tambahan) === */
+.status-akan-dilakukan {}
+.status-sedang-dikerjakan {}
+.status-selesai { -fx-opacity: 0.7; }
+
+/* === BUTTONS DI TASK CARD === */
+.button-link-small {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #43766C;
+    -fx-font-size: 11px;
+    -fx-font-family: "Poppins Medium";
+}
+.button-outline-small {
+    -fx-background-color: transparent;
+    -fx-border-color: #43766C;
+    -fx-text-fill: #43766C;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-font-family: "Poppins Medium";
+}
+.button-outline-small:hover {
+    -fx-background-color: #E5F0ED;
+}
+.button-selesai {
+    -fx-background-color: #43766C;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-padding: 4 10;
+    -fx-font-family: "Poppins Medium";
+    -fx-background-radius: 6;
+}
+.button-selesai:hover {
+    -fx-background-color: derive(#43766C, -10%);
+}
+.dialog-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: "Poppins Regular";
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 15;
+}
+
+.custom-dialog .label {
+    -fx-text-fill: #3F3F3F;
+    -fx-font-size: 13px;
+    -fx-font-family: "Poppins Regular";
 }

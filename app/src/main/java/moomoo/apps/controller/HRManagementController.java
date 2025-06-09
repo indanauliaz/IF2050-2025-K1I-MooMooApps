@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
@@ -28,6 +29,8 @@ import moomoo.apps.model.EmployeeModel;
 import moomoo.apps.model.TaskModel;
 import moomoo.apps.utils.DatabaseManager;
 import moomoo.apps.model.AttendanceRecordModel; // Model baru
+import java.net.URL;
+
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -396,10 +399,52 @@ public class HRManagementController {
     }
     
     public void showPlaceholderDialog(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setHeaderText(null);
+
+        // Label konten
+        Label label = new Label(content);
+        label.setWrapText(true);
+        label.setStyle(
+            "-fx-font-family: 'Poppins Regular';" +
+            "-fx-font-size: 13px;" +
+            "-fx-text-fill: #3F3F3F;"
+        );
+
+        VBox contentBox = new VBox(label);
+        contentBox.setSpacing(10);
+        contentBox.setStyle(
+            "-fx-background-color: #F8FAE5;" +    // warna kuning seperti desain
+            "-fx-padding: 20;" +
+            "-fx-border-radius: 10;" +
+            "-fx-background-radius: 10;"
+        );
+
+        dialog.getDialogPane().setContent(contentBox);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setText("Oke");
+        okButton.setStyle(
+            "-fx-background-color: #43766C;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-family: 'Poppins Medium';" +
+            "-fx-font-size: 13px;" +
+            "-fx-padding: 6 16;" +
+            "-fx-background-radius: 8;" +
+            "-fx-cursor: hand;"
+        );
+
+        // Style keseluruhan dialog
+        dialog.getDialogPane().setStyle(
+            "-fx-background-color: #F8FAE5;" +  // latar kuning
+            "-fx-border-color: transparent;" +
+            "-fx-background-radius: 10;"
+        );
+
+        dialog.showAndWait();
     }
+
 }

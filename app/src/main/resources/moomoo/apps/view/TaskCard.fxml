@@ -1,35 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<VBox fx:id="rootTaskCardVBox" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<VBox fx:id="rootTaskCardVBox" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="moomoo.apps.controller.TaskCardController"
-      spacing="8.0" style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #E0E0E0; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 5, 0, 0, 1);"
+      spacing="10"
+      stylesheets="@task_management_style.css"
+      styleClass="task-card"
       maxWidth="Infinity">
 
-    <!-- ... sisa konten FXML sama seperti sebelumnya ... -->
-    <HBox alignment="CENTER_LEFT" spacing="8.0">
-        <Label fx:id="namaTugasLabel" text="Nama Tugas Placeholder" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;" wrapText="true" HBox.hgrow="ALWAYS"/>
-        <Label fx:id="prioritasLabel" text="Normal" style="-fx-font-size: 11px; -fx-padding: 2 5; -fx-background-radius: 3;"/>
-        <Circle fx:id="prioritasIndicator" radius="6.0" />
+    <!-- HEADER: Nama + Prioritas -->
+    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="task-card-header">
+        <Label fx:id="namaTugasLabel"
+               text="Nama Tugas Placeholder"
+               wrapText="true"
+               styleClass="task-name"
+               HBox.hgrow="ALWAYS" />
+        <Label fx:id="prioritasLabel"
+               text="Normal"
+               styleClass="task-priority-badge task-priority-normal" />
+        <Circle fx:id="prioritasIndicator"
+                radius="6" />
     </HBox>
 
-    <Label fx:id="deskripsiLabel" text="Deskripsi singkat tugas akan muncul di sini..." style="-fx-font-size: 12px; -fx-text-fill: #666;" wrapText="true" />
+    <!-- DESKRIPSI -->
+    <Label fx:id="deskripsiLabel"
+           text="Deskripsi singkat tugas akan muncul di sini..."
+           styleClass="task-description"
+           wrapText="true" />
 
-    <HBox alignment="CENTER_LEFT" spacing="5.0">
-        <Label text="Untuk:" style="-fx-font-size: 11px; -fx-text-fill: #888;"/>
-        <Label fx:id="ditugaskanKeLabel" text="Belum Ditugaskan" style="-fx-font-size: 11px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+    <!-- DITUGASKAN KE -->
+    <HBox alignment="CENTER_LEFT" spacing="5" styleClass="task-footer">
+        <Label text="Untuk:" styleClass="task-time"/>
+        <Label fx:id="ditugaskanKeLabel"
+               text="Belum Ditugaskan"
+               styleClass="task-assigned-to"/>
     </HBox>
 
-    <HBox spacing="8.0" alignment="CENTER_RIGHT" style="-fx-padding: 5 0 0 0;">
-        <Button fx:id="detailButton" text="Detail" onAction="#handleDetailTugas" styleClass="button-link-small"/>
-        <Button fx:id="tundaButton" text="Tunda" onAction="#handleTundaTugas" styleClass="button-outline-small"/>
-        <Button fx:id="selesaikanButton" text="Selesaikan" onAction="#handleSelesaikanTugas" styleClass="button-primary-small"/>
+    <!-- ACTIONS -->
+    <HBox spacing="8" alignment="CENTER_RIGHT" styleClass="task-actions">
+        <Button fx:id="detailButton"
+                text="Detail"
+                onAction="#handleDetailTugas"
+                styleClass="button-link-small"/>
+        <Button fx:id="tundaButton"
+                text="Tunda"
+                onAction="#handleTundaTugas"
+                styleClass="button-outline-small"/>
+        <Button fx:id="selesaikanButton"
+                text="Selesaikan"
+                onAction="#handleSelesaikanTugas"
+                styleClass="button-selesai"/>
     </HBox>
+
 </VBox>
