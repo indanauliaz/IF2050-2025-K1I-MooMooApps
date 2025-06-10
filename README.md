@@ -16,8 +16,35 @@ Moo Moo Apps bertujuan untuk meningkatkan efisiensi kerja, koordinasi tim, serta
 
 ## Daftar Modul
 | Nama Modul | Pembagian Tugas | Tampilan Layar |
-| --- | --- | --- |
-| ... | ... | ... |
-| ... | ... | ... |
+| Tampilan autentikasi | --- | --- |
+| Login | ... | ... |
+| Register | ... | ... |
+| Verifikasi | ... | ... |
+| Tampilan dashboard untuk pemilik | ... | ... |
+| Tampilan laporan untuk pemilik | ... | ... |
+| Tampilan keuangan untuk pemilik | ... | ... |
+| Tampilan pengawasan tugas untuk pemilik | ... | ... |
+| Tampilan dashboard manager | ... | ... |
+| Tampilan laporan produksi | ... | ... |
+| Tampilan laporan keuangan | ... | ... |
+| Tampilan laporan SDM | ... | ... |
+| Menambah catatan produksi | ... | ... |
+| Menampilkan catatan produksi | ... | ... |
+| Mengedit catatan produksi | ... | ... |
+| Menghapus catatan produksi | ... | ... |
+| Menampilkan manajemen keuangan | ... | ... |
+| Menambahkan catatan keuangan | ... | ... |
+| Mengedit catatan keuangan | ... | ... |
+| Menghapus catatan keuangan | ... | ... |
+| Menampilkan laporan penggajian | ... | ... |
+| Menambahkan data laporan penggajian | ... | ... |
+| Menampilkan daftar tugas | ... | ... |
+| Menambahkan tugas | ... | ... |
+| Mengedit tugas | ... | ... |
+| Menghapus tugas | ... | ... |
+| Memulai tugas | ... | ... |
+| Menunda tugas | ... | ... |
+| Menyelesaikan tugas | ... | ... |
+| Logout | ... | ... |
 
 ## Daftar Basis Data
