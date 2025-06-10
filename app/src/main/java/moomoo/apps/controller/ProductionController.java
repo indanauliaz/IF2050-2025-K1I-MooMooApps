@@ -14,6 +14,7 @@ import moomoo.apps.interfaces.UserAwareController;
 import moomoo.apps.model.ProductionModel; 
 import moomoo.apps.model.ProductionRecord;
 import moomoo.apps.model.UserModel;
+import moomoo.apps.utils.ValidationUtils; // <-- IMPORT KELAS VALIDASI
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 public class ProductionController implements UserAwareController {
 
-
+    // ... (Deklarasi FXML tetap sama) ...
     @FXML private ComboBox<String> kategoriComboBox;
     @FXML private DatePicker tanggalPicker;
     @FXML private TextField jumlahField;
@@ -54,10 +55,9 @@ public class ProductionController implements UserAwareController {
 
     private UserModel currentUser;
     private ProductionRecord currentEditingRecord = null;
-
+    
     @FXML
     public void initialize() {
-        // 1. Dapatkan instance ProductionModel yang sama dengan laporan
         this.productionModel = ProductionModel.getInstance();
 
         kategoriComboBox.setItems(FXCollections.observableArrayList(kategoriOptions));
@@ -79,6 +79,62 @@ public class ProductionController implements UserAwareController {
         this.currentUser = user;
     }
 
+    private void handleCommonSaveLogic() {
+        String kategori = kategoriComboBox.getValue();
+        LocalDate tanggal = tanggalPicker.getValue();
+        String jumlahStr = jumlahField.getText();
+        String satuan = satuanComboBox.getValue();
+        String lokasi = lokasiComboBox.getValue();
+        String kualitas = kualitasComboBox.getValue();
+        String catatan = catatanField.getText();
+
+        // ** PERUBAHAN UTAMA: Memanggil metode validasi terpusat **
+        if (!ValidationUtils.validateProductionInput(kategori, tanggal, jumlahStr, satuan, lokasi, kualitas)) {
+            showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Harap isi semua kolom wajib dengan format yang benar. Jumlah harus berupa angka positif.");
+            return;
+        }
+
+        double jumlah = Double.parseDouble(jumlahStr.replace(",", "."));
+
+        if (currentEditingRecord != null) {
+            // Logic untuk UPDATE
+            currentEditingRecord.setKategori(kategori);
+            currentEditingRecord.setTanggal(tanggal);
+            currentEditingRecord.setJumlah(jumlah);
+            currentEditingRecord.setSatuan(satuan);
+            currentEditingRecord.setLokasi(lokasi);
+            currentEditingRecord.setKualitas(kualitas);
+            currentEditingRecord.setCatatan(catatan);
+
+            if (productionModel.updateRecordInDB(currentEditingRecord)) {
+                clearFormAndResetEditMode();
+                showAlert(Alert.AlertType.INFORMATION, "Sukses", "Catatan produksi berhasil diperbarui.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal memperbarui catatan produksi di database.");
+            }
+        } else {
+            // Logic untuk INSERT
+            ProductionRecord newRecord = new ProductionRecord(kategori, jumlah, satuan, tanggal, lokasi, kualitas, catatan);
+            if (productionModel.saveRecordToDB(newRecord)) {
+                clearForm();
+                showAlert(Alert.AlertType.INFORMATION, "Sukses", "Catatan produksi berhasil ditambahkan.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal menyimpan catatan produksi ke database.");
+            }
+        }
+    }
+    
+    @FXML
+    private void handleTambahCatatan(ActionEvent event) {
+        handleCommonSaveLogic();
+    }
+    
+    // Metode handleUpdateCatatan sekarang digabung ke dalam handleCommonSaveLogic
+    // private void handleUpdateCatatan() { ... }
+
+    // Metode validateInput dan parseJumlah dihapus dari sini
+
+    // ... Sisa dari file ProductionController.java tetap sama ...
     private void setupTableColumns() {
         kategoriCol.setCellValueFactory(new PropertyValueFactory<>("kategori"));
         jumlahCol.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getJumlahDenganSatuan()));
@@ -104,7 +160,6 @@ public class ProductionController implements UserAwareController {
     }
 
     private void updateTablePage(int pageIndex) {
-        // Menggunakan data dari productionModel
         ObservableList<ProductionRecord> allData = productionModel.getAllProductionData();
         int fromIndex = pageIndex * ITEMS_PER_PAGE;
         int toIndex = Math.min(fromIndex + ITEMS_PER_PAGE, allData.size());
@@ -114,65 +169,6 @@ public class ProductionController implements UserAwareController {
             currentPageDataList.setAll(allData.subList(fromIndex, toIndex));
         }
         productionTableView.setItems(currentPageDataList);
-    }
-
-    @FXML
-    private void handleTambahCatatan(ActionEvent event) {
-        if (currentEditingRecord != null) {
-            handleUpdateCatatan();
-            return;
-        }
-
-        String kategori = kategoriComboBox.getValue();
-        LocalDate tanggal = tanggalPicker.getValue();
-        String jumlahStr = jumlahField.getText();
-        String satuan = satuanComboBox.getValue();
-        String lokasi = lokasiComboBox.getValue();
-        String kualitas = kualitasComboBox.getValue();
-        String catatan = catatanField.getText();
-
-        if (!validateInput(kategori, tanggal, jumlahStr, satuan, lokasi, kualitas)) return;
-        double jumlah = parseJumlah(jumlahStr);
-        if (jumlah < 0) return;
-
-        ProductionRecord newRecord = new ProductionRecord(kategori, jumlah, satuan, tanggal, lokasi, kualitas, catatan);
-
-        if (productionModel.saveRecordToDB(newRecord)) {
-            clearForm();
-            showAlert(Alert.AlertType.INFORMATION, "Sukses", "Catatan produksi berhasil ditambahkan.");
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal menyimpan catatan produksi ke database.");
-        }
-    }
-    
-    private void handleUpdateCatatan() {
-        if (currentEditingRecord == null) return;
-        
-        String kategori = kategoriComboBox.getValue();
-        LocalDate tanggal = tanggalPicker.getValue();
-        String jumlahStr = jumlahField.getText();
-        String satuan = satuanComboBox.getValue();
-        String lokasi = lokasiComboBox.getValue();
-        String kualitas = kualitasComboBox.getValue();
-        String catatan = catatanField.getText();
-        if (!validateInput(kategori, tanggal, jumlahStr, satuan, lokasi, kualitas)) return;
-        double jumlah = parseJumlah(jumlahStr);
-        if (jumlah < 0) return;
-
-        currentEditingRecord.setKategori(kategori);
-        currentEditingRecord.setTanggal(tanggal);
-        currentEditingRecord.setJumlah(jumlah);
-        currentEditingRecord.setSatuan(satuan);
-        currentEditingRecord.setLokasi(lokasi);
-        currentEditingRecord.setKualitas(kualitas);
-        currentEditingRecord.setCatatan(catatan);
-
-        if (productionModel.updateRecordInDB(currentEditingRecord)) {
-            clearFormAndResetEditMode();
-            showAlert(Alert.AlertType.INFORMATION, "Sukses", "Catatan produksi berhasil diperbarui.");
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal memperbarui catatan produksi di database.");
-        }
     }
 
     private void handleDeleteCatatan(ProductionRecord record) {
@@ -252,27 +248,6 @@ public class ProductionController implements UserAwareController {
         tambahCatatanButton.setText("Update Catatan");
     }
     
-    private boolean validateInput(String kategori, LocalDate tanggal, String jumlahStr, String satuan, String lokasi, String kualitas) {
-        if (kategori == null || kategori.trim().isEmpty()) { showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Kategori produksi harus dipilih."); return false; }
-        if (tanggal == null) { showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Tanggal harus diisi."); return false; }
-        if (jumlahStr.trim().isEmpty()) { showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Jumlah harus diisi."); return false; }
-        if (satuan == null || satuan.trim().isEmpty()) { showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Satuan untuk jumlah harus dipilih."); return false; }
-        if (lokasi == null || lokasi.trim().isEmpty()) { showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Lokasi harus dipilih."); return false; }
-        if (kualitas == null || kualitas.trim().isEmpty()) { showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Kualitas harus dipilih."); return false; }
-        return true;
-    }
-
-    private double parseJumlah(String jumlahStr) {
-        try {
-            double jumlah = Double.parseDouble(jumlahStr.replace(",","."));
-            if (jumlah <= 0) throw new NumberFormatException("Jumlah harus positif.");
-            return jumlah;
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Input Salah", "Jumlah harus berupa angka positif yang valid.");
-            return -1;
-        }
-    }
-    
     private void clearForm() {
         kategoriComboBox.getSelectionModel().clearSelection();
         tanggalPicker.setValue(LocalDate.now());
@@ -297,5 +272,4 @@ public class ProductionController implements UserAwareController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    //</editor-fold>
 }

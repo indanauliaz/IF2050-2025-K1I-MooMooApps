@@ -1,4 +1,3 @@
-// TransactionTabManager.java
 package moomoo.apps.controller;
 
 import javafx.collections.ObservableList;
@@ -119,14 +118,12 @@ public class TransactionTabManager {
         String kategori = kategoriBox.getValue();
         String catatan = catatanField.getText();
 
-        if (mainController.validateInput(deskripsi, tanggal, jumlahStr, metode, kategori)) {
-            double jumlah = Double.parseDouble(jumlahStr.replace(",", ".")); // Handle potential commas
-            int userIdToSave = (mainController.getCurrentUser() != null) ? mainController.getCurrentUser().getId() : 0;
-            TransactionModel newTransaction = new TransactionModel(
-                    transactionType, deskripsi, jumlah, kategori, tanggal, metode, catatan, userIdToSave);
-            mainController.saveTransactionToDB(newTransaction, transactionList);
-            clearForm();
-        }
+        double jumlah = Double.parseDouble(jumlahStr.replace(",", ".")); 
+        int userIdToSave = (mainController.getCurrentUser() != null) ? mainController.getCurrentUser().getId() : 0;
+        TransactionModel newTransaction = new TransactionModel(
+                transactionType, deskripsi, jumlah, kategori, tanggal, metode, catatan, userIdToSave);
+        mainController.saveTransactionToDB(newTransaction, transactionList);
+        clearForm();
     }
 
     public void clearForm() {
@@ -141,7 +138,7 @@ public class TransactionTabManager {
     public void populateFormForEdit(TransactionModel transaction) {
         deskripsiField.setText(transaction.getDescription());
         tanggalPicker.setValue(transaction.getDate());
-        jumlahField.setText(String.valueOf(transaction.getAmount()).replace(".", ",")); // Format for display
+        jumlahField.setText(String.valueOf(transaction.getAmount()).replace(".", ",")); 
         metodePembayaranBox.setValue(transaction.getPaymentMethod());
         kategoriBox.setValue(transaction.getCategory());
         catatanField.setText(transaction.getNotes());

@@ -17,13 +17,13 @@ import javafx.util.StringConverter;
 import moomoo.apps.model.EmployeeModel;
 import moomoo.apps.model.TaskModel;
 import moomoo.apps.utils.DatabaseManager;
+import moomoo.apps.utils.ValidationUtils;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class TambahTugasController implements Initializable {
@@ -77,50 +77,28 @@ public class TambahTugasController implements Initializable {
 
     @FXML
     private void handleSimpan(ActionEvent event) {
-        // Validasi Input
-        if (namaTugasField.getText() == null || namaTugasField.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Nama tugas tidak boleh kosong!");
-            return;
-        }
-        if (tanggalPicker.getValue() == null) {
-            showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Tanggal tidak boleh kosong!");
-            return;
-        }
-        if (karyawanComboBox.getSelectionModel().getSelectedItem() == null) {
-            showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Anda harus memilih penanggung jawab!");
-            return;
-        }
-
-        // Mengambil data dari form
         String namaTugas = namaTugasField.getText();
-        String deskripsi = deskripsiArea.getText();
-        EmployeeModel selectedEmployee = karyawanComboBox.getSelectionModel().getSelectedItem();
         LocalDate tanggal = tanggalPicker.getValue();
+        EmployeeModel selectedEmployee = karyawanComboBox.getSelectionModel().getSelectedItem();
         String waktuStr = waktuField.getText();
+
+        if (!ValidationUtils.validateNewTaskInput(namaTugas, tanggal, selectedEmployee, waktuStr)) {
+            showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Harap isi semua kolom wajib (Nama Tugas, Karyawan, Tanggal) dan pastikan format waktu adalah HH:MM jika diisi.");
+            return;
+        }
+        String deskripsi = deskripsiArea.getText();
         String prioritas = prioritasComboBox.getValue();
         String status = statusComboBox.getValue();
-
-        LocalTime waktu = null;
-        if (waktuStr != null && !waktuStr.trim().isEmpty()) {
-            try {
-                waktu = LocalTime.parse(waktuStr, TIME_FORMATTER);
-            } catch (DateTimeParseException e) {
-                showAlert(Alert.AlertType.ERROR, "Format Waktu Salah", "Gunakan format HH:MM (Contoh: 07:30)");
-                return;
-            }
-        }
+        LocalTime waktu = (waktuStr != null && !waktuStr.isEmpty()) ? LocalTime.parse(waktuStr, TIME_FORMATTER) : null;
         
         Integer employeeId = selectedEmployee.getId();
         String namaKaryawan = selectedEmployee.getNamaLengkap();
         String departemenKaryawan = selectedEmployee.getDepartemen();
 
-        // Membuat objek TaskModel dengan konstruktor yang benar
         this.newTask = new TaskModel(0, namaTugas, deskripsi, employeeId, namaKaryawan, departemenKaryawan, tanggal, waktu, prioritas, status, null);
         
-        // Menyimpan ke database
         if (DatabaseManager.insertTask(this.newTask)) {
-            this.isSaved = true; // Tandai bahwa data berhasil disimpan
-            // Tidak perlu menampilkan alert di sini, biarkan HRManagementController yang memberi notifikasi jika perlu
+            this.isSaved = true;
             closeStage(event);
         } else {
             showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal menyimpan tugas ke database.");

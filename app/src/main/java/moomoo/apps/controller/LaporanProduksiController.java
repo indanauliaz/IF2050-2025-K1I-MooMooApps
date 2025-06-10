@@ -62,7 +62,6 @@ public class LaporanProduksiController implements ILaporanKontenController {
 
     private static final DateTimeFormatter CHART_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMM");
     private static final DateTimeFormatter TABLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final int ITEMS_PER_PAGE_TABLE = 10; 
 
 
     @Override
@@ -85,7 +84,7 @@ public class LaporanProduksiController implements ILaporanKontenController {
     public void terapkanFilterPeriode(String periode) {
         if (periode == null || periode.isEmpty()) {
             System.err.println("LaporanProduksiController: Filter periode tidak valid (null atau kosong). Menggunakan default.");
-            this.currentPeriodeFilter = "Bulan Ini"; // Fallback
+            this.currentPeriodeFilter = "Bulan Ini"; 
         } else {
             this.currentPeriodeFilter = periode;
         }

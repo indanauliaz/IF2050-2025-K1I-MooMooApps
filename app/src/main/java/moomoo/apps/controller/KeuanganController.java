@@ -15,6 +15,7 @@ import moomoo.apps.model.FinanceModel;
 import moomoo.apps.model.TransactionModel;
 import moomoo.apps.model.UserModel;
 import moomoo.apps.utils.DatabaseManager;
+import moomoo.apps.utils.ValidationUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -133,6 +134,26 @@ public class KeuanganController implements UserAwareController {
                 metodePenggajianCol, catatanPenggajianCol, aksiPenggajianCol, filterBulanPenggajianBox, exportPenggajianButton,
                 this);
 
+        // *** PERBAIKAN DI SINI ***
+        // Mengatur aksi tombol HANYA SEKALI dengan logika validasi.
+        tambahPemasukanButton.setOnAction(event -> {
+            if (validateFormAndShowAlert(deskripsiPemasukanField.getText(), tanggalPemasukanPicker.getValue(), jumlahPemasukanField.getText(), metodePembayaranPemasukanBox.getValue(), kategoriPemasukanBox.getValue())) {
+                pemasukanManager.handleTambah();
+            }
+        });
+
+        tambahPengeluaranButton.setOnAction(event -> {
+            if (validateFormAndShowAlert(deskripsiPengeluaranField.getText(), tanggalPengeluaranPicker.getValue(), jumlahPengeluaranField.getText(), metodePembayaranPengeluaranBox.getValue(), kategoriPengeluaranBox.getValue())) {
+                pengeluaranManager.handleTambah();
+            }
+        });
+        
+        tambahPenggajianButton.setOnAction(event -> {
+            if (validateFormAndShowAlert(deskripsiPenggajianField.getText(), tanggalPenggajianPicker.getValue(), jumlahPenggajianField.getText(), metodePembayaranPenggajianBox.getValue(), kategoriPenggajianBox.getValue())) {
+                penggajianManager.handleTambah();
+            }
+        });
+
         pemasukanManager.initializeTab(
                 Arrays.asList("Penjualan Produk", "Pendapatan Jasa", "Investasi", "Hibah", "Lain-lain"),
                 Arrays.asList("Transfer Bank", "Tunai", "Dompet Digital", "Cek"),
@@ -140,7 +161,7 @@ public class KeuanganController implements UserAwareController {
         );
         pemasukanManager.setupTable(TABLE_DATE_FORMATTER);
         pemasukanManager.loadData();
-        tambahPemasukanButton.setOnAction(event -> pemasukanManager.handleTambah());
+        
         pengeluaranManager.initializeTab(
                 Arrays.asList("Pakan Ternak", "Obat & Vaksin", "Operasional Kandang", "Perawatan Alat", "Transportasi", "Biaya Listrik/Air", "Lain-lain"),
                 Arrays.asList("Transfer Bank", "Tunai", "Dompet Digital", "Kas Peternakan"),
@@ -148,25 +169,32 @@ public class KeuanganController implements UserAwareController {
         );
         pengeluaranManager.setupTable(TABLE_DATE_FORMATTER);
         pengeluaranManager.loadData();
-        tambahPengeluaranButton.setOnAction(event -> pengeluaranManager.handleTambah());
+        
         penggajianManager.initializeTab(
                 Arrays.asList("Gaji Karyawan Tetap", "Gaji Karyawan Harian", "Bonus", "Tunjangan", "Lain-lain"),
                 Arrays.asList("Transfer Bank", "Tunai"),
                 Arrays.asList("Bulan Ini", "Bulan Lalu", "Semua"), "Bulan Ini"
         );
         penggajianManager.setupTable(TABLE_DATE_FORMATTER);
-        tambahPenggajianButton.setOnAction(event -> penggajianManager.handleTambah());
+        
         financeModel.getAllTransactions().addListener((ListChangeListener.Change<? extends TransactionModel> c) -> {
-        System.out.println("DEBUG: Perubahan terdeteksi di FinanceModel, UI akan di-update.");
-        updateLocalListsAndUI();
+            System.out.println("DEBUG: Perubahan terdeteksi di FinanceModel, UI akan di-update.");
+            updateLocalListsAndUI();
         });
 
-         keuanganTabPane.getSelectionModel().select(0);
-        //  updateLocalListsAndUI(); 
+        keuanganTabPane.getSelectionModel().select(0);
+    }
+
+    private boolean validateFormAndShowAlert(String deskripsi, LocalDate tanggal, String jumlahStr, String metode, String kategori) {
+        if (ValidationUtils.validateTransactionInput(deskripsi, tanggal, jumlahStr, metode, kategori)) {
+            return true;
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Harap isi semua kolom wajib dengan format yang benar. Jumlah harus angka positif.");
+            return false;
+        }
     }
 
     private void updateLocalListsAndUI() {
-
         pemasukanList.setAll(
             financeModel.getAllTransactions().stream()
                 .filter(t -> "Pemasukan".equalsIgnoreCase(t.getTransactionType()))
@@ -184,12 +212,7 @@ public class KeuanganController implements UserAwareController {
                 .filter(t -> "Penggajian".equalsIgnoreCase(t.getTransactionType()))
                 .collect(Collectors.toList())
         );
-
-
-        // refreshOverviewData();
     }
-
-
 
     @Override
     public void initData(UserModel user) {
@@ -199,23 +222,6 @@ public class KeuanganController implements UserAwareController {
 
     public UserModel getCurrentUser() {
         return currentUser;
-    }
-
-    public boolean validateInput(String deskripsi, LocalDate tanggal, String jumlahStr, String metode, String kategori) {
-        if (deskripsi.isEmpty() || tanggal == null || jumlahStr.isEmpty() || metode == null || kategori == null) {
-            showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Harap isi semua kolom yang wajib diisi (Deskripsi, Tanggal, Jumlah, Metode, Kategori).");
-            return false;
-        }
-        try {
-          
-            String cleanJumlahStr = jumlahStr.replace(".", "").replace(",", ".");
-            double jumlah = Double.parseDouble(cleanJumlahStr);
-            if (jumlah <= 0) throw new NumberFormatException("Jumlah harus positif");
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Input Salah", "Jumlah harus berupa angka positif yang valid.");
-            return false;
-        }
-        return true;
     }
 
     public void saveTransactionToDB(TransactionModel transaction, ObservableList<TransactionModel> listToUpdate) {
@@ -242,9 +248,6 @@ public class KeuanganController implements UserAwareController {
                         transaction.setId(generatedKeys.getInt(1));
                     }
                 }
-                // listToUpdate.add(transaction); 
-                
-                // refreshOverviewData();
                 financeModel.addTransaction(transaction);
                
                 DatabaseManager.updateLastChangeTimestamp();
@@ -317,12 +320,12 @@ public class KeuanganController implements UserAwareController {
                 deleteButton.getStyleClass().addAll("action-button", "action-button-delete");
 
                 editButton.setOnAction(event -> {
-                    TransactionModel transaction = tableView.getItems().get(getIndex()); // Use passed tableView
+                    TransactionModel transaction = tableView.getItems().get(getIndex());
                     handleEditTransaction(transaction, type);
                 });
 
                 deleteButton.setOnAction(event -> {
-                    TransactionModel transaction = tableView.getItems().get(getIndex()); // Use passed tableView
+                    TransactionModel transaction = tableView.getItems().get(getIndex());
                     handleDeleteTransaction(transaction, type);
                 });
             }
@@ -389,5 +392,4 @@ public class KeuanganController implements UserAwareController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }

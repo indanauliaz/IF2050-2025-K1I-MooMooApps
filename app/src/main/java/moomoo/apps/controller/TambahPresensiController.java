@@ -9,11 +9,11 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import moomoo.apps.model.AttendanceRecordModel;
 import moomoo.apps.model.EmployeeModel;
+import moomoo.apps.utils.ValidationUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +39,6 @@ public class TambahPresensiController {
     @FXML
     public void initialize() {
         statusComboBox.setItems(FXCollections.observableArrayList(statusOptions));
-        // Listener to enable/disable time fields based on status
         statusComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 boolean enableTimes = "Hadir".equalsIgnoreCase(newVal) || "Terlambat".equalsIgnoreCase(newVal);
@@ -56,15 +55,15 @@ public class TambahPresensiController {
     public void setDialogData(ObservableList<EmployeeModel> employees, LocalDate date, AttendanceRecordModel recordToEdit) {
         this.employeeList.setAll(employees);
         karyawanComboBox.setItems(this.employeeList);
-        tanggalDatePicker.setValue(date); // Set date from HRManagementController
+        tanggalDatePicker.setValue(date); 
 
         if (recordToEdit != null) {
             isEditMode = true;
             currentRecord = recordToEdit;
             dialogTitleLabel.setText("Edit Presensi");
             karyawanComboBox.setValue(recordToEdit.getKaryawan());
-            karyawanComboBox.setDisable(true); // Usually cannot change employee when editing
-            tanggalDatePicker.setDisable(true); // Usually cannot change date when editing
+            karyawanComboBox.setDisable(true); 
+            tanggalDatePicker.setDisable(true); 
             statusComboBox.setValue(recordToEdit.getStatusKehadiran());
             if (recordToEdit.getWaktuMasuk() != null) {
                 waktuMasukField.setText(recordToEdit.getWaktuMasuk().format(TIME_FORMATTER));
@@ -75,10 +74,10 @@ public class TambahPresensiController {
             catatanArea.setText(recordToEdit.getCatatan());
         } else {
             isEditMode = false;
-            currentRecord = null; // Will be created on save
+            currentRecord = null; 
             dialogTitleLabel.setText("Tambah Presensi Baru");
             karyawanComboBox.setDisable(false);
-            tanggalDatePicker.setDisable(false); // Or true if date is fixed by main controller
+            tanggalDatePicker.setDisable(false); 
         }
     }
 
@@ -87,64 +86,24 @@ public class TambahPresensiController {
         EmployeeModel selectedEmployee = karyawanComboBox.getValue();
         LocalDate attendanceDate = tanggalDatePicker.getValue();
         String status = statusComboBox.getValue();
+        String waktuMasukStr = waktuMasukField.getText();
+        String waktuKeluarStr = waktuKeluarField.getText();
         String notes = catatanArea.getText();
 
-        if (selectedEmployee == null) {
-            showAlert(Alert.AlertType.ERROR, "Input Error", "Karyawan harus dipilih.");
-            return;
-        }
-        if (attendanceDate == null) {
-            showAlert(Alert.AlertType.ERROR, "Input Error", "Tanggal harus diisi.");
-            return;
-        }
-        if (status == null || status.trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Input Error", "Status kehadiran harus dipilih.");
+        if (!ValidationUtils.validateNewAttendanceInput(selectedEmployee, attendanceDate, status, waktuMasukStr, waktuKeluarStr)) {
+            showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Pastikan semua kolom wajib diisi. Untuk status 'Hadir' atau 'Terlambat', waktu masuk wajib diisi dengan format HH:MM. Waktu keluar juga tidak boleh sebelum waktu masuk.");
             return;
         }
 
-        LocalTime clockInTime = null;
-        LocalTime clockOutTime = null;
-
-        boolean timesRequired = "Hadir".equalsIgnoreCase(status) || "Terlambat".equalsIgnoreCase(status);
-
-        if (timesRequired) {
-            if (waktuMasukField.getText() == null || waktuMasukField.getText().trim().isEmpty()) {
-                 showAlert(Alert.AlertType.ERROR, "Input Error", "Waktu masuk harus diisi untuk status " + status);
-                 return;
-            }
-            try {
-                clockInTime = LocalTime.parse(waktuMasukField.getText(), TIME_FORMATTER);
-            } catch (DateTimeParseException e) {
-                showAlert(Alert.AlertType.ERROR, "Input Error", "Format waktu masuk salah (HH:MM).");
-                return;
-            }
-
-            if (waktuKeluarField.getText() != null && !waktuKeluarField.getText().trim().isEmpty()) {
-                try {
-                    clockOutTime = LocalTime.parse(waktuKeluarField.getText(), TIME_FORMATTER);
-                    if (clockInTime != null && clockOutTime.isBefore(clockInTime)) {
-                        showAlert(Alert.AlertType.ERROR, "Input Error", "Waktu keluar tidak boleh sebelum waktu masuk.");
-                        return;
-                    }
-                } catch (DateTimeParseException e) {
-                    showAlert(Alert.AlertType.ERROR, "Input Error", "Format waktu keluar salah (HH:MM).");
-                    return;
-                }
-            }
-        }
-
-
+        LocalTime clockInTime = (waktuMasukStr != null && !waktuMasukStr.isEmpty()) ? LocalTime.parse(waktuMasukStr, TIME_FORMATTER) : null;
+        LocalTime clockOutTime = (waktuKeluarStr != null && !waktuKeluarStr.isEmpty()) ? LocalTime.parse(waktuKeluarStr, TIME_FORMATTER) : null;
+        
         if (isEditMode && currentRecord != null) {
-            // Update existing record
-            currentRecord.setKaryawan(selectedEmployee); // Should not change typically, but for completeness
-            currentRecord.setTanggalAbsen(attendanceDate); // Should not change typically
             currentRecord.setStatusKehadiran(status);
             currentRecord.setWaktuMasuk(clockInTime);
             currentRecord.setWaktuKeluar(clockOutTime);
             currentRecord.setCatatan(notes);
         } else {
-            // Create new record
-            // ID will be set by DatabaseManager upon insertion for a new record
             currentRecord = new AttendanceRecordModel(0, selectedEmployee, attendanceDate, status, clockInTime, clockOutTime, notes);
         }
         closeStage(event);
@@ -152,7 +111,7 @@ public class TambahPresensiController {
 
     @FXML
     private void handleCancel(ActionEvent event) {
-        currentRecord = null; // Ensure no record is returned on cancel
+        currentRecord = null; 
         closeStage(event);
     }
 

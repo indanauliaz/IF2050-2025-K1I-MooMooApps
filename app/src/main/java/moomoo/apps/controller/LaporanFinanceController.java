@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 public class LaporanFinanceController implements ILaporanKontenController {
 
-    //<editor-fold defaultstate="collapsed" desc="FXML Declarations">
     @FXML private Label totalPemasukanLabel;
     @FXML private Label pemasukanPercentageLabel;
     @FXML private Label totalPengeluaranLabel;
@@ -147,8 +146,6 @@ public class LaporanFinanceController implements ILaporanKontenController {
                 .filter(t -> "Pemasukan".equalsIgnoreCase(t.getTransactionType()))
                 .collect(Collectors.groupingBy(t -> t.getDate().get(weekFields.weekOfMonth()), Collectors.summingDouble(TransactionModel::getAmount)));
 
-        // --- REVISI DI SINI ---
-        // Untuk grafik, "Pengeluaran" dan "Penggajian" digabung menjadi satu bar "Pengeluaran" agar sesuai gambar
         Map<Integer, Double> pengeluaranGabunganPerMinggu = transactions.stream()
                 .filter(t -> "Pengeluaran".equalsIgnoreCase(t.getTransactionType()) || "Penggajian".equalsIgnoreCase(t.getTransactionType()))
                 .collect(Collectors.groupingBy(t -> t.getDate().get(weekFields.weekOfMonth()), Collectors.summingDouble(TransactionModel::getAmount)));
@@ -170,8 +167,6 @@ public class LaporanFinanceController implements ILaporanKontenController {
     private void updateGrafikDistribusi(List<TransactionModel> transactions) {
         distribusiPengeluaranChart.getData().clear();
 
-        // --- REVISI DI SINI ---
-        // Distribusi juga harus mencakup kategori dari "Pengeluaran" dan "Penggajian"
         Map<String, Double> distribusi = transactions.stream()
                 .filter(t -> "Pengeluaran".equalsIgnoreCase(t.getTransactionType()) || "Penggajian".equalsIgnoreCase(t.getTransactionType()))
                 .collect(Collectors.groupingBy(TransactionModel::getCategory, Collectors.summingDouble(TransactionModel::getAmount)));

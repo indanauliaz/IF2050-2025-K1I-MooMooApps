@@ -10,21 +10,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import moomoo.apps.model.TaskModel;
 import moomoo.apps.utils.DatabaseManager;
-import javafx.scene.layout.VBox; // Untuk mengubah style kartu
+import javafx.scene.layout.VBox; 
 
 public class TaskCardController {
 
     @FXML private Label namaTugasLabel;
     @FXML private Label deskripsiLabel;
     @FXML private Label ditugaskanKeLabel;
-    @FXML private Label prioritasLabel; // Label teks untuk prioritas
-    @FXML private Circle prioritasIndicator; // Lingkaran indikator prioritas
+    @FXML private Label prioritasLabel;
+    @FXML private Circle prioritasIndicator; 
 
     @FXML private Button detailButton;
     @FXML private Button tundaButton;
     @FXML private Button selesaikanButton;
 
-    @FXML private VBox rootTaskCardVBox; // fx:id untuk VBox root kartu
+    @FXML private VBox rootTaskCardVBox;
 
     private TaskModel currentTask;
     private HRManagementController taskManagementController;
@@ -35,7 +35,7 @@ public class TaskCardController {
 
         namaTugasLabel.setText(task.getNamaTugas());
         String deskripsiFull = task.getDeskripsiTugas();
-        deskripsiLabel.setText(deskripsiFull.length() > 60 ? deskripsiFull.substring(0, 60) + "..." : deskripsiFull); // Kurangi panjangnya sedikit
+        deskripsiLabel.setText(deskripsiFull.length() > 60 ? deskripsiFull.substring(0, 60) + "..." : deskripsiFull); 
 
         String penanggungJawab = task.getNamaKaryawanPenanggungJawab();
         ditugaskanKeLabel.setText(penanggungJawab != null && !penanggungJawab.isEmpty() ? penanggungJawab : "Belum Ditugaskan");
@@ -81,7 +81,7 @@ public class TaskCardController {
         switch (status) {
             case "Belum Dimulai":
             case "Akan Dilakukan":
-                selesaikanButton.setText("Mulai"); // Lebih singkat
+                selesaikanButton.setText("Mulai"); 
                 if (rootTaskCardVBox != null) rootTaskCardVBox.getStyleClass().add("status-akan-dilakukan");
                 break;
             case "Sedang Dikerjakan":
@@ -96,7 +96,6 @@ public class TaskCardController {
                 if (rootTaskCardVBox != null) rootTaskCardVBox.getStyleClass().add("status-selesai");
                 break;
             default:
-                // Status tidak dikenal
                 break;
         }
     }
@@ -128,7 +127,7 @@ public class TaskCardController {
         String statusTargetBaru = "";
         LocalDate tanggalSelesai = currentTask.getTanggalSelesai();
 
-        if ("Akan Dilakukan".equals(statusLama) || "Belum Dimulai".equals(statusLama)) { // <-- UBAH DI BARIS INI
+        if ("Akan Dilakukan".equals(statusLama) || "Belum Dimulai".equals(statusLama)) {
             statusTargetBaru = "Sedang Dikerjakan";
             tanggalSelesai = null;
         } else if ("Sedang Dikerjakan".equals(statusLama)) {
