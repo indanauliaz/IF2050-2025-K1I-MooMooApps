@@ -1,8 +1,8 @@
 package moomoo.apps.controller;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -75,6 +75,11 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
         tabelPemasukan.setPlaceholder(new Label("Tidak ada data pemasukan untuk ditampilkan."));
         tabelPengeluaran.setPlaceholder(new Label("Tidak ada data pengeluaran untuk ditampilkan."));
         tabelPenggajian.setPlaceholder(new Label("Tidak ada data penggajian untuk ditampilkan."));
+
+        financeModel.getAllTransactions().addListener((ListChangeListener<TransactionModel>) c -> {
+            System.out.println("KeuanganPemilikController mendeteksi perubahan di FinanceModel. Memperbarui tabel...");
+            updateTables();
+        });
     }
 
     @Override

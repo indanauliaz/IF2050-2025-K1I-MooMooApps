@@ -1,29 +1,36 @@
 package moomoo.apps.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import moomoo.apps.interfaces.UserAwareController;
+import moomoo.apps.model.FinanceModel;
+import moomoo.apps.model.ProductionModel;
+import moomoo.apps.model.SdmModel;
 import moomoo.apps.model.UserModel;
+import moomoo.apps.utils.PollingService;
 
 import java.io.IOException;
 import java.net.URL;
 
+
 public class DashboardPemilikController {
 
-    // FXML dari struktur utama
     @FXML private VBox sidebar;
     @FXML private BorderPane mainContentPane;
-    
-    // FXML untuk header dan tombol sidebar
     @FXML private Label headerTitleLabel;
     @FXML private Label userNameLabel;
     @FXML private Label userRoleLabel;
@@ -32,23 +39,70 @@ public class DashboardPemilikController {
     @FXML private Button keuanganButton;
     @FXML private Button tugasButton;
     @FXML private Button logoutButton;
+    @FXML private Button refreshButton;
 
     private UserModel currentUser;
 
-    /**
-     * Method initialize() akan otomatis dipanggil oleh JavaFX saat FXML dimuat.
-     * Kita atur halaman default yang akan tampil pertama kali di sini.
-     */
+
+    private Timeline autoRefreshTimeline;
+
     @FXML 
     public void initialize() {
         javafx.application.Platform.runLater(() -> {
             handleDashboardMenuClick(null);
+            setActiveButton(dashboardButton);
         });
     }
 
     public void initData(UserModel user) {
         this.currentUser = user;
         updateUserInfo();
+        PollingService.getInstance().start();
+        startAutoRefresh();
+    }
+    
+    private void startAutoRefresh() {
+
+        if (autoRefreshTimeline != null) {
+            autoRefreshTimeline.stop();
+        }
+        
+        autoRefreshTimeline = new Timeline(
+            new KeyFrame(Duration.seconds(5), event -> {
+
+                performRefresh(true);
+            })
+        );
+        
+        autoRefreshTimeline.setCycleCount(Timeline.INDEFINITE); 
+        autoRefreshTimeline.play();
+        System.out.println("Refresh otomatis setiap 30 detik telah dimulai.");
+    }
+
+    private void stopAutoRefresh() {
+        if (autoRefreshTimeline != null) {
+            autoRefreshTimeline.stop();
+            System.out.println("Refresh otomatis telah dihentikan.");
+        }
+    }
+
+
+    private void performRefresh(boolean isAutoRefresh) {
+        System.out.println("Memulai proses refresh data... Dipicu oleh: " + (isAutoRefresh ? "Otomatis" : "Manual"));
+
+
+        FinanceModel.getInstance().loadAllTransactionsFromDB();
+        ProductionModel.getInstance().loadProductionDataFromDB();
+        SdmModel.getInstance().loadAllEmployeesFromDB();
+        
+        System.out.println("Semua model telah diperbarui.");
+
+        if (!isAutoRefresh) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Data telah berhasil diperbarui.", ButtonType.OK);
+            alert.setHeaderText("Refresh Berhasil");
+            alert.setTitle("Informasi");
+            alert.showAndWait();
+        }
     }
     
     private void updateUserInfo() {
@@ -65,9 +119,7 @@ public class DashboardPemilikController {
     void handleTugasMenuClick(ActionEvent event) {
         // Mengubah judul header
         headerTitleLabel.setText("Pengawasan Tugas");
-        // Memuat file TugasPemilikView.fxml ke area konten utama
         loadPage("/moomoo/apps/view/TugasPemilikView.fxml");
-        // Mengatur tombol 'Tugas' agar aktif secara visual
         setActiveButton(tugasButton);
     }
 
@@ -77,7 +129,6 @@ public class DashboardPemilikController {
     @FXML 
     void handleDashboardMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Dashboard");
-        // Menampilkan konten placeholder
         mainContentPane.setCenter(new VBox(new Label("Konten Dashboard Pemilik akan Tampil di Sini")));
         setActiveButton(dashboardButton);
     }
@@ -88,7 +139,6 @@ public class DashboardPemilikController {
     @FXML 
     void handleLaporanMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Laporan");
-        // Menampilkan konten placeholder
         loadPage("/moomoo/apps/view/LaporanPemilikView.fxml");
         setActiveButton(laporanButton);
     }
@@ -99,13 +149,15 @@ public class DashboardPemilikController {
     @FXML 
     void handleKeuanganMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Keuangan");
-        // Menampilkan konten placeholder
         loadPage("/moomoo/apps/view/KeuanganPemilikView.fxml"); 
         setActiveButton(keuanganButton);
     }
 
     @FXML
     private void handleLogoutAction(ActionEvent event) {
+
+        stopAutoRefresh();
+        PollingService.getInstance().stop();
         try {
             Stage currentStage = (Stage) logoutButton.getScene().getWindow();
             URL fxmlLocation = getClass().getResource("/moomoo/apps/view/LoginView.fxml");
@@ -154,6 +206,11 @@ public class DashboardPemilikController {
         VBox errorBox = new VBox(new Label(message));
         errorBox.setStyle("-fx-alignment: center; -fx-font-size: 16px; -fx-text-fill: red;");
         mainContentPane.setCenter(errorBox);
+    }
+
+    @FXML
+    void handleRefreshAction(ActionEvent event) {
+        performRefresh(false);
     }
     
     /**

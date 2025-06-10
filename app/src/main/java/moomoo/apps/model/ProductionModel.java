@@ -85,7 +85,7 @@ public class ProductionModel {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        record.setId(generatedKeys.getInt(1)); // Set ID yang digenerate DB
+                        record.setId(generatedKeys.getInt(1)); 
                     }
                 }
                 // Menambahkan ke awal list agar langsung terlihat jika diurutkan berdasarkan terbaru
@@ -96,6 +96,7 @@ public class ProductionModel {
                 // Jika ingin mempertahankan urutan seperti di DB (tanggal DESC),
                 // mungkin lebih baik memuat ulang atau menyisipkan secara terurut.
                 // Untuk kesederhanaan, add(0) akan membuatnya muncul di atas di tabel jika tabel belum diurutkan ulang.
+                DatabaseManager.updateLastChangeTimestamp();
                 return true;
             }
         } catch (SQLException e) {
@@ -135,8 +136,7 @@ public class ProductionModel {
                 if (index != -1) {
                     allProductionData.set(index, record); // Ini akan memicu listener
                 } else {
-                    // Seharusnya tidak terjadi jika record yang diedit ada di list
-                    // Sebagai fallback, muat ulang semua data.
+
                     loadProductionDataFromDB(); 
                 }
                 return true;
@@ -157,6 +157,7 @@ public class ProductionModel {
             if (affectedRows > 0) {
                 // Hapus dari ObservableList agar UI terupdate
                 allProductionData.removeIf(r -> r.getId() == recordId);
+                DatabaseManager.updateLastChangeTimestamp();
                 return true;
             }
         } catch (SQLException e) {

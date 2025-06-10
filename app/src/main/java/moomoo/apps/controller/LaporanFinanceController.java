@@ -21,7 +21,6 @@ import java.text.NumberFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.TextStyle;
 import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
@@ -100,7 +99,7 @@ public class LaporanFinanceController implements ILaporanKontenController {
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(item);
-                getStyleClass().removeAll("text-green", "text-red", "text-orange"); // Tambahkan text-orange untuk penggajian
+                getStyleClass().removeAll("text-green", "text-red", "text-orange");
                 if (item != null && !empty) {
                     switch (item.toLowerCase()) {
                         case "pemasukan":
@@ -110,7 +109,7 @@ public class LaporanFinanceController implements ILaporanKontenController {
                             getStyleClass().add("text-red");
                             break;
                         case "penggajian":
-                            getStyleClass().add("text-orange"); // Gaji bisa diberi warna beda jika mau
+                            getStyleClass().add("text-orange"); 
                             break;
                     }
                 }
@@ -123,8 +122,6 @@ public class LaporanFinanceController implements ILaporanKontenController {
                 .filter(t -> "Pemasukan".equalsIgnoreCase(t.getTransactionType()))
                 .mapToDouble(TransactionModel::getAmount).sum();
 
-        // --- REVISI DI SINI ---
-        // Total pengeluaran adalah gabungan dari 'Pengeluaran' dan 'Penggajian'
         double pengeluaran = transactions.stream()
                 .filter(t -> "Pengeluaran".equalsIgnoreCase(t.getTransactionType()) || "Penggajian".equalsIgnoreCase(t.getTransactionType()))
                 .mapToDouble(TransactionModel::getAmount).sum();

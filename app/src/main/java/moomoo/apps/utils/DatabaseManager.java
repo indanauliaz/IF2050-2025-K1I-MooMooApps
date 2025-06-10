@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sqlite.SQLiteConfig;
+
 import moomoo.apps.model.AttendanceRecordModel;
 import moomoo.apps.model.TaskModel;
 import moomoo.apps.model.EmployeeModel;
@@ -29,7 +31,9 @@ public class DatabaseManager {
 
 
     public static Connection getConnection() throws SQLException{
-        return DriverManager.getConnection(DATABASE_URL);
+        SQLiteConfig config = new SQLiteConfig();
+        config.setJournalMode(SQLiteConfig.JournalMode.WAL);
+        return DriverManager.getConnection(DATABASE_URL, config.toProperties());
     }
 
     public static void initializeDatabase() {
@@ -100,6 +104,13 @@ public class DatabaseManager {
                 + "FOREIGN KEY (employee_id) REFERENCES employees(id)"
                 + ");";
 
+        String createStateTableSQL = "CREATE TABLE IF NOT EXISTS app_state ("
+                               + "key TEXT PRIMARY KEY,"
+                               + "value TEXT NOT NULL"
+                               + ");";
+
+        String insertInitialTimestampSQL = "INSERT OR IGNORE INTO app_state (key, value) VALUES ('last_update', '0');";
+
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             
@@ -121,6 +132,12 @@ public class DatabaseManager {
 
             stmt.execute(createAttendanceRecordsTableSQL); 
             System.out.println("Tabel 'attendance_records' siap atau sudah ada.");
+
+            stmt.execute(createStateTableSQL);
+            System.out.println("Tabel 'app_state' siap atau sudah ada.");
+            
+            stmt.execute(insertInitialTimestampSQL);
+            System.out.println("Initial timestamp untuk 'last_update' sudah di-set.");
 
 
             addInitialEmployeeData(conn);
@@ -180,47 +197,6 @@ public class DatabaseManager {
 
     private static final String DB_FILE_NAME = "moomoo_apps.db"; 
 
-
-    // public static List<TaskModel> getAllTasks() {
-    //     List<TaskModel> tasks = new ArrayList<>();
-    //     String sql = "SELECT t.id, t.nama_tugas, t.deskripsi_tugas, t.employee_id, e.nama_lengkap AS nama_karyawan, " +
-    //                  "t.tanggal_tugas, t.waktu_tugas, t.prioritas, t.status, t.tanggal_selesai " +
-    //                  "FROM tasks t LEFT JOIN employees e ON t.employee_id = e.id ORDER BY t.tanggal_tugas, t.waktu_tugas";
-
-    //     try (Connection conn = getConnection();
-    //          PreparedStatement pstmt = conn.prepareStatement(sql);
-    //          ResultSet rs = pstmt.executeQuery()) {
-
-    //         while (rs.next()) {
-    //             int id = rs.getInt("id");
-    //             String namaTugas = rs.getString("nama_tugas");
-    //             String deskripsiTugas = rs.getString("deskripsi_tugas");
-    //             Integer employeeId = (Integer) rs.getObject("employee_id"); // Handle NULL employee_id
-    //             String namaKaryawan = rs.getString("nama_karyawan");
-                
-    //             LocalDate tanggalTugas = null;
-    //             String tanggalTugasStr = rs.getString("tanggal_tugas");
-    //             if (tanggalTugasStr != null) tanggalTugas = LocalDate.parse(tanggalTugasStr, DATE_FORMATTER);
-
-    //             LocalTime waktuTugas = null;
-    //             String waktuTugasStr = rs.getString("waktu_tugas");
-    //             if (waktuTugasStr != null && !waktuTugasStr.isEmpty()) waktuTugas = LocalTime.parse(waktuTugasStr, TIME_FORMATTER);
-                
-    //             String prioritas = rs.getString("prioritas");
-    //             String status = rs.getString("status");
-
-    //             LocalDate tanggalSelesai = null;
-    //             String tanggalSelesaiStr = rs.getString("tanggal_selesai");
-    //             if (tanggalSelesaiStr != null) tanggalSelesai = LocalDate.parse(tanggalSelesaiStr, DATE_FORMATTER);
-
-    //             tasks.add(new TaskModel(id, namaTugas, deskripsiTugas, employeeId, namaKaryawan, tanggalTugas, waktuTugas, prioritas, status, tanggalSelesai));
-    //         }
-    //     } catch (SQLException e) {
-    //         System.err.println("Error getting all tasks: " + e.getMessage());
-    //         e.printStackTrace();
-    //     }
-    //     return tasks;
-    // }
 
     private static void addInitialTaskData(Connection conn) {
         String checkEmptySQL = "SELECT COUNT(*) AS count FROM tasks";
@@ -525,6 +501,18 @@ public class DatabaseManager {
         } catch (Exception e) { 
             System.err.println("Error tidak terduga saat menghapus file database: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public static void updateLastChangeTimestamp() {
+        String sql = "UPDATE app_state SET value = ? WHERE key = 'last_update'";
+        try (Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            // Menggunakan System.currentTimeMillis() untuk timestamp yang sederhana dan unik
+            pstmt.setString(1, String.valueOf(System.currentTimeMillis()));
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Gagal memperbarui timestamp perubahan: " + e.getMessage());
         }
     }
 }

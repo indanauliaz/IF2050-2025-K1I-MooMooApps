@@ -1,6 +1,5 @@
 package moomoo.apps;
 import moomoo.apps.utils.*;
-import moomoo.apps.controller.*;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +28,6 @@ public class App extends Application {
             Font.loadFont(getClass().getResourceAsStream("/fonts/Poppins-ExtraBold.ttf"), 12);
             Font.loadFont(getClass().getResourceAsStream("/fonts/Poppins-Light.ttf"), 12);
 
-            // ✅ Load FXML
             URL fxmlLocation = getClass().getResource("/moomoo/apps/view/LoginView.fxml");
 
             if (fxmlLocation == null) {

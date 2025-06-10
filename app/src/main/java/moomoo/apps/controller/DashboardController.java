@@ -1,5 +1,4 @@
 package moomoo.apps.controller; 
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,10 +12,10 @@ import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import moomoo.apps.interfaces.UserAwareController;
 import moomoo.apps.model.UserModel;
+import moomoo.apps.utils.PollingService;
 
 import java.io.IOException;
 import java.net.URL;
-import javafx.geometry.Pos; 
 
 public class DashboardController {
 
@@ -87,6 +86,7 @@ public class DashboardController {
     public void initData(UserModel user) {
         this.currentUser = user;
         updateUserInfo(user);
+        PollingService.getInstance().start();
     }
 
     private void updateUserInfo(UserModel user) {
@@ -126,6 +126,8 @@ public class DashboardController {
 
     @FXML
     private void handleLogoutAction(ActionEvent event) {
+
+        PollingService.getInstance().stop();
         System.out.println("Logout action triggered");
         try {
             Stage currentStage = (Stage) logoutButton.getScene().getWindow();

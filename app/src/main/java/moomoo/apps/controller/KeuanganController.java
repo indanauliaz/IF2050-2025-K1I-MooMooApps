@@ -3,19 +3,11 @@ package moomoo.apps.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox; 
-import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 
 import moomoo.apps.interfaces.UserAwareController;
@@ -28,19 +20,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.time.YearMonth;
-// import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -117,11 +99,6 @@ public class KeuanganController implements UserAwareController {
 
     private static final DateTimeFormatter TABLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter DB_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
-    private static final DateTimeFormatter MONTH_YEAR_FORMATTER = DateTimeFormatter.ofPattern("MMM yyyy", new Locale("id", "ID"));
-    private static final DateTimeFormatter DAY_MONTH_YEAR_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy", new Locale("id", "ID"));
-
-    private static final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
-
     private UserModel currentUser;
 
     private TransactionTabManager pemasukanManager;
@@ -183,13 +160,6 @@ public class KeuanganController implements UserAwareController {
         System.out.println("DEBUG: Perubahan terdeteksi di FinanceModel, UI akan di-update.");
         updateLocalListsAndUI();
         });
-        // setupOverviewTab();
-
-        // keuanganTabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
-        //     if (newTab != null && newTab.getText().equals("Overview")) {
-        //         refreshOverviewData();
-        //     }
-        // });
 
          keuanganTabPane.getSelectionModel().select(0);
         //  updateLocalListsAndUI(); 
@@ -219,192 +189,13 @@ public class KeuanganController implements UserAwareController {
         // refreshOverviewData();
     }
 
-    // private void setupOverviewTab() {
-    //     overviewDeskripsiCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-    //     overviewKategoriCol.setCellValueFactory(new PropertyValueFactory<>("category"));
-    //     overviewTanggalCol.setCellValueFactory(cellData ->
-    //         new javafx.beans.property.SimpleStringProperty(
-    //             cellData.getValue().getDate() != null ?
-    //             TABLE_DATE_FORMATTER.format(cellData.getValue().getDate()) : ""
-    //         )
-    //     );
-    //     overviewJumlahCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
-    //     overviewJumlahCol.setCellFactory(tc -> new TableCell<TransactionModel, Number>() {
-    //         @Override
-    //         protected void updateItem(Number value, boolean empty) {
-    //             super.updateItem(value, empty);
-    //             if (empty || value == null) {
-    //                 setText(null);
-    //             } else {
-    //                 setText(CURRENCY_FORMATTER.format(value.doubleValue()));
-    //             }
-    //         }
-    //     });
-    //     overviewTipeCol.setCellValueFactory(new PropertyValueFactory<>("transactionType"));
-    //     overviewRecentTransactionsTable.setItems(allTransactionsList); 
 
-    //     overviewFilterBulanBox.setItems(FXCollections.observableArrayList("Bulan Ini", "Bulan Lalu", "3 Bulan Terakhir", "Semua"));
-    //     overviewFilterBulanBox.setValue("Bulan Ini");
-    //     overviewFilterBulanBox.setOnAction(event -> refreshOverviewData());
-
-        
-    // }
 
     @Override
     public void initData(UserModel user) {
         this.currentUser = user;
-        // pemasukanManager.loadData();
-        // pengeluaranManager.loadData();
-        // penggajianManager.loadData();
-        // refreshOverviewData();
         updateLocalListsAndUI();
     }
-    
-    // public void refreshOverviewData() {
-    // if (currentUser == null) return;
-
-    // LocalDate now = LocalDate.now();
-    // YearMonth currentMonth = YearMonth.from(now);
-    // YearMonth previousMonth = currentMonth.minusMonths(1);
- 
-
-    // double currentMonthPemasukan = pemasukanList.stream()
-    //         .filter(t -> YearMonth.from(t.getDate()).equals(currentMonth))
-    //         .mapToDouble(TransactionModel::getAmount).sum();
-
-    // ObservableList<TransactionModel> combinedExpenses = FXCollections.observableArrayList(pengeluaranList);
-    // combinedExpenses.addAll(penggajianList);
-
-    // double currentMonthPengeluaranTotal = combinedExpenses.stream()
-    //         .filter(t -> YearMonth.from(t.getDate()).equals(currentMonth))
-    //         .mapToDouble(TransactionModel::getAmount).sum();
-            
-    // double previousMonthPemasukan = pemasukanList.stream()
-    //         .filter(t -> YearMonth.from(t.getDate()).equals(previousMonth))
-    //         .mapToDouble(TransactionModel::getAmount).sum();
-
-    // double previousMonthPengeluaranTotal = combinedExpenses.stream()
-    //         .filter(t -> YearMonth.from(t.getDate()).equals(previousMonth))
-    //         .mapToDouble(TransactionModel::getAmount).sum();
-    
-    // double totalPemasukan = pemasukanList.stream().mapToDouble(TransactionModel::getAmount).sum();
-    // double grandTotalPengeluaran = combinedExpenses.stream().mapToDouble(TransactionModel::getAmount).sum();
-    // double labaBersih = totalPemasukan - grandTotalPengeluaran;
-
-    // overviewTotalPemasukanLabel.setText(CURRENCY_FORMATTER.format(currentMonthPemasukan));
-    // overviewTotalPengeluaranLabel.setText(CURRENCY_FORMATTER.format(currentMonthPengeluaranTotal));
-    // overviewLabaBersihLabel.setText(CURRENCY_FORMATTER.format(currentMonthPemasukan - currentMonthPengeluaranTotal));
-    // overviewKeuanganSaatIniLabel.setText(CURRENCY_FORMATTER.format(labaBersih)); 
-    // overviewKeuanganDateLabel.setText("Per " + DAY_MONTH_YEAR_FORMATTER.format(now));
-
-    // setPercentageLabel(overviewPemasukanPercentageLabel, currentMonthPemasukan, previousMonthPemasukan);
-    // setPercentageLabel(overviewPengeluaranPercentageLabel, currentMonthPengeluaranTotal, previousMonthPengeluaranTotal);
-    // double currentMonthLaba = currentMonthPemasukan - currentMonthPengeluaranTotal;
-    // double previousMonthLaba = previousMonthPemasukan - previousMonthPengeluaranTotal;
-    // setPercentageLabel(overviewLabaPercentageLabel, currentMonthLaba, previousMonthLaba);
-
-    // // --- BAR CHART LOGIC (REVISED) ---
-    // overviewGrafikKeuanganChart.getData().clear();
-
-    // Map<YearMonth, Double> allMonthlyPemasukan = pemasukanList.stream()
-    //     .collect(Collectors.groupingBy(t -> YearMonth.from(t.getDate()), Collectors.summingDouble(TransactionModel::getAmount)));
-    // Map<YearMonth, Double> allMonthlyPengeluaran = combinedExpenses.stream()
-    //     .collect(Collectors.groupingBy(t -> YearMonth.from(t.getDate()), Collectors.summingDouble(TransactionModel::getAmount)));
-
-    // List<YearMonth> sortedMonths = allMonthlyPemasukan.keySet().stream()
-    //     .sorted(Comparator.reverseOrder()).limit(6).sorted().collect(Collectors.toList());}
-
-    // if (sortedMonths.isEmpty()) {
-    //     YearMonth startLoop = YearMonth.now().minusMonths(5);
-    //     for(int i=0; i<6; i++) { sortedMonths.add(startLoop.plusMonths(i)); }
-    // }
-
-//     XYChart.Series<String, Number> pemasukanSeries = new XYChart.Series<>();
-//     pemasukanSeries.setName("Pemasukan");
-//     XYChart.Series<String, Number> pengeluaranSeries = new XYChart.Series<>();
-//     pengeluaranSeries.setName("Pengeluaran");
-
-//     List<String> monthLabels = sortedMonths.stream()
-//         .map(ym -> ym.getMonth().getDisplayName(TextStyle.SHORT, new Locale("id","ID")))
-//         .collect(Collectors.toList());
-//     overviewGrafikKeuanganXAxis.setCategories(FXCollections.observableArrayList(monthLabels));
-
-//     for (YearMonth ym : sortedMonths) {
-//         String monthStr = ym.getMonth().getDisplayName(TextStyle.SHORT, new Locale("id","ID"));
-//         pemasukanSeries.getData().add(new XYChart.Data<>(monthStr, allMonthlyPemasukan.getOrDefault(ym, 0.0)));
-//         pengeluaranSeries.getData().add(new XYChart.Data<>(monthStr, allMonthlyPengeluaran.getOrDefault(ym, 0.0)));
-//     }
-//     overviewGrafikKeuanganChart.getData().addAll(pemasukanSeries, pengeluaranSeries);
-
-//     // --- Menentukan Filter Tanggal ---
-//     String filterSelection = overviewFilterBulanBox.getValue();
-//     LocalDate filterEndDate = LocalDate.now();
-//     LocalDate filterStartDate;
-//     switch (filterSelection) {
-//         case "Bulan Lalu":
-//             filterStartDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
-//             filterEndDate = YearMonth.from(filterStartDate).atEndOfMonth();
-//             break;
-//         case "3 Bulan Terakhir":
-//             filterStartDate = LocalDate.now().minusMonths(2).withDayOfMonth(1);
-//             break;
-//         case "Semua":
-//             filterStartDate = LocalDate.MIN;
-//             break;
-//         case "Bulan Ini":
-//         default:
-//             filterStartDate = LocalDate.now().withDayOfMonth(1);
-//             break;
-//     }
-//     final LocalDate finalFilterStartDate = filterStartDate;
-//     final LocalDate finalFilterEndDate = filterEndDate;
-
-//     // --- PIE CHART LOGIC (REVISED) ---
-//     overviewDistribusiPengeluaranChart.getData().clear();
-//     overviewDistribusiPengeluaranChart.setTitle("Distribusi Pengeluaran (" + filterSelection + ")");
-
-//     Map<String, Double> pengeluaranByCategory = combinedExpenses.stream()
-//         .filter(t -> !t.getDate().isBefore(finalFilterStartDate) && !t.getDate().isAfter(finalFilterEndDate))
-//         .collect(Collectors.groupingBy(TransactionModel::getCategory, Collectors.summingDouble(TransactionModel::getAmount)));
-
-//     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-//     double totalPieChartExpenses = pengeluaranByCategory.values().stream().mapToDouble(Double::doubleValue).sum();
-
-//     for (Map.Entry<String, Double> entry : pengeluaranByCategory.entrySet()) {
-//         double percentage = (totalPieChartExpenses > 0) ? (entry.getValue() / totalPieChartExpenses) * 100 : 0;
-//         pieChartData.add(new PieChart.Data(String.format("%s (%.1f%%)", entry.getKey(), percentage), entry.getValue()));
-//     }
-//     overviewDistribusiPengeluaranChart.setData(pieChartData);
-
-//     // --- TABLE VIEW LOGIC (REVISED) ---
-//     List<TransactionModel> filteredForTable = financeModel.getAllTransactions().stream()
-//         .filter(t -> !t.getDate().isBefore(finalFilterStartDate) && !t.getDate().isAfter(finalFilterEndDate))
-//         .sorted(Comparator.comparing(TransactionModel::getDate).reversed())
-//         .collect(Collectors.toList());
-    
-//     // Menggunakan setAll lebih aman untuk TableView daripada membuat list baru setiap saat
-//     overviewRecentTransactionsTable.getItems().setAll(filteredForTable);
-// }
-
-//     private void setPercentageLabel(Label label, double currentValue, double previousValue) {
-//         double percentageChange = 0;
-//         if (previousValue != 0) {
-//             percentageChange = ((currentValue - previousValue) / previousValue) * 100;
-//         } else if (currentValue > 0) {
-//             percentageChange = 100.0; 
-//         }
-
-//         String prefix = percentageChange >= 0 ? "+" : "";
-//         label.setText(String.format("%s%.1f%%", prefix, percentageChange));
-//         if (percentageChange >= 0) {
-//             label.setTextFill(Color.GREEN);
-//         } else {
-//             label.setTextFill(Color.RED);
-//         }
-//         if (label == overviewLabaPercentageLabel) label.setText(label.getText() + " periode sebelumnya");
-//         else label.setText(label.getText() + " dari bulan lalu");
-
-//     }
 
     public UserModel getCurrentUser() {
         return currentUser;
@@ -455,7 +246,8 @@ public class KeuanganController implements UserAwareController {
                 
                 // refreshOverviewData();
                 financeModel.addTransaction(transaction);
-
+               
+                DatabaseManager.updateLastChangeTimestamp();
                 showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Data " + transaction.getTransactionType().toLowerCase() + " berhasil ditambahkan.");
             }
 
@@ -558,6 +350,7 @@ public class KeuanganController implements UserAwareController {
         }
         if (managerToUse != null) {
             managerToUse.populateFormForEdit(transaction);
+            DatabaseManager.updateLastChangeTimestamp();
         }
         showAlert(Alert.AlertType.INFORMATION, "Mode Edit (" + type + ")", "Silakan ubah data. Menyimpan akan membuat entri baru atau Anda perlu mengimplementasikan logic UPDATE jika ingin mengubah data yang ada.");
     }
@@ -578,6 +371,7 @@ public class KeuanganController implements UserAwareController {
                 if (affectedRows > 0) {
                     showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Data " + type.toLowerCase() + " berhasil dihapus.");
                     financeModel.removeTransaction(transaction);
+                    DatabaseManager.updateLastChangeTimestamp();
                 } else {
                     showAlert(Alert.AlertType.ERROR, "Gagal", "Data tidak ditemukan untuk dihapus.");
                 }

@@ -19,7 +19,7 @@ public class FinanceModel {
 
     private FinanceModel() {
         allTransactions = FXCollections.observableArrayList();
-        loadAllTransactionsFromDB(); // Muat data saat pertama kali dibuat
+        loadAllTransactionsFromDB(); 
     }
 
     // Metode Singleton untuk mendapatkan satu-satunya instance
@@ -50,7 +50,7 @@ public class FinanceModel {
     }
     
     // Metode untuk memuat semua data dari database
-    private void loadAllTransactionsFromDB() {
+    public void loadAllTransactionsFromDB() {
         allTransactions.clear();
         String sql = "SELECT * FROM transactions ORDER BY date DESC"; // Ambil semua tipe
 
