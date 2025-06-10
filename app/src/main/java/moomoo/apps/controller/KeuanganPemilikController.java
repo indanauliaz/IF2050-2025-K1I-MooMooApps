@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import moomoo.apps.interfaces.UserAwareController;
@@ -16,7 +17,10 @@ import moomoo.apps.model.UserModel;
 
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -111,7 +115,9 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
         kolomDeskripsiPemasukan.setCellValueFactory(new PropertyValueFactory<>("description"));
         kolomKategoriPemasukan.setCellValueFactory(new PropertyValueFactory<>("category"));
         kolomTanggalPemasukan.setCellValueFactory(new PropertyValueFactory<>("date"));
+        kolomTanggalPemasukan.setCellFactory(column -> createDateCell());
         kolomJumlahPemasukan.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        kolomJumlahPemasukan.setCellFactory(column -> createCurrencyCell());
         kolomMetodePemasukan.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
         kolomCatatanPemasukan.setCellValueFactory(new PropertyValueFactory<>("notes"));
 
@@ -119,7 +125,9 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
         kolomDeskripsiPengeluaran.setCellValueFactory(new PropertyValueFactory<>("description"));
         kolomKategoriPengeluaran.setCellValueFactory(new PropertyValueFactory<>("category"));
         kolomTanggalPengeluaran.setCellValueFactory(new PropertyValueFactory<>("date"));
+        kolomTanggalPengeluaran.setCellFactory(column -> createDateCell());
         kolomJumlahPengeluaran.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        kolomJumlahPengeluaran.setCellFactory(column -> createCurrencyCell());
         kolomMetodePengeluaran.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
         kolomCatatanPengeluaran.setCellValueFactory(new PropertyValueFactory<>("notes"));
         
@@ -127,8 +135,32 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
         kolomDeskripsiGaji.setCellValueFactory(new PropertyValueFactory<>("description"));
         kolomKategoriGaji.setCellValueFactory(new PropertyValueFactory<>("category"));
         kolomTanggalGaji.setCellValueFactory(new PropertyValueFactory<>("date"));
+        kolomTanggalGaji.setCellFactory(column -> createDateCell());
         kolomJumlahGaji.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        kolomJumlahGaji.setCellFactory(column -> createCurrencyCell());
         kolomMetodeGaji.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
         kolomCatatanGaji.setCellValueFactory(new PropertyValueFactory<>("notes"));
+    }
+
+    private TableCell<TransactionModel, LocalDate> createDateCell() {
+        final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID"));
+        return new TableCell<>() {
+            @Override
+            protected void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item == null || empty ? null : DATE_FORMATTER.format(item));
+            }
+        };
+    }
+
+    private TableCell<TransactionModel, Double> createCurrencyCell() {
+        final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        return new TableCell<>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item == null || empty ? null : CURRENCY_FORMATTER.format(item));
+            }
+        };
     }
 }

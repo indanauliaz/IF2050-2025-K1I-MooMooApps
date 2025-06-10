@@ -4,10 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import moomoo.apps.interfaces.UserAwareController;
 import moomoo.apps.model.UserModel;
 
@@ -28,6 +31,7 @@ public class DashboardPemilikController {
     @FXML private Button laporanButton;
     @FXML private Button keuanganButton;
     @FXML private Button tugasButton;
+    @FXML private Button logoutButton;
 
     private UserModel currentUser;
 
@@ -98,6 +102,25 @@ public class DashboardPemilikController {
         // Menampilkan konten placeholder
         loadPage("/moomoo/apps/view/KeuanganPemilikView.fxml"); 
         setActiveButton(keuanganButton);
+    }
+
+    @FXML
+    private void handleLogoutAction(ActionEvent event) {
+        try {
+            Stage currentStage = (Stage) logoutButton.getScene().getWindow();
+            URL fxmlLocation = getClass().getResource("/moomoo/apps/view/LoginView.fxml");
+            if (fxmlLocation == null) {
+                System.err.println("LoginView.fxml not found!");
+                return;
+            }
+            Parent loginRoot = FXMLLoader.load(fxmlLocation);
+            Scene loginScene = new Scene(loginRoot);
+            currentStage.setScene(loginScene);
+            currentStage.setTitle("Login Moo Moo Apps");
+            currentStage.centerOnScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

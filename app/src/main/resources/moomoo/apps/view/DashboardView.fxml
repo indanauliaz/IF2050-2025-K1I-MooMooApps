@@ -118,7 +118,7 @@
                               <text>Settings</text>
                            </Button>
 
-                           <Button fx:id="logoutButton" styleClass="menu-button-icon">
+                           <Button fx:id="logoutButton" onAction="#handleLogoutAction" styleClass="menu-button-icon" text="Logout">
                               <graphic>
                                     <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
                                        <image>
