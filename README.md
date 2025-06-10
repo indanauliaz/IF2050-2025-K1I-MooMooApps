@@ -11,3 +11,13 @@ Dengan Moo Moo Apps, pengguna dapat:
 - Mengakses laporan analisis operasional otomatis untuk mendukung pengambilan keputusan berbasis data
 
 Moo Moo Apps bertujuan untuk meningkatkan efisiensi kerja, koordinasi tim, serta membantu pemilik usaha membuat keputusan strategis secara tepat dan terstruktur.
+
+## Cara Menjalankan Aplikasi
+
+## Daftar Modul
+| Nama Modul | Pembagian Tugas | Tampilan Layar |
+| --- | --- | --- |
+| ... | ... | ... |
+| ... | ... | ... |
+
+## Daftar Basis Data
