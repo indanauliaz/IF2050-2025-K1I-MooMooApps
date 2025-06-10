@@ -12,7 +12,35 @@ Dengan Moo Moo Apps, pengguna dapat:
 
 Moo Moo Apps bertujuan untuk meningkatkan efisiensi kerja, koordinasi tim, serta membantu pemilik usaha membuat keputusan strategis secara tepat dan terstruktur.
 
-## Cara Menjalankan Aplikasi
+## Cara Menjalankan Aplikasi MooMooApps
+Untuk dapat menjalankan MooMooApps, ada beberapa hal yang perlu kamu siapkan dan lakukan. Ikuti langkah-langkah di bawah ini ya!
+### ✅ Prasyarat
+
+* **Java**: Aplikasi ini dibuat dengan bahasa Java, jadi pastikan kamu sudah menginstalnya. (Disarankan menggunakan versi [tulis versi Java di sini, misal: JDK 11 atau lebih baru]).
+* **Git**: Dibutuhkan untuk mengambil salinan proyek dari GitHub.
+
+### ⚙️ Langkah-langkah Instalasi
+
+1.  **Clone Repositori Ini**
+    Pertama-tama, salin (clone) repositori ini ke dalam komputermu dengan membuka terminal/CMD dan mengetikkan perintah:
+    ```bash
+    git clone [https://github.com/indanauliaz/IF2050-2025-K1I-MooMooApps](https://github.com/indanauliaz/IF2050-2025-K1I-MooMooApps)
+    ```
+
+2.  **Navigasi ke Folder Proyek**
+    Setelah proses clone selesai, masuk ke dalam direktori (folder) proyek yang baru saja terbuat:
+    ```bash
+    cd IF2050-2025-K1I-MooMooApps
+    ```
+    *Seluruh perintah selanjutnya dijalankan dari dalam direktori ini.*
+
+3.  **Kompilasi dan Jalankan Proyek**
+    Terakhir, jalankan perintah di bawah ini. Perintah ini akan secara otomatis mengompilasi kode sumber dan langsung menjalankan aplikasinya.
+    ```bash
+    ./gradlew run
+    ```
+
+Voila! 🎉 Aplikasi MooMooApps sudah berjalan dan siap untuk kamu gunakan. Kamu juga bisa membuka folder proyek ini menggunakan editor kode seperti Visual Studio Code untuk melihat-lihat isinya.
 
 ## Daftar Modul
 
