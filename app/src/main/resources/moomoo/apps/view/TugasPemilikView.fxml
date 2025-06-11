@@ -14,15 +14,22 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane styleClass="content-background" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.TugasPemilikController">
+<!-- PERBAIKAN: Menambahkan stylesheet yang benar -->
+<AnchorPane stylesheets="@task_management_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.TugasPemilikController">
    <children>
       <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <VBox spacing="24.0">
-               <padding>
-                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-               </padding>
+            <!-- PERBAIKAN: Menerapkan styleClass 'main-content-area' untuk padding dan background yang konsisten -->
+            <VBox spacing="24.0" styleClass="main-content-area">
                <children>
+                  <!-- PERBAIKAN: Menambahkan Judul dan Subjudul Halaman -->
+                  <VBox>
+                     <children>
+                        <Label text="Pengawasan Tugas" styleClass="view-title" />
+                        <Label text="Lacak status dan kinerja penyelesaian tugas." styleClass="view-subtitle" />
+                     </children>
+                  </VBox>
+
                   <HBox alignment="CENTER_LEFT" spacing="20.0">
                      <children>
                         <HBox styleClass="filter-box">
