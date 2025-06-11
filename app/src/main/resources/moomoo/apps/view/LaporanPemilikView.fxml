@@ -1,44 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
 
-<VBox fx:id="laporanRootPane" spacing="20.0" styleClass="main-content-area"
-      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="moomoo.apps.controller.LaporanController"
+      fx:id="laporanRootPane"
+      spacing="20.0"
+      styleClass="main-content-area"
       stylesheets="@task_management_style.css">
 
+    <!-- Padding keseluruhan -->
     <padding>
-        <Insets top="30" bottom="30" left="30" right="30"/>
+        <Insets top="30" right="30" bottom="30" left="30"/>
     </padding>
 
-    <!-- ====== Judul dan Subjudul ====== -->
+    <!-- ====== Judul Halaman ====== -->
     <Label text="Laporan Peternakan" styleClass="view-title"/>
-    <Label text="Pilih kategori laporan dan filter periode yang diinginkan" styleClass="view-subtitle"/>
+    <Label text="Pilih kategori laporan dan filter periode yang diinginkan"
+           styleClass="view-subtitle"/>
 
-    <!-- ====== Navigasi Tab dan Filter ====== -->
-    <HBox spacing="20.0" alignment="CENTER_LEFT">
+    <!-- ====== Tab Navigasi & Filter ====== -->
+    <HBox alignment="CENTER_LEFT" spacing="20.0">
+        <!-- Tab -->
         <HBox spacing="12.0">
-            <Button fx:id="produksiTabButton" text="Produksi" onAction="#handleProduksiTabAction"
+            <Button fx:id="produksiTabButton"
+                    text="Produksi"
+                    onAction="#handleProduksiTabAction"
                     styleClass="tab-button"/>
-            <Button fx:id="keuanganTabButton" text="Keuangan" onAction="#handleKeuanganTabAction"
+            <Button fx:id="keuanganTabButton"
+                    text="Keuangan"
+                    onAction="#handleKeuanganTabAction"
                     styleClass="tab-button"/>
-            <Button fx:id="sdmTabButton" text="SDM" onAction="#handleSdmTabAction"
+            <Button fx:id="sdmTabButton"
+                    text="SDM"
+                    onAction="#handleSdmTabAction"
                     styleClass="tab-button"/>
         </HBox>
 
-        <HBox spacing="10.0" alignment="CENTER_RIGHT" styleClass="filter-bar" HBox.hgrow="ALWAYS">
+        <!-- Filter -->
+        <HBox alignment="CENTER_RIGHT"
+              spacing="10.0"
+              styleClass="filter-bar"
+              HBox.hgrow="ALWAYS">
             <Label text="Filter Periode:"/>
-            <ComboBox fx:id="filterPeriodeComboBox" promptText="Pilih Periode"
+            <ComboBox fx:id="filterPeriodeComboBox"
+                      promptText="Pilih Periode"
                       prefWidth="160.0"/>
         </HBox>
     </HBox>
 
-    <!-- ====== Area Laporan Dinamis ====== -->
+    <!-- ====== Konten Dinamis ====== -->
     <VBox fx:id="dynamicReportContentArea" VBox.vgrow="ALWAYS"/>
 
 </VBox>

@@ -14,144 +14,212 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" stylesheets="@moomoo_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.DashboardPemilikController">
-   <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         
-         <!-- SIDEBAR (Struktur Disederhanakan) -->
-         <left>
-            <VBox fx:id="sidebar" prefWidth="260.0" spacing="8.0" styleClass="sidebar">
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-               <children>
-                  <!-- Logo / Judul Aplikasi -->
-                  <VBox alignment="CENTER" prefHeight="100.0" spacing="10.0">
-                     <padding>
-                        <Insets bottom="10.0" top="20.0" />
-                     </padding>
-                     <children>
-                        <ImageView fitHeight="74.0" fitWidth="148.0" preserveRatio="true">
-                           <image>
-                              <Image url="@/images/logo.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </VBox>
+<AnchorPane prefHeight="750.0"
+            prefWidth="1200.0"
+            stylesheets="@task_management_style.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="moomoo.apps.controller.DashboardPemilikController">
 
-                  <!-- Semua Tombol menjadi anak langsung dari VBox sidebar -->
-                  <Button fx:id="dashboardButton" onAction="#handleDashboardMenuClick" styleClass="menu-button-icon" text="Dashboard">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                           <image>
-                              <Image url="@/icons/dashboard.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="laporanButton" onAction="#handleLaporanMenuClick" styleClass="menu-button-icon" text="Laporan">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                           <image>
-                              <Image url="@/icons/report.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="keuanganButton" onAction="#handleKeuanganMenuClick" styleClass="menu-button-icon" text="Keuangan">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                           <image>
-                              <Image url="@/icons/money.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="tugasButton" onAction="#handleTugasMenuClick" styleClass="menu-button-icon" text="Tugas">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                           <image>
-                              <Image url="@/icons/tasks.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  
-                  <!-- Spacer untuk mendorong tombol ke bawah -->
-                  <Region VBox.vgrow="ALWAYS" />
-                  
-                  <!-- Tombol Settings & Logout -->
-                  <Button fx:id="settingsButton" styleClass="menu-button-icon" text="Settings">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                           <image>
-                              <Image url="@/icons/settings.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="logoutButton" onAction="#handleLogoutAction" styleClass="menu-button-icon" text="Logout">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                           <image>
-                              <Image url="@/icons/logout.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <VBox prefHeight="10.0" /> <!-- Memberi sedikit spasi di bawah logout -->
-               </children>
-            </VBox>
-         </left>
-         
-         <!-- MAIN CONTENT (Header + Isi) -->
-         <center>
-            <VBox>
-               <children>
-                  <!-- Header -->
-                  <HBox alignment="CENTER_LEFT" prefHeight="80.0" spacing="20.0" styleClass="header-pane">
-                     <children>
-                        <!-- Hapus HBox.hgrow dari Label Judul -->
-                        <Label fx:id="headerTitleLabel" styleClass="header-title" text="Judul Halaman" />
-                        
-                        <!-- ================= PERUBAHAN DI SINI ================= -->
-                        <!-- Tombol Refresh ditambahkan di sini -->
-                        <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefreshAction" text="Refresh Data">
-                           <graphic>
-                              <SVGPath content="M17.65,6.35C16.2,4.9 14.21,4 12,4c-4.42,0 -7.99,3.58 -7.99,8s3.57,8 7.99,8c3.73,0 6.84,-2.55 7.73,-6h-2.08c-0.82,2.33 -3.04,4 -5.65,4 -3.31,0 -6,-2.69 -6,-6s2.69,-6 6,-6c1.66,0 3.14,0.69 4.22,1.78L13,11h7V4l-2.35,2.35z" fill="WHITE" />
-                           </graphic>
-                           <styleClass>
-                              <!-- Anda bisa menggunakan style yang sudah ada atau membuat baru -->
-                              <String fx:value="button-primary" />
-                           </styleClass>
-                        </Button>
-                        <!-- ================= AKHIR PERUBAHAN ================= -->
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
 
-                        <!-- Spacer untuk mendorong sisa elemen ke kanan -->
-                        <Region HBox.hgrow="ALWAYS" />
+            <!-- ===== SIDEBAR ===== -->
+            <left>
+                <VBox fx:id="sidebar"
+                      prefWidth="260.0"
+                      spacing="8.0"
+                      styleClass="sidebar">
+                    <padding>
+                        <Insets top="10.0"/>
+                    </padding>
 
-                        <TextField promptText="Search..." style="-fx-background-radius: 20;" />
-                        <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                           <children>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
-                              <VBox>
-                                 <children>
-                                    <Label fx:id="userNameLabel" text="Tuan Jones" style="-fx-font-weight: bold;" />
-                                    <Label fx:id="userRoleLabel" text="Pemilik" style="-fx-text-fill: #6c757d;" />
-                                 </children>
-                              </VBox>
-                           </children>
+                    <!-- Logo -->
+                    <VBox alignment="CENTER"
+                          prefHeight="100.0"
+                          spacing="10.0">
+                        <padding>
+                            <Insets top="20.0" bottom="10.0"/>
+                        </padding>
+                        <children>
+                            <ImageView fitHeight="74.0"
+                                       fitWidth="148.0"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/images/logo.png"/>
+                                </image>
+                            </ImageView>
+                        </children>
+                    </VBox>
+
+                    <!-- Menu Buttons -->
+                    <Button fx:id="dashboardButton"
+                            onAction="#handleDashboardMenuClick"
+                            styleClass="menu-button-icon"
+                            text="Dashboard">
+                        <graphic>
+                            <ImageView fitHeight="16.0"
+                                       fitWidth="16.0"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/dashboard.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="laporanButton"
+                            onAction="#handleLaporanMenuClick"
+                            styleClass="menu-button-icon"
+                            text="Laporan">
+                        <graphic>
+                            <ImageView fitHeight="16.0"
+                                       fitWidth="16.0"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/report.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="keuanganButton"
+                            onAction="#handleKeuanganMenuClick"
+                            styleClass="menu-button-icon"
+                            text="Keuangan">
+                        <graphic>
+                            <ImageView fitHeight="16.0"
+                                       fitWidth="16.0"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/money.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="tugasButton"
+                            onAction="#handleTugasMenuClick"
+                            styleClass="menu-button-icon"
+                            text="Tugas">
+                        <graphic>
+                            <ImageView fitHeight="16.0"
+                                       fitWidth="16.0"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/tasks.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <!-- Spacer -->
+                    <Region VBox.vgrow="ALWAYS"/>
+
+                    <!-- Bottom Buttons -->
+                    <Button fx:id="settingsButton"
+                            styleClass="menu-button-icon"
+                            text="Settings">
+                        <graphic>
+                            <ImageView fitHeight="16.0"
+                                       fitWidth="16.0"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/settings.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Button fx:id="logoutButton"
+                            onAction="#handleLogoutAction"
+                            styleClass="menu-button-icon"
+                            text="Logout">
+                        <graphic>
+                            <ImageView fitHeight="16.0"
+                                       fitWidth="16.0"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/logout.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <!-- Bottom Padding -->
+                    <VBox prefHeight="10.0"/>
+                </VBox>
+            </left>
+
+            <!-- ===== MAIN CONTENT ===== -->
+            <center>
+                <VBox styleClass="main-content-area">
+                    <children>
+                        <!-- Header -->
+                        <HBox alignment="CENTER_LEFT"
+                              prefHeight="80.0"
+                              spacing="20.0"
+                              styleClass="header-pane">
+                            <padding>
+                                <Insets left="24.0" right="24.0"/>
+                            </padding>
+                            <children>
+                                <!-- Page Title -->
+                                <Label fx:id="headerTitleLabel"
+                                       styleClass="view-title"
+                                       text="Judul Halaman"/>
+
+                                <!-- Refresh Button -->
+                                <Button fx:id="refreshButton"
+                                        onAction="#handleRefreshAction"
+                                        text="Refresh Data"
+                                        styleClass="button-accent">
+                                    <graphic>
+                                        <SVGPath content="M17.65,6.35C16.2,4.9 14.21,4 12,4c-4.42,0 -7.99,3.58 -7.99,8s3.57,8 7.99,8c3.73,0 6.84,-2.55 7.73,-6h-2.08c-0.82,2.33 -3.04,4 -5.65,4 -3.31,0 -6,-2.69 -6,-6s2.69,-6 6,-6c1.66,0 3.14,0.69 4.22,1.78L13,11h7V4l-2.35,2.35z"
+                                                 fill="WHITE"/>
+                                    </graphic>
+                                </Button>
+
+                                <!-- Spacer -->
+                                <Region HBox.hgrow="ALWAYS"/>
+
+                                <!-- Search Field -->
+                                <TextField promptText="Search..."
+                                           style="-fx-background-radius: 20;"/>
+
+                                <!-- User Info -->
+                                <HBox alignment="CENTER_RIGHT"
+                                      spacing="10.0">
+                                    <children>
+                                        <ImageView fitHeight="40.0"
+                                                   fitWidth="40.0"
+                                                   pickOnBounds="true"
+                                                   preserveRatio="true"/>
+                                        <VBox>
+                                            <children>
+                                                <Label fx:id="userNameLabel"
+                                                       text="Tuan Jones"
+                                                       style="-fx-font-weight: bold;"/>
+                                                <Label fx:id="userRoleLabel"
+                                                       text="Pemilik"
+                                                       style="-fx-text-fill: #6c757d;"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
                         </HBox>
-                     </children>
-                     <padding>
-                        <Insets left="24.0" right="24.0" />
-                     </padding>
-                  </HBox>
-                  <!-- Area untuk memuat konten halaman lain -->
-                  <BorderPane fx:id="mainContentPane" styleClass="content-background" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
-         </center>
-      </BorderPane>
-   </children>
+
+                        <!-- Dynamic Content Area -->
+                        <BorderPane fx:id="mainContentPane"
+                                    styleClass="content-background"
+                                    VBox.vgrow="ALWAYS"/>
+                    </children>
+                </VBox>
+            </center>
+        </BorderPane>
+    </children>
 </AnchorPane>

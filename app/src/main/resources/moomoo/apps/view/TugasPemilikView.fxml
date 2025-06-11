@@ -14,106 +14,127 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- PERBAIKAN: Menambahkan stylesheet yang benar -->
-<AnchorPane stylesheets="@task_management_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="moomoo.apps.controller.TugasPemilikController">
-   <children>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <content>
-            <!-- PERBAIKAN: Menerapkan styleClass 'main-content-area' untuk padding dan background yang konsisten -->
-            <VBox spacing="24.0" styleClass="main-content-area">
-               <children>
-                  <!-- PERBAIKAN: Menambahkan Judul dan Subjudul Halaman -->
-                  <VBox>
-                     <children>
-                        <Label text="Pengawasan Tugas" styleClass="view-title" />
-                        <Label text="Lacak status dan kinerja penyelesaian tugas." styleClass="view-subtitle" />
-                     </children>
-                  </VBox>
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="moomoo.apps.controller.TugasPemilikController"
+            stylesheets="@task_management_style.css">
 
-                  <HBox alignment="CENTER_LEFT" spacing="20.0">
-                     <children>
-                        <HBox styleClass="filter-box">
-                           <children>
-                              <Label text="📅" />
-                              <ComboBox fx:id="filterPeriodeComboBox" promptText="Filter Periode" />
-                           </children>
+    <children>
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent;"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0">
+            <content>
+                <VBox spacing="24.0" styleClass="main-content-area">
+                    <children>
+                        <!-- Judul & Subjudul -->
+                        <VBox>
+                            <children>
+                                <Label text="Pengawasan Tugas" styleClass="view-title"/>
+                                <Label text="Lacak status dan kinerja penyelesaian tugas." styleClass="view-subtitle"/>
+                            </children>
+                        </VBox>
+
+                        <!-- Filter -->
+                        <HBox spacing="20.0" alignment="CENTER_LEFT">
+                            <HBox styleClass="filter-box">
+                                <children>
+                                    <Label text="📅"/>
+                                    <ComboBox fx:id="filterPeriodeComboBox" promptText="Filter Periode"/>
+                                </children>
+                            </HBox>
+                            <HBox styleClass="filter-box">
+                                <children>
+                                    <Label text="👥"/>
+                                    <ComboBox fx:id="filterDepartemenComboBox" promptText="Semua Departemen"/>
+                                </children>
+                            </HBox>
                         </HBox>
-                        <HBox styleClass="filter-box">
-                           <children>
-                              <Label text="👥" />
-                              <ComboBox fx:id="filterDepartemenComboBox" promptText="Semua Departemen" />
-                           </children>
+
+                        <!-- KPI Cards -->
+                        <HBox spacing="24.0">
+                            <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label text="TOTAL TUGAS" styleClass="kpi-title"/>
+                                    <Label fx:id="totalTugasLabel" text="0" styleClass="kpi-value"/>
+                                </children>
+                            </VBox>
+                            <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label text="SELESAI" styleClass="kpi-title"/>
+                                    <Label fx:id="totalSelesaiLabel" text="0" styleClass="kpi-value kpi-value-green"/>
+                                </children>
+                            </VBox>
+                            <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label text="DIKERJAKAN" styleClass="kpi-title"/>
+                                    <Label fx:id="sedangDikerjakanLabel" text="0" styleClass="kpi-value kpi-value-orange"/>
+                                </children>
+                            </VBox>
+                            <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label text="EFISIENSI" styleClass="kpi-title"/>
+                                    <Label fx:id="efisiensiLabel" text="0%" styleClass="kpi-value kpi-value-blue"/>
+                                </children>
+                            </VBox>
                         </HBox>
-                     </children>
-                  </HBox>
-                  <HBox spacing="24.0">
-                     <children>
-                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="TOTAL TUGAS" styleClass="kpi-title" />
-                              <Label fx:id="totalTugasLabel" text="0" styleClass="kpi-value" />
-                           </children>
+
+                        <!-- Grafik -->
+                        <HBox spacing="24.0" VBox.vgrow="ALWAYS">
+                            <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label text="Distribusi Tugas" styleClass="chart-title"/>
+                                    <Label text="Berdasarkan departemen" styleClass="chart-subtitle"/>
+                                    <BarChart fx:id="distribusiTugasChart"
+                                              animated="false"
+                                              barGap="5.0"
+                                              categoryGap="20.0"
+                                              legendVisible="false"
+                                              VBox.vgrow="ALWAYS">
+                                        <xAxis><CategoryAxis side="BOTTOM"/></xAxis>
+                                        <yAxis><NumberAxis side="LEFT"/></yAxis>
+                                    </BarChart>
+                                </children>
+                            </VBox>
+
+                            <VBox styleClass="chart-container" prefWidth="380.0">
+                                <children>
+                                    <Label text="Kinerja Penyelesaian" styleClass="chart-title"/>
+                                    <Label text="Berdasarkan status tugas" styleClass="chart-subtitle"/>
+                                    <PieChart fx:id="kinerjaKaryawanChart"
+                                              animated="false"
+                                              labelsVisible="false"
+                                              legendSide="RIGHT"
+                                              VBox.vgrow="ALWAYS"/>
+                                </children>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Tabel Rincian -->
+                        <VBox styleClass="table-container" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label text="Rincian Tugas Karyawan" styleClass="table-title"/>
+                                <TableView fx:id="tugasTableView" VBox.vgrow="ALWAYS">
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                    <columns>
+                                        <TableColumn fx:id="tugasColumn" text="Tugas" prefWidth="200.0"/>
+                                        <TableColumn fx:id="penanggungJawabColumn" text="Penanggung Jawab" prefWidth="150.0"/>
+                                        <TableColumn fx:id="departemenColumn" text="Departemen" prefWidth="120.0"/>
+                                        <TableColumn fx:id="prioritasColumn" text="Prioritas" prefWidth="100.0"/>
+                                        <TableColumn fx:id="tenggatColumn" text="Tenggat" prefWidth="120.0"/>
+                                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="150.0"/>
+                                    </columns>
+                                </TableView>
+                            </children>
                         </VBox>
-                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="SELESAI" styleClass="kpi-title" />
-                              <Label fx:id="totalSelesaiLabel" text="0" styleClass="kpi-value kpi-value-green" />
-                           </children>
-                        </VBox>
-                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="DIKERJAKAN" styleClass="kpi-title" />
-                              <Label fx:id="sedangDikerjakanLabel" text="0" styleClass="kpi-value kpi-value-orange" />
-                           </children>
-                        </VBox>
-                        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="EFISIENSI" styleClass="kpi-title" />
-                              <Label fx:id="efisiensiLabel" text="0%" styleClass="kpi-value kpi-value-blue" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <HBox spacing="24.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="Distribusi Tugas" styleClass="chart-title" />
-                              <Label text="Berdasarkan departemen" styleClass="chart-subtitle" />
-                              <BarChart fx:id="distribusiTugasChart" animated="false" barGap="5.0" categoryGap="20.0" legendVisible="false" VBox.vgrow="ALWAYS">
-                                 <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
-                                 <yAxis><NumberAxis side="LEFT" /></yAxis>
-                              </BarChart>
-                           </children>
-                        </VBox>
-                        <VBox styleClass="chart-container" prefWidth="380.0">
-                           <children>
-                              <Label text="Kinerja Penyelesaian" styleClass="chart-title" />
-                              <Label text="Berdasarkan status tugas" styleClass="chart-subtitle" />
-                              <PieChart fx:id="kinerjaKaryawanChart" animated="false" labelsVisible="false" legendSide="RIGHT" VBox.vgrow="ALWAYS" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <VBox styleClass="table-container" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label text="Rincian Tugas Karyawan" styleClass="table-title" />
-                        <TableView fx:id="tugasTableView" VBox.vgrow="ALWAYS">
-                           <columns>
-                              <TableColumn fx:id="tugasColumn" prefWidth="200.0" text="Tugas" />
-                              <TableColumn fx:id="penanggungJawabColumn" prefWidth="150.0" text="Penanggung Jawab" />
-                              <TableColumn fx:id="departemenColumn" prefWidth="120.0" text="Departemen" />
-                              <TableColumn fx:id="prioritasColumn" prefWidth="100.0" text="Prioritas" />
-                              <TableColumn fx:id="tenggatColumn" prefWidth="120.0" text="Tenggat" />
-                              <TableColumn fx:id="statusColumn" prefWidth="150.0" text="Status" />
-                           </columns>
-                           <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
-                        </TableView>
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-         </content>
-      </ScrollPane>
-   </children>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
 </AnchorPane>
