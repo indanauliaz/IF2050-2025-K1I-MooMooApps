@@ -67,6 +67,10 @@ public class HRManagementController {
     @FXML private Label summaryKehadiranLabel;
     @FXML private Button hariSebelumnyaButton;
     @FXML private Button hariBerikutnyaButton;
+
+    @FXML private Label badgeTodo;
+    @FXML private Label badgeInProgress;
+    @FXML private Label badgeDone;
     //</editor-fold>
 
     private ObservableList<TaskModel> semuaTugasList = FXCollections.observableArrayList();
@@ -174,6 +178,10 @@ public class HRManagementController {
                 e.printStackTrace();
             }
         }
+
+        badgeTodo.setText(String.valueOf(akanDilakukanListVBox.getChildren().size()));
+        badgeInProgress.setText(String.valueOf(sedangDikerjakanListVBox.getChildren().size()));
+        badgeDone.setText(String.valueOf(selesaiListVBox.getChildren().size()));
     }
 
     public void refreshKanbanBoard() {
