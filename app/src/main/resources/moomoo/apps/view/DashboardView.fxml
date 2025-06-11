@@ -9,220 +9,149 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0"
-             stylesheets="@dashboard_style.css"
-             xmlns="http://javafx.com/javafx/17"
-             xmlns:fx="http://javafx.com/fxml/1"
-             fx:controller="moomoo.apps.controller.DashboardController">
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="moomoo.apps.controller.DashboardController"
+            prefWidth="1200" prefHeight="750"
+            stylesheets="@task_management_style.css">
 
     <children>
-        <BorderPane AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <BorderPane AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
 
-            <!-- SIDEBAR -->
+            <!-- ========== SIDEBAR ========== -->
             <left>
-                <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="260.0">
-                    <children>
-                        <!-- Logo Centered -->
-                        <VBox alignment="CENTER" spacing="10.0" prefHeight="120.0">
-                            <padding>
-                                <Insets top="30.0" bottom="20.0"/>
-                            </padding>
-                            <children>
-                                <ImageView fitHeight="74.0" fitWidth="148.0" preserveRatio="true">
-                                    <image>
-                                        <Image url="@/images/logo.png"/>
-                                    </image>
-                                </ImageView>
-                            </children>
-                        </VBox>
+                <VBox fx:id="sidebar" prefWidth="260" spacing="8" styleClass="sidebar">
 
-                        <fx:define>
-                            <ToggleGroup fx:id="menuToggleGroup"/>
-                        </fx:define>
+                    <!-- Logo -->
+                    <VBox alignment="CENTER" spacing="10" prefHeight="120">
+                        <padding><Insets top="30" bottom="20"/></padding>
+                        <ImageView fitWidth="148" fitHeight="74" preserveRatio="true">
+                            <image><Image url="@/images/logo.png"/></image>
+                        </ImageView>
+                    </VBox>
 
-                        <!-- Menu Buttons -->
-                        <VBox spacing="8.0" styleClass="menu-section">
-                            <ToggleButton fx:id="dashboardButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
-                                <graphic>
-                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-                                        <image>
-                                            <Image url="@/icons/dashboard.png"/>
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <text>Dashboard</text>
-                            </ToggleButton>
+                    <!-- ToggleGroup definition -->
+                    <fx:define><ToggleGroup fx:id="menuToggleGroup"/></fx:define>
 
-                            <ToggleButton fx:id="laporanButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
-                                <graphic>
-                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-                                        <image>
-                                            <Image url="@/icons/report.png"/>
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <text>Laporan</text>
-                            </ToggleButton>
+                    <!-- Menu Buttons -->
+                    <VBox spacing="6" styleClass="menu-section">
+                        <ToggleButton fx:id="dashboardButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                <image><Image url="@/icons/dashboard.png"/></image></ImageView></graphic>
+                            <text>Dashboard</text>
+                        </ToggleButton>
 
-                            <ToggleButton fx:id="produksiButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
-                                <graphic>
-                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-                                        <image>
-                                            <Image url="@/icons/milk.png"/>
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <text>Produksi</text>
-                            </ToggleButton>
+                        <ToggleButton fx:id="laporanButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                <image><Image url="@/icons/report.png"/></image></ImageView></graphic>
+                            <text>Laporan</text>
+                        </ToggleButton>
 
-                            <ToggleButton fx:id="keuanganButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
-                                <graphic>
-                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-                                        <image>
-                                            <Image url="@/icons/money.png"/>
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <text>Keuangan</text>
-                            </ToggleButton>
+                        <ToggleButton fx:id="produksiButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                <image><Image url="@/icons/milk.png"/></image></ImageView></graphic>
+                            <text>Produksi</text>
+                        </ToggleButton>
 
-                            <ToggleButton fx:id="tugasButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
-                                <graphic>
-                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-                                        <image>
-                                            <Image url="@/icons/tasks.png"/>
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <text>Tugas</text>
-                            </ToggleButton>
-                        </VBox>
+                        <ToggleButton fx:id="keuanganButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                <image><Image url="@/icons/money.png"/></image></ImageView></graphic>
+                            <text>Keuangan</text>
+                        </ToggleButton>
 
-                        <!-- Spacer -->
-                        <Region VBox.vgrow="ALWAYS"/>
+                        <ToggleButton fx:id="tugasButton" toggleGroup="$menuToggleGroup" styleClass="menu-button-icon">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                <image><Image url="@/icons/tasks.png"/></image></ImageView></graphic>
+                            <text>Tugas</text>
+                        </ToggleButton>
+                    </VBox>
 
-                        <!-- Settings & Logout as Buttons -->
-                        <VBox spacing="8.0" alignment="CENTER_LEFT">
-                           <padding>
-                              <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
-                           </padding>
-                           <Button fx:id="settingsButton" styleClass="menu-button-icon">
-                              <graphic>
-                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-                                       <image>
-                                          <Image url="@/icons/settings.png"/>
-                                       </image>
-                                    </ImageView>
-                              </graphic>
-                              <text>Settings</text>
-                           </Button>
+                    <Region VBox.vgrow="ALWAYS"/>
 
-                           <Button fx:id="logoutButton" onAction="#handleLogoutAction" styleClass="menu-button-icon" text="Logout">
-                              <graphic>
-                                    <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
-                                       <image>
-                                          <Image url="@/icons/logout.png"/>
-                                       </image>
-                                    </ImageView>
-                              </graphic>
-                              <text>Logout</text>
-                           </Button>
-                        </VBox>
-                    </children>
+                    <!-- Settings & Logout -->
+                    <VBox alignment="CENTER_LEFT" spacing="6">
+                        <padding><Insets left="10" right="10" bottom="10" top="10"/></padding>
+
+                        <Button fx:id="settingsButton" styleClass="menu-button-icon">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                <image><Image url="@/icons/settings.png"/></image></ImageView></graphic>
+                            <text>Settings</text>
+                        </Button>
+
+                        <Button fx:id="logoutButton" onAction="#handleLogoutAction" styleClass="menu-button-icon">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                                <image><Image url="@/icons/logout.png"/></image></ImageView></graphic>
+                            <text>Logout</text>
+                        </Button>
+                    </VBox>
                 </VBox>
             </left>
 
-            <!-- MAIN CONTENT -->
+            <!-- ========== MAIN CONTENT ========== -->
             <center>
-                <ScrollPane fx:id="mainContentScrollPane" fitToWidth="true" fitToHeight="true">
+                <ScrollPane fx:id="mainContentScrollPane" fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER">
                     <content>
-                        <VBox spacing="20.0" styleClass="main-content">
-                            <padding>
-                                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
-                            </padding>
+                        <VBox spacing="25" styleClass="main-content-area">
+                            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-                            <!-- Header -->
-                            <Label text="Dashboard" styleClass="dashboard-title"/>
-                            <Label text="Selamat Datang, Manager" styleClass="welcome-label"/>
+                            <!-- Hidden user/search row (controller hook) -->
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <TextField fx:id="searchField" promptText="Search..." visible="false" managed="false"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="userNameLabel" visible="false" managed="false"/>
+                                <Label fx:id="userRoleLabel" visible="false" managed="false"/>
+                            </HBox>
 
-                            <!-- Cards -->
-                            <HBox spacing="15.0">
-                                <VBox styleClass="card">
+                            <!-- Headers -->
+                            <Label text="Dashboard" styleClass="view-title"/>
+                            <Label text="Selamat Datang, Manager" styleClass="view-subtitle"/>
+
+                            <!-- KPI Cards -->
+                            <HBox spacing="18">
+                                <VBox spacing="6" styleClass="card">
                                     <Label text="Total Produksi" styleClass="card-title"/>
-                                    <Label text="2,345 L" styleClass="card-value"/>
-                                    <Label text="+52% dari bulan lalu" styleClass="card-sub"/>
-                                    <ProgressBar progress="0.52" styleClass="progress-green"/>
+                                    <Label fx:id="totalProduksiLabel" text="0 L" styleClass="card-value"/>
+                                    <Label fx:id="deltaProduksiLabel" styleClass="card-sub"/>
+                                    <ProgressBar fx:id="produksiProgress" progress="0" styleClass="progress-green"/>
                                 </VBox>
-                                <VBox styleClass="card">
+
+                                <VBox spacing="6" styleClass="card">
                                     <Label text="Pendapatan" styleClass="card-title"/>
-                                    <Label text="Rp 200,736,000" styleClass="card-value"/>
-                                    <Label text="+3.1% dari bulan lalu" styleClass="card-sub"/>
-                                    <ProgressBar progress="0.31" styleClass="progress-green"/>
+                                    <Label fx:id="totalPendapatanLabel" text="Rp 0" styleClass="card-value"/>
+                                    <Label fx:id="deltaPendapatanLabel" styleClass="card-sub"/>
+                                    <ProgressBar fx:id="pendapatanProgress" progress="0" styleClass="progress-green"/>
                                 </VBox>
-                                <VBox styleClass="card">
+
+                                <VBox spacing="6" styleClass="card">
                                     <Label text="Tugas Selesai" styleClass="card-title"/>
-                                    <Label text="24/30" styleClass="card-value"/>
-                                    <Label text="80% tingkat penyelesaian" styleClass="card-sub"/>
-                                    <ProgressBar progress="0.8" styleClass="progress-green"/>
+                                    <Label fx:id="taskDoneLabel" text="0/0" styleClass="card-value"/>
+                                    <Label fx:id="taskPercentLabel" styleClass="card-sub"/>
+                                    <ProgressBar fx:id="taskProgress" progress="0" styleClass="progress-green"/>
                                 </VBox>
-                                <VBox styleClass="card">
+
+                                <VBox spacing="6" styleClass="card">
                                     <Label text="Kehadiran Karyawan" styleClass="card-title"/>
-                                    <Label text="18/20" styleClass="card-value"/>
-                                    <Label text="90% tingkat kehadiran" styleClass="card-sub"/>
-                                    <ProgressBar progress="0.9" styleClass="progress-green"/>
+                                    <Label fx:id="attendanceLabel" text="0/0" styleClass="card-value"/>
+                                    <Label fx:id="attendancePercentLabel" styleClass="card-sub"/>
+                                    <ProgressBar fx:id="attendanceProgress" progress="0" styleClass="progress-green"/>
                                 </VBox>
                             </HBox>
 
-                            <!-- Chart -->
-                            <VBox styleClass="chart-card">
-                                <Label text="Produksi susu harian selama 7 hari" styleClass="section-title"/>
-                                <AreaChart fx:id="milkChart" title="" prefHeight="250.0" prefWidth="880.0">
-                                    <xAxis>
-                                        <CategoryAxis label="Hari"/>
-                                    </xAxis>
-                                    <yAxis>
-                                        <NumberAxis label="Liter"/>
-                                    </yAxis>
+                            <!-- Milk Production Chart -->
+                            <VBox spacing="10" styleClass="chart-card">
+                                <Label text="Produksi Susu Harian (7 Hari Terakhir)" styleClass="section-title"/>
+                                <AreaChart fx:id="milkChart" prefHeight="260" prefWidth="880">
+                                    <xAxis><CategoryAxis label="Hari"/></xAxis>
+                                    <yAxis><NumberAxis label="Liter"/></yAxis>
                                 </AreaChart>
                             </VBox>
 
-                            <!-- Task List -->
-                           <VBox spacing="10.0" styleClass="task-list-card">
-                              <Label text="Tugas Hari Ini" styleClass="section-title"/>
-                              
-                              <VBox spacing="8.0">
-                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                       <Label text="Pemerahan Pagi" styleClass="task-label"/>
-                                       <Region HBox.hgrow="ALWAYS"/>
-                                       <Label text="Selesai" styleClass="status-done"/>
-                                 </HBox>
-
-                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                       <Label text="Distribusi Pakan" styleClass="task-label"/>
-                                       <Region HBox.hgrow="ALWAYS"/>
-                                       <Label text="Selesai" styleClass="status-done"/>
-                                 </HBox>
-
-                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                       <Label text="Pemeriksaan Kesehatan" styleClass="task-label"/>
-                                       <Region HBox.hgrow="ALWAYS"/>
-                                       <Label text="Sedang dikerjakan" styleClass="status-progress"/>
-                                 </HBox>
-
-                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                       <Label text="Pemerahan Sore" styleClass="task-label"/>
-                                       <Region HBox.hgrow="ALWAYS"/>
-                                       <Label text="Tertunda" styleClass="status-pending"/>
-                                 </HBox>
-
-                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                       <Label text="Pembersihan Peralatan" styleClass="task-label"/>
-                                       <Region HBox.hgrow="ALWAYS"/>
-                                       <Label text="Tertunda" styleClass="status-pending"/>
-                                 </HBox>
-                              </VBox>
-                           </VBox>
+                            <!-- Today Task List -->
+                            <VBox spacing="10" styleClass="task-list-card">
+                                <Label text="Tugas Hari Ini" styleClass="section-title"/>
+                                <VBox fx:id="todayTaskList" spacing="8"/>
+                            </VBox>
                         </VBox>
                     </content>
                 </ScrollPane>

@@ -1,223 +1,237 @@
-package moomoo.apps.controller; 
+package moomoo.apps.controller;
+
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox; 
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
+
 import moomoo.apps.interfaces.UserAwareController;
-import moomoo.apps.model.UserModel;
+import moomoo.apps.model.*;
+import moomoo.apps.utils.DatabaseManager;
 import moomoo.apps.utils.PollingService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class DashboardController {
 
-    @FXML
-    private VBox sidebar;
+    /* --------- Sidebar & Header --------- */
+    @FXML private ToggleGroup menuToggleGroup;
+    @FXML private ToggleButton dashboardButton, laporanButton, keuanganButton, tugasButton, produksiButton;
+    @FXML private Button logoutButton;
+    @FXML private Label userNameLabel, userRoleLabel;
+    @FXML private ScrollPane mainContentScrollPane;
 
-    @FXML
-    private ToggleGroup menuToggleGroup;
+    /* --------- KPI Controls --------- */
+    @FXML private Label totalProduksiLabel, deltaProduksiLabel;
+    @FXML private ProgressBar produksiProgress;
+    @FXML private Label totalPendapatanLabel, deltaPendapatanLabel;
+    @FXML private ProgressBar pendapatanProgress;
+    @FXML private Label taskDoneLabel, taskPercentLabel;
+    @FXML private ProgressBar taskProgress;
+    @FXML private Label attendanceLabel, attendancePercentLabel;
+    @FXML private ProgressBar attendanceProgress;
 
-    @FXML
-    private ToggleButton dashboardButton;
+    /* --------- Task List Today --------- */
+    @FXML private VBox todayTaskList;
 
-    @FXML
-    private ToggleButton laporanButton;
-
-    @FXML
-    private ToggleButton keuanganButton;
-
-    @FXML
-    private ToggleButton tugasButton;
-
-    @FXML
-    private ToggleButton produksiButton;
-
-    @FXML
-    private Button settingsButton;
-
-    @FXML
-    private Button logoutButton;
-
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private Label userNameLabel;
-
-    @FXML
-    private Label userRoleLabel;
-
-    @FXML
-    private ScrollPane mainContentScrollPane;
-
-    private UserModel currentUser;
     private Node originalDashboardContent;
+    private UserModel currentUser;
 
-    public void initialize() {
-        menuToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-             
-                if (oldValue != null) {
-                    oldValue.setSelected(true);
-                }
-            } else {
-                handleSidebarNavigation((ToggleButton) newValue);
-            }
+    /* ========== INITIALIZE ========== */
+    @FXML
+    private void initialize() {
+        menuToggleGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> {
+            if (newT == null) {
+                if (oldT != null) oldT.setSelected(true);
+            } else handleSidebar((ToggleButton) newT);
         });
 
         dashboardButton.setSelected(true);
 
         Platform.runLater(() -> {
-            if (mainContentScrollPane != null) {
-                originalDashboardContent = mainContentScrollPane.getContent();
-                System.out.println("Saved original dashboard content.");
-            }
+            originalDashboardContent = mainContentScrollPane.getContent();
+            refreshDashboard();
         });
     }
 
-    public void initData(UserModel user) {
-        this.currentUser = user;
-        updateUserInfo(user);
-        PollingService.getInstance().start();
+    @FXML
+    public void handleLogoutAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/moomoo/apps/view/LoginView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Login");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void updateUserInfo(UserModel user) {
+
+    /* ========== DATA BIND ========== */
+    public void initData(UserModel user) {
+        this.currentUser = user;
         if (user != null) {
             userNameLabel.setText(user.getUsername());
             userRoleLabel.setText(user.getRole());
         }
+        PollingService.getInstance().start();
     }
 
-    private void handleSidebarNavigation(ToggleButton selectedButton) {
-        String viewPath = null;
+    /* ========== DASHBOARD REFRESH LOGIC ========== */
+    public void refreshDashboard() {
+        updateProduksiKpi();
+        updateKeuanganKpi();
+        updateTaskKpi();
+        updateAttendanceKpi();
+        populateTodayTasks();
+    }
 
-        if (selectedButton == dashboardButton) {
-            System.out.println("DEBUG: Dashboard selected");
-            loadDashboardFXMLContent();
-            return;
-        } else if (selectedButton == laporanButton) {
-            System.out.println("DEBUG: Laporan selected");
-            viewPath = "/moomoo/apps/view/LaporanView.fxml";
-        } else if (selectedButton == keuanganButton) {
-            System.out.println("DEBUG: Keuangan selected");
-            viewPath = "/moomoo/apps/view/FinanceView.fxml";
-        } else if (selectedButton == tugasButton) {
-            System.out.println("DEBUG: Tugas selected");
-            viewPath = "/moomoo/apps/view/TaskManagement.fxml";
-        } else if (selectedButton == produksiButton) {
-            System.out.println("DEBUG: Produksi selected");
-            viewPath = "/moomoo/apps/view/ProductionView.fxml";
-        }
+    /* --- PRODUKSI KPI --- */
+    private void updateProduksiKpi() {
+        LocalDate today = LocalDate.now();
+        LocalDate startCurr = today.withDayOfMonth(1);
+        LocalDate endPrev   = startCurr.minusDays(1);
+        LocalDate startPrev = endPrev.withDayOfMonth(1);
 
-        if (viewPath != null) {
-            loadView(viewPath, this.currentUser);
-        } else if (selectedButton != dashboardButton) {
-            showPlaceholderView("Konten untuk " + selectedButton.getText());
+        double currTotal = ProductionModel.getInstance().getAllProductionData().stream()
+                .filter(r -> !r.getTanggal().isBefore(startCurr) && !r.getTanggal().isAfter(today))
+                .mapToDouble(ProductionRecord::getJumlah).sum();
+
+        double prevTotal = ProductionModel.getInstance().getAllProductionData().stream()
+                .filter(r -> !r.getTanggal().isBefore(startPrev) && !r.getTanggal().isAfter(endPrev))
+                .mapToDouble(ProductionRecord::getJumlah).sum();
+
+        double delta = prevTotal == 0 ? 0 : (currTotal - prevTotal) / prevTotal;
+
+        totalProduksiLabel.setText(String.format(Locale.US, "%,.0f L", currTotal));
+        deltaProduksiLabel.setText(String.format(Locale.US, "%+.1f%% dari bulan lalu", delta * 100));
+        produksiProgress.setProgress(Math.min(1.0, Math.abs(delta)));
+    }
+
+    /* --- KEUANGAN KPI --- */
+    private void updateKeuanganKpi() {
+        NumberFormat nf = NumberFormat.getInstance(new Locale("id", "ID"));
+        List<TransactionModel> trx = FinanceModel.getInstance().getAllTransactions();
+        double pemasukan   = trx.stream().filter(t -> "Pemasukan".equalsIgnoreCase(t.getTransactionType()))
+                                .mapToDouble(TransactionModel::getAmount).sum();
+        double pengeluaran = trx.stream().filter(t -> "Pengeluaran".equalsIgnoreCase(t.getTransactionType()))
+                                .mapToDouble(TransactionModel::getAmount).sum();
+        double net = pemasukan - pengeluaran;
+
+        totalPendapatanLabel.setText("Rp " + nf.format(net));
+        pendapatanProgress.setProgress(pemasukan == 0 ? 0 : pengeluaran / pemasukan);
+        deltaPendapatanLabel.setText("Pengeluaran: Rp " + nf.format(pengeluaran));
+    }
+
+    /* --- TASK KPI --- */
+    private void updateTaskKpi() {
+        List<TaskModel> tasks = DatabaseManager.getAllTasks();
+        long done   = tasks.stream().filter(t -> "Selesai".equalsIgnoreCase(t.getStatus())).count();
+        int  total  = tasks.size();
+        double pct  = total == 0 ? 0 : (double) done / total;
+
+        taskDoneLabel.setText(done + "/" + total);
+        taskPercentLabel.setText(String.format(Locale.US, "%.0f%% tingkat penyelesaian", pct * 100));
+        taskProgress.setProgress(pct);
+    }
+
+    /* --- ATTENDANCE KPI --- */
+    private void updateAttendanceKpi() {
+        LocalDate today = LocalDate.now();
+        List<AttendanceRecordModel> todayRecords = DatabaseManager.getAttendanceRecordsByDate(today);
+        long hadir = todayRecords.stream().filter(r -> "Hadir".equalsIgnoreCase(r.getStatusKehadiran())).count();
+        int totalKaryawan = DatabaseManager.getAllEmployees().size();
+        double pct = totalKaryawan == 0 ? 0 : (double) hadir / totalKaryawan;
+
+        attendanceLabel.setText(hadir + "/" + totalKaryawan);
+        attendancePercentLabel.setText(String.format(Locale.US, "%.0f%% tingkat kehadiran", pct * 100));
+        attendanceProgress.setProgress(pct);
+    }
+
+    /* --- TASK LIST HARI INI --- */
+    private void populateTodayTasks() {
+        todayTaskList.getChildren().clear();
+        LocalDate today = LocalDate.now();
+        List<TaskModel> todayTasks = DatabaseManager.getAllTasks().stream()
+                .filter(t -> today.equals(t.getTanggalTugas()))
+                .collect(Collectors.toList());
+
+        for (TaskModel t : todayTasks) {
+            Label name = new Label(t.getNamaTugas());
+            name.getStyleClass().add("task-label");
+
+            Label status = new Label(t.getStatus());
+            status.getStyleClass().add(switch (t.getStatus().toLowerCase()) {
+                case "selesai" -> "status-done";
+                case "sedang dikerjakan" -> "status-progress";
+                default -> "status-pending";
+            });
+
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+            HBox row = new HBox(10, name, spacer, status);
+            row.setAlignment(Pos.CENTER_LEFT);
+            todayTaskList.getChildren().add(row);
         }
     }
 
-    @FXML
-    private void handleLogoutAction(ActionEvent event) {
-
-        PollingService.getInstance().stop();
-        System.out.println("Logout action triggered");
+    /* ========== VIEW HELPERS ========== */
+    private void loadView(String path) {
         try {
-            Stage currentStage = (Stage) logoutButton.getScene().getWindow();
-            URL fxmlLocation = getClass().getResource("/moomoo/apps/view/LoginView.fxml");
-            if (fxmlLocation == null) {
-                System.err.println("LoginView.fxml not found!");
-                return;
-            }
-            Parent loginRoot = FXMLLoader.load(fxmlLocation);
-            Scene loginScene = new Scene(loginRoot);
-
-            // String css = getClass().getResource("/moomoo/apps/view/style_precise.css").toExternalForm();
-            // loginScene.getStylesheets().add(css);
-
-            currentStage.setScene(loginScene);
-            currentStage.setTitle("Login Moo Moo Apps");
-            currentStage.centerOnScreen();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadView(String fxmlPath, UserModel user) {
-        try {
-            URL resourceUrl = getClass().getResource(fxmlPath);
-            if (resourceUrl == null) {
-                System.err.println("ERROR: FXML Resource not found: " + fxmlPath);
-                showErrorInScrollPane("File FXML tidak ditemukan: " + fxmlPath);
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(resourceUrl);
-            Parent view = loader.load();
-
-            Object controller = loader.getController();
-
-            if (user != null && controller instanceof UserAwareController) {
-                ((UserAwareController) controller).initData(user);
-            }
-
+            URL url = getClass().getResource(path);
+            if (url == null) { showError("FXML not found: " + path); return; }
+            FXMLLoader fx = new FXMLLoader(url);
+            Parent view = fx.load();
+            if (currentUser != null && fx.getController() instanceof UserAwareController uac) uac.initData(currentUser);
             mainContentScrollPane.setContent(view);
-            mainContentScrollPane.setFitToWidth(true);
-            mainContentScrollPane.setFitToHeight(true);
-        } catch (IOException e) {
-            System.err.println("ERROR: IOException while loading FXML: " + fxmlPath);
-            e.printStackTrace(); 
-            showErrorInScrollPane("Gagal memuat tampilan: " + fxmlPath.substring(fxmlPath.lastIndexOf('/') + 1) + "\nError: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("ERROR: Unexpected exception in loadView for " + fxmlPath);
             e.printStackTrace();
-            showErrorInScrollPane("Gagal memuat tampilan: " + fxmlPath);
+            showError("Gagal memuat: " + path);
         }
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        //     showErrorInScrollPane("Terjadi kesalahan saat memuat: " + fxmlPath);
-        // }
     }
 
-    private void showPlaceholderView(String pageName) {
-        VBox placeholderContent = new VBox();
-        placeholderContent.setPadding(new javafx.geometry.Insets(20));
-        placeholderContent.setAlignment(Pos.CENTER);
-        Label placeholderLabel = new Label("Ini Halaman " + pageName + " (Belum Diimplementasikan)");
-        placeholderLabel.setStyle("-fx-font-size: 18px;");
-        placeholderContent.getChildren().add(placeholderLabel);
-        mainContentScrollPane.setContent(placeholderContent);
-        mainContentScrollPane.setFitToWidth(true);
-        mainContentScrollPane.setFitToHeight(true);
+    private void handleSidebar(ToggleButton btn) {
+        if (btn == dashboardButton) { restoreDashboard(); return; }
+        String fxml = switch (btn.getId()) {
+            case "laporanButton"  -> "/moomoo/apps/view/LaporanView.fxml";
+            case "keuanganButton" -> "/moomoo/apps/view/FinanceView.fxml";
+            case "tugasButton"    -> "/moomoo/apps/view/TaskManagement.fxml";
+            case "produksiButton" -> "/moomoo/apps/view/ProductionView.fxml";
+            default -> null;
+        };
+        if (fxml != null) loadView(fxml); else showPlaceholderView(btn.getText());
     }
 
-    private void showErrorInScrollPane(String message) {
-        VBox errorContainer = new VBox();
-        errorContainer.setPadding(new javafx.geometry.Insets(20));
-        errorContainer.setAlignment(Pos.CENTER);
-        Label errorLabel = new Label(message);
-        errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-wrap-text: true;");
-        errorContainer.getChildren().add(errorLabel);
-        mainContentScrollPane.setContent(errorContainer);
-        mainContentScrollPane.setFitToWidth(true);
-        mainContentScrollPane.setFitToHeight(true);
+    private void restoreDashboard() {
+        if (originalDashboardContent != null) mainContentScrollPane.setContent(originalDashboardContent);
+        refreshDashboard();
     }
 
-    private void loadDashboardFXMLContent() {
-        if (originalDashboardContent != null) {
-            mainContentScrollPane.setContent(originalDashboardContent);
-            mainContentScrollPane.setFitToWidth(true);
-            mainContentScrollPane.setFitToHeight(true);
-            System.out.println("Dashboard content restored from original node.");
-        } else {
-            System.err.println("Original dashboard content is null!");
-        }
+    private void showPlaceholderView(String name) {
+        Label l = new Label("Halaman " + name + " belum tersedia"); l.setStyle("-fx-font-size:18px;");
+        VBox box = new VBox(l); box.setAlignment(Pos.CENTER); box.setPadding(new Insets(20));
+        mainContentScrollPane.setContent(box);
+    }
+
+    private void showError(String msg) {
+        Label l = new Label(msg); l.setStyle("-fx-text-fill:red;-fx-font-size:16px;");
+        VBox box = new VBox(l); box.setAlignment(Pos.CENTER); box.setPadding(new Insets(20));
+        mainContentScrollPane.setContent(box);
     }
 }
