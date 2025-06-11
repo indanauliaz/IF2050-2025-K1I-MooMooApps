@@ -24,7 +24,7 @@ public class TaskModel {
     private final StringProperty status;
     private final ObjectProperty<LocalDate> tanggalSelesai;
 
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm"); // Dijadikan public static final
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm"); 
 
     // Konstruktor Utama (Lengkap)
     public TaskModel(int id, String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab, String departemen, LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status, LocalDate tanggalSelesai) {
@@ -41,12 +41,8 @@ public class TaskModel {
         this.tanggalSelesai = new SimpleObjectProperty<>(tanggalSelesai);
     }
 
-    // Konstruktor untuk TUGAS BARU (sesuai format yang kamu minta)
-    // ID akan di-set default ke 0 (atau bisa di-handle saat insert ke DB)
-    // Tanggal Selesai default null
     public TaskModel(String namaTugas, String deskripsiTugas, Integer employeeId, String namaKaryawanPenanggungJawab, String departemen,
                      LocalDate tanggalTugas, LocalTime waktuTugas, String prioritas, String status) {
-        // Memanggil konstruktor utama dengan ID default 0 dan tanggalSelesai null
         this(0, // ID default untuk tugas baru
              namaTugas,
              deskripsiTugas,

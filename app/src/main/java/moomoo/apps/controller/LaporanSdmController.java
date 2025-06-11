@@ -141,31 +141,28 @@ public class LaporanSdmController implements ILaporanKontenController {
     }
 
     private void updateKartuStatistik(List<EmployeeModel> karyawanList, List<AttendanceRecordModel> kehadiranList) {
-        // Kartu 1: Total Karyawan
+
         totalKaryawanLabel.setText(String.valueOf(karyawanList.size()));
         totalKaryawanProgressBar.setProgress(karyawanList.size() / 50.0);
         totalKaryawanDescLabel.setText("Total karyawan aktif");
 
-        // Kartu 2: Tingkat Kehadiran
         double avgKehadiran = karyawanList.stream().mapToDouble(EmployeeModel::getPersentaseKehadiran).average().orElse(0.0);
         tingkatKehadiranLabel.setText(String.format("%.1f%%", avgKehadiran * 100));
         kehadiranProgressBar.setProgress(avgKehadiran);
         tingkatKehadiranDescLabel.setText("Rata-rata periode " + currentPeriodeFilter);
 
-        // Kartu 3: Produktivitas
-        double avgProduktivitas = karyawanList.stream().mapToDouble(EmployeeModel::getPersentaseProduktivitas).average().orElse(0.0);
+
+        double avgProduktivitas = sdmModel.getKinerjaGabunganPeriodeIni(); 
         produktivitasLabel.setText(String.format("%.1f%%", avgProduktivitas * 100));
         produktivitasProgressBar.setProgress(avgProduktivitas);
         produktivitasDescLabel.setText("Kinerja gabungan");
 
-        // Kartu 4: Biaya (Placeholder)
+  
         biayaSdmLabel.setText("N/A");
         biayaSdmProgressBar.setProgress(0);
         biayaSdmDescLabel.setText("Data tidak tersedia");
     }
     
-    // ... (Metode setupTampilanAwalSdm, updateGrafikDistribusi, updateGrafikKehadiran, dll. tetap sama) ...
-    //<editor-fold defaultstate="collapsed" desc="Unchanged UI Methods">
     private void setupTampilanAwalSdm() {
         setFilterChartAktif(filterHadirButton);
         sebelumnyaButton.setDisable(true);

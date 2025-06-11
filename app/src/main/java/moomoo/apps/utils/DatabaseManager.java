@@ -201,61 +201,65 @@ public class DatabaseManager {
     private static void addInitialTaskData(Connection conn) {
         String checkEmptySQL = "SELECT COUNT(*) AS count FROM tasks";
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(checkEmptySQL)) {
+            ResultSet rs = stmt.executeQuery(checkEmptySQL)) {
             
             if (rs.next() && rs.getInt("count") == 0) {
-                System.out.println("Menambahkan data tugas awal...");
+                System.out.println("Menambahkan data tugas awal yang diperbarui...");
                 String insertSQL = "INSERT INTO tasks (nama_tugas, deskripsi_tugas, employee_id, tanggal_tugas, waktu_tugas, prioritas, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
                     
-                    // Data tugas sesuai mockup
-                    pstmt.setString(1, "Pemerahan Pagi");
-                    pstmt.setString(2, "Sesi pemerahan susu pagi");
-                    pstmt.setInt(3, 1); // ID Budi Santoso
-                    pstmt.setString(4, "2025-05-09");
+                    // Tugas 1 (Juni - Selesai)
+                    pstmt.setString(1, "Pemerahan Pagi Sesi 1");
+                    pstmt.setString(2, "Sesi pemerahan susu pagi di kandang A");
+                    pstmt.setInt(3, 2); // Siti Aminah
+                    pstmt.setString(4, "2025-06-03"); // <-- TANGGAL JUNI
                     pstmt.setString(5, "08:00");
                     pstmt.setString(6, "Tinggi");
-                    pstmt.setString(7, "Selesai");
+                    pstmt.setString(7, "Selesai"); // <-- STATUS SELESAI
                     pstmt.addBatch();
                     
-                    pstmt.setString(1, "Distribusi Pakan");
-                    pstmt.setString(2, "Memberi makan sapi di kandang A");
-                    pstmt.setInt(3, 2); // ID Siti Aminah
-                    pstmt.setString(4, "2025-05-09");
-                    pstmt.setString(5, "09:00");
-                    pstmt.setString(6, "Sedang");
-                    pstmt.setString(7, "Selesai");
-                    pstmt.addBatch();
-                    
-                    pstmt.setString(1, "Pembersihan Kandang");
+                    // Tugas 2 (Juni - Dikerjakan)
+                    pstmt.setString(1, "Pembersihan Kandang B");
                     pstmt.setString(2, "Membersihkan seluruh area kandang B");
-                    pstmt.setInt(3, 3); // ID Agus Wijaya
-                    pstmt.setString(4, "2025-05-09");
+                    pstmt.setInt(3, 3); // Agus Wijaya
+                    pstmt.setString(4, "2025-06-10"); // <-- TANGGAL JUNI
                     pstmt.setString(5, "10:00");
                     pstmt.setString(6, "Normal");
                     pstmt.setString(7, "Sedang Dikerjakan");
                     pstmt.addBatch();
                     
-                    pstmt.setString(1, "Pemeriksaan Kesehatan");
-                    pstmt.setString(2, "Cek kesehatan sapi indukan");
-                    pstmt.setInt(3, 1); // ID Budi Santoso
-                    pstmt.setString(4, "2025-05-09");
+                    // Tugas 3 (Juni - Akan Dilakukan)
+                    pstmt.setString(1, "Pemeriksaan Kesehatan Rutin");
+                    pstmt.setString(2, "Cek kesehatan sapi indukan oleh dokter hewan");
+                    pstmt.setInt(3, 1); // Budi Santoso
+                    pstmt.setString(4, "2025-06-12"); // <-- TANGGAL JUNI
                     pstmt.setString(5, "14:00");
                     pstmt.setString(6, "Tinggi");
-                    pstmt.setString(7, "Tertunda");
+                    pstmt.setString(7, "Akan Dilakukan");
                     pstmt.addBatch();
 
-                    pstmt.setString(1, "Stok Pakan");
+                    // Tugas 4 (Mei - Selesai, untuk data historis)
+                    pstmt.setString(1, "Distribusi Pakan Mei");
+                    pstmt.setString(2, "Memberi makan sapi di semua kandang");
+                    pstmt.setInt(3, 2); // Siti Aminah
+                    pstmt.setString(4, "2025-05-15"); // <-- TANGGAL MEI
+                    pstmt.setString(5, "09:00");
+                    pstmt.setString(6, "Sedang");
+                    pstmt.setString(7, "Selesai");
+                    pstmt.addBatch();
+                    
+                    // Tugas 5 (Mei - Selesai, untuk data historis)
+                    pstmt.setString(1, "Inventarisasi Stok Pakan Mei");
                     pstmt.setString(2, "Inventarisasi stok pakan di gudang");
-                    pstmt.setInt(3, 4); // ID Dewi Lestari
-                    pstmt.setString(4, "2025-05-09");
+                    pstmt.setInt(3, 4); // Dewi Lestari
+                    pstmt.setString(4, "2025-05-28"); // <-- TANGGAL MEI
                     pstmt.setString(5, "15:00");
-                    pstmt.setString(6, "Tinggi");
-                    pstmt.setString(7, "Tertunda");
+                    pstmt.setString(6, "Rendah");
+                    pstmt.setString(7, "Selesai");
                     pstmt.addBatch();
 
                     pstmt.executeBatch();
-                    System.out.println("Data tugas awal berhasil ditambahkan.");
+                    System.out.println("Data tugas awal yang diperbarui berhasil ditambahkan.");
                 }
             } else {
                 System.out.println("Data tugas sudah ada atau gagal memeriksa tabel.");

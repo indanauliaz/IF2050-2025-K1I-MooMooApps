@@ -84,21 +84,16 @@ public class HRManagementController {
 
     @FXML
     public void initialize() {
-        // Inisialisasi Database
         DatabaseManager.initializeDatabase();
-
-        // Setup untuk Tab Tugas
         tanggalFilterPicker.setValue(LocalDate.now());
         muatDaftarKaryawan();
         muatSemuaTugasDariDB();
 
-        // Setup untuk Tab Kehadiran
         tanggalKehadiranSaatIni = LocalDate.now(); 
         updateLabelTanggalKehadiran();
         setupKolomTabelKehadiran();
         muatDataKehadiran(tanggalKehadiranSaatIni);
         
-        // Listener untuk perpindahan Tab
         mainTabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
             if (newTab == kehadiranTab) {
                 System.out.println("Tab Kehadiran dipilih. Mereload data kehadiran...");
@@ -156,8 +151,8 @@ public class HRManagementController {
                 cardController.setData(tugas, this);
 
                 switch (tugas.getStatus()) {
-                    case "Belum Dimulai": // Disesuaikan dengan status baru
-                    case "Akan Dilakukan": // Menjaga kompatibilitas
+                    case "Belum Dimulai":
+                    case "Akan Dilakukan": 
                         akanDilakukanListVBox.getChildren().add(taskCardNode);
                         break;
                     case "Sedang Dikerjakan":
@@ -167,7 +162,6 @@ public class HRManagementController {
                         selesaiListVBox.getChildren().add(taskCardNode);
                         break;
                     case "Tertunda": // Status baru
-                        // Mungkin bisa dimasukkan ke 'Akan Dilakukan' atau kolom baru
                         akanDilakukanListVBox.getChildren().add(taskCardNode);
                         break;
                     default:

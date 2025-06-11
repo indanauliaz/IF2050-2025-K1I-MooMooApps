@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -23,6 +24,12 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DashboardController {
@@ -49,6 +56,8 @@ public class DashboardController {
 
     private Node originalDashboardContent;
     private UserModel currentUser;
+
+    @FXML private AreaChart<String, Number> milkChart;
 
     /* ========== INITIALIZE ========== */
     @FXML
@@ -82,8 +91,6 @@ public class DashboardController {
         }
     }
 
-
-    /* ========== DATA BIND ========== */
     public void initData(UserModel user) {
         this.currentUser = user;
         if (user != null) {
@@ -93,13 +100,13 @@ public class DashboardController {
         PollingService.getInstance().start();
     }
 
-    /* ========== DASHBOARD REFRESH LOGIC ========== */
     public void refreshDashboard() {
         updateProduksiKpi();
         updateKeuanganKpi();
         updateTaskKpi();
         updateAttendanceKpi();
         populateTodayTasks();
+        updateMilkProductionChart(); 
     }
 
     /* --- PRODUKSI KPI --- */
@@ -189,6 +196,36 @@ public class DashboardController {
             row.setAlignment(Pos.CENTER_LEFT);
             todayTaskList.getChildren().add(row);
         }
+    }
+
+    /* --- MILK PRODUCTION CHART --- */
+    private void updateMilkProductionChart() {
+        milkChart.getData().clear();
+        milkChart.setAnimated(false); 
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Produksi Susu (Liter)");
+
+        LocalDate today = LocalDate.now();
+        LocalDate sevenDaysAgo = today.minusDays(6); 
+
+ 
+        Map<LocalDate, Double> dailyProduction = ProductionModel.getInstance().getAllProductionData().stream()
+                .filter(record -> !record.getTanggal().isBefore(sevenDaysAgo) && !record.getTanggal().isAfter(today))
+                .collect(Collectors.groupingBy(
+                        ProductionRecord::getTanggal,
+                        Collectors.summingDouble(ProductionRecord::getJumlah)
+                ));
+
+    
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM");
+        sevenDaysAgo.datesUntil(today.plusDays(1)) 
+                .forEach(date -> {
+                    double total = dailyProduction.getOrDefault(date, 0.0); 
+                    series.getData().add(new XYChart.Data<>(date.format(formatter), total));
+                });
+
+        milkChart.getData().add(series);
     }
 
     /* ========== VIEW HELPERS ========== */

@@ -72,7 +72,6 @@ public class DashboardPemilikController {
         });
     }
 
-    // --- Method inti untuk membangun seluruh UI Dashboard ---
     @FXML
     void handleDashboardMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Dashboard");
@@ -104,25 +103,33 @@ public class DashboardPemilikController {
         YearMonth currentMonth = YearMonth.now();
         YearMonth previousMonth = currentMonth.minusMonths(1);
 
-        // Data Produksi Susu
+
         double susuBulanIni = getMonthlyProductionByCategory(currentMonth, "Susu");
         double susuBulanLalu = getMonthlyProductionByCategory(previousMonth, "Susu");
         String susuChangeText = calculatePercentageChange(susuBulanIni, susuBulanLalu);
 
-        // Data Produksi Daging
         double dagingBulanIni = getMonthlyProductionByCategory(currentMonth, "Daging");
         double dagingBulanLalu = getMonthlyProductionByCategory(previousMonth, "Daging");
         String dagingChangeText = calculatePercentageChange(dagingBulanIni, dagingBulanLalu);
 
-        // Data Produktivitas Tim
-        double produktivitasBulanIni = getMonthlyProductivity(currentMonth);
-        double produktivitasBulanLalu = getMonthlyProductivity(previousMonth);
-        String produktivitasChangeText = calculatePercentageChange(produktivitasBulanIni * 100, produktivitasBulanLalu * 100);
+     
+        double produktivitasBulanIni = SdmModel.getInstance().getKinerjaGabungan(currentMonth);
+        double produktivitasBulanLalu = SdmModel.getInstance().getKinerjaGabungan(previousMonth);
+        String produktivitasChangeText = calculatePercentageChange(produktivitasBulanIni, produktivitasBulanLalu);
+      
+        double produktivitasTim = SdmModel.getInstance().getKinerjaGabunganPeriodeIni();
 
-        // Membuat Kartu dengan komposisi baru
-        VBox cardProduksiSusu = createMetricCard("Produksi Susu", String.format("%,.0f L", susuBulanIni), susuChangeText, susuBulanIni / 20000.0); // Asumsi target 20,000 L
-        VBox cardProduksiDaging = createMetricCard("Produksi Daging", String.format("%,.0f Kg", dagingBulanIni), dagingChangeText, dagingBulanIni / 5000.0); // Asumsi target 5,000 Kg
-        VBox cardProduktivitas = createMetricCard("Produktivitas Tim", String.format("%.0f%%", produktivitasBulanIni * 100), produktivitasChangeText, produktivitasBulanIni);
+    
+
+        VBox cardProduksiSusu = createMetricCard("Produksi Susu", String.format("%,.0f L", susuBulanIni), susuChangeText, susuBulanIni / 20000.0);
+        VBox cardProduksiDaging = createMetricCard("Produksi Daging", String.format("%,.0f Kg", dagingBulanIni), dagingChangeText, dagingBulanIni / 5000.0); 
+        VBox cardProduktivitas = createMetricCard(
+        "Produktivitas Tim", 
+        String.format("%.1f%%", produktivitasBulanIni * 100), 
+        produktivitasChangeText, 
+        produktivitasBulanIni
+    );
+
 
         HBox row = new HBox(20, cardProduksiSusu, cardProduksiDaging, cardProduktivitas);
         HBox.setHgrow(cardProduksiSusu, Priority.ALWAYS);
@@ -223,10 +230,27 @@ public class DashboardPemilikController {
     }
     
     private double getMonthlyProductivity(YearMonth month) {
-        List < TaskModel > tasks = SdmModel.getInstance().getTasksByDateRange(month.atDay(1), month.atEndOfMonth());
+        System.out.println("\n--- Menghitung produktivitas untuk bulan: " + month + " ---");
+
+        LocalDate startDate = month.atDay(1);
+        LocalDate endDate = month.atEndOfMonth();
+        List<TaskModel> tasks = SdmModel.getInstance().getTasksByDateRange(startDate, endDate);
+        
         long totalTugas = tasks.size();
-        long tugasSelesai = tasks.stream().filter(t -> "Selesai".equalsIgnoreCase(t.getStatus())).count();
-        return (totalTugas > 0) ? (double) tugasSelesai / totalTugas : 0.0;
+        System.out.println("Total tugas ditemukan untuk rentang " + startDate + " s/d " + endDate + ": " + totalTugas);
+
+        long tugasSelesai = tasks.stream()
+                                .filter(t -> "Selesai".equalsIgnoreCase(t.getStatus())) 
+                                .count();
+        
+        System.out.println("Jumlah tugas dengan status 'Selesai' (case-insensitive): " + tugasSelesai);
+
+        // Kalkulasi produktivitas
+        double productivity = (totalTugas > 0) ? (double) tugasSelesai / totalTugas : 0.0;
+        System.out.println("Hasil kalkulasi produktivitas: " + productivity);
+        System.out.println("--- Selesai menghitung produktivitas ---\n");
+        
+        return productivity;
     }
     
     private String calculatePercentageChange(double current, double previous) {
@@ -243,6 +267,7 @@ public class DashboardPemilikController {
         FinanceModel.getInstance().loadAllTransactionsFromDB();
         ProductionModel.getInstance().loadProductionDataFromDB();
         SdmModel.getInstance().loadAllEmployeesFromDB();
+        SdmModel.getInstance().loadAllTasksFromDB(); 
         System.out.println("Semua model telah diperbarui.");
         if (headerTitleLabel.getText().equals("Dashboard")) {
             Platform.runLater(() -> handleDashboardMenuClick(null));

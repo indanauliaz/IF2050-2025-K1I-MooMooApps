@@ -9,9 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SdmModel {
@@ -20,10 +24,13 @@ public class SdmModel {
     private static final DateTimeFormatter DB_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     private final ObservableList<EmployeeModel> allEmployees;
+    private List<TaskModel> allTasks;
 
     private SdmModel() {
         this.allEmployees = FXCollections.observableArrayList();
+        this.allTasks = new ArrayList<>();
         loadAllEmployeesFromDB();
+        loadAllTasksFromDB();
     }
 
     public static synchronized SdmModel getInstance() {
@@ -88,13 +95,79 @@ public class SdmModel {
      * @param endDate Tanggal akhir.
      * @return List dari TaskModel.
      */
+
+    public void loadAllTasksFromDB() {
+        this.allTasks = DatabaseManager.getAllTasks(); 
+        if (this.allTasks != null) {
+            System.out.println("SdmModel: " + this.allTasks.size() + " tugas berhasil dimuat.");
+        } else {
+            System.err.println("SdmModel: Gagal memuat tugas (null).");
+            this.allTasks = new ArrayList<>();
+        }
+    }
+
+
     public List<TaskModel> getTasksByDateRange(LocalDate startDate, LocalDate endDate) {
-        List<TaskModel> allTasks = DatabaseManager.getAllTasks();
+        if (allTasks == null) {
+            return Collections.emptyList();
+        }
+        
         return allTasks.stream()
             .filter(task -> {
                 LocalDate taskDate = task.getTanggalTugas();
                 return taskDate != null && !taskDate.isBefore(startDate) && !taskDate.isAfter(endDate);
             })
             .collect(Collectors.toList());
+    }
+
+    public double getKinerjaGabunganPeriodeIni() {
+        return getKinerjaGabungan(YearMonth.now());
+    }
+
+    public double getKinerjaGabungan(YearMonth month) {
+
+        LocalDate startDate = month.atDay(1);
+        LocalDate endDate = month.atEndOfMonth();
+
+
+        List<EmployeeModel> semuaKaryawan = this.getAllEmployees();
+        if (semuaKaryawan == null || semuaKaryawan.isEmpty()) {
+            return 0.0;
+        }
+        
+        List<AttendanceRecordModel> catatanKehadiran = this.getAttendanceRecordsByDateRange(startDate, endDate);
+        List<TaskModel> catatanTugas = this.getTasksByDateRange(startDate, endDate);
+        
+
+        long totalHariKerja = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+
+
+        Map<Integer, Long> kehadiranPerKaryawan = catatanKehadiran.stream()
+                .filter(r -> "Hadir".equalsIgnoreCase(r.getStatusKehadiran()) || "Terlambat".equalsIgnoreCase(r.getStatusKehadiran()))
+                .collect(Collectors.groupingBy(r -> r.getKaryawan().getId(), Collectors.counting()));
+                
+        Map<Integer, List<TaskModel>> tugasPerKaryawan = catatanTugas.stream()
+                .filter(t -> t.getEmployeeId() != null)
+                .collect(Collectors.groupingBy(TaskModel::getEmployeeId));
+
+        List<Double> skorProduktivitasIndividu = new ArrayList<>();
+        for (EmployeeModel emp : semuaKaryawan) {
+            long jumlahHadir = kehadiranPerKaryawan.getOrDefault(emp.getId(), 0L);
+            double skorKehadiran = (totalHariKerja > 0) ? ((double) jumlahHadir / totalHariKerja) : 0.0;
+            
+            List<TaskModel> tugasKaryawanIni = tugasPerKaryawan.getOrDefault(emp.getId(), List.of());
+            long totalTugas = tugasKaryawanIni.size();
+            long tugasSelesai = tugasKaryawanIni.stream().filter(t -> "Selesai".equalsIgnoreCase(t.getStatus())).count();
+            double skorTugas = (totalTugas > 0) ? ((double) tugasSelesai / totalTugas) : 1.0; 
+
+            double produktivitas = (skorKehadiran * 0.6) + (skorTugas * 0.4);
+            skorProduktivitasIndividu.add(produktivitas);
+        }
+
+
+        return skorProduktivitasIndividu.stream()
+                .mapToDouble(Double::doubleValue)
+                .average()
+                .orElse(0.0);
     }
 }
