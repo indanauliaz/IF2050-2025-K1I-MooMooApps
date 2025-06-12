@@ -33,7 +33,7 @@ public class TransactionTabManager {
     private final ComboBox<String> filterBulanBox;
     private final Button exportButton;
 
-    private final KeuanganController mainController; 
+    private final KeuanganController mainController;
 
     public TransactionTabManager(
             String transactionType, ObservableList<TransactionModel> transactionList,
@@ -93,19 +93,21 @@ public class TransactionTabManager {
                 if (empty || value == null) {
                     setText(null);
                 } else {
-                   
+
                     setText(String.format("Rp %,.0f", value.doubleValue()));
                 }
             }
         });
         metodeCol.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
         catatanCol.setCellValueFactory(new PropertyValueFactory<>("notes"));
-        
-        mainController.addAksiButtonsToTable(aksiCol, transactionType, tableView); 
+
+        mainController.addAksiButtonsToTable(aksiCol, transactionType, tableView);
 
         tableView.setItems(transactionList);
     }
 
+    // Metode ini tidak lagi dipanggil dari KeuanganController setelah modifikasi,
+    // karena data dimuat secara terpusat oleh FinanceModel.
     public void loadData() {
         mainController.loadTransactionData(transactionType, transactionList);
     }
@@ -118,7 +120,7 @@ public class TransactionTabManager {
         String kategori = kategoriBox.getValue();
         String catatan = catatanField.getText();
 
-        double jumlah = Double.parseDouble(jumlahStr.replace(",", ".")); 
+        double jumlah = Double.parseDouble(jumlahStr.replace(",", "."));
         int userIdToSave = (mainController.getCurrentUser() != null) ? mainController.getCurrentUser().getId() : 0;
         TransactionModel newTransaction = new TransactionModel(
                 transactionType, deskripsi, jumlah, kategori, tanggal, metode, catatan, userIdToSave);
@@ -133,14 +135,49 @@ public class TransactionTabManager {
         metodePembayaranBox.getSelectionModel().clearSelection();
         kategoriBox.getSelectionModel().clearSelection();
         catatanField.clear();
+        deskripsiField.requestFocus(); // Tambahan untuk UX
     }
-    
+
     public void populateFormForEdit(TransactionModel transaction) {
         deskripsiField.setText(transaction.getDescription());
         tanggalPicker.setValue(transaction.getDate());
-        jumlahField.setText(String.valueOf(transaction.getAmount()).replace(".", ",")); 
+        // Format angka ke string dengan koma sebagai desimal untuk konsistensi
+        jumlahField.setText(String.format("%,.2f", transaction.getAmount()).replace(".", ","));
         metodePembayaranBox.setValue(transaction.getPaymentMethod());
         kategoriBox.setValue(transaction.getCategory());
         catatanField.setText(transaction.getNotes());
+    }
+
+    // *** PERUBAHAN DI SINI: MENAMBAHKAN GETTERS ***
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public TextField getDeskripsiField() {
+        return deskripsiField;
+    }
+
+    public DatePicker getTanggalPicker() {
+        return tanggalPicker;
+    }
+
+    public TextField getJumlahField() {
+        return jumlahField;
+    }
+
+    public ComboBox<String> getMetodePembayaranBox() {
+        return metodePembayaranBox;
+    }
+
+    public ComboBox<String> getKategoriBox() {
+        return kategoriBox;
+    }
+
+    public TextField getCatatanField() {
+        return catatanField;
+    }
+
+    public Button getTambahButton() {
+        return tambahButton;
     }
 }

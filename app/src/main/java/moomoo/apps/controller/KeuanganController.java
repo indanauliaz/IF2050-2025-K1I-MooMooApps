@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox; 
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 
 import moomoo.apps.interfaces.UserAwareController;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class KeuanganController implements UserAwareController {
 
-    @FXML private VBox keuanganRootPane; 
+    @FXML private VBox keuanganRootPane;
 
     @FXML private TabPane keuanganTabPane;
     @FXML private Tab pemasukanTab;
@@ -101,6 +101,7 @@ public class KeuanganController implements UserAwareController {
     private static final DateTimeFormatter TABLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter DB_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
     private UserModel currentUser;
+    private TransactionModel currentEditingTransaction = null; 
 
     private TransactionTabManager pemasukanManager;
     private TransactionTabManager pengeluaranManager;
@@ -134,23 +135,33 @@ public class KeuanganController implements UserAwareController {
                 metodePenggajianCol, catatanPenggajianCol, aksiPenggajianCol, filterBulanPenggajianBox, exportPenggajianButton,
                 this);
 
-        // *** PERBAIKAN DI SINI ***
-        // Mengatur aksi tombol HANYA SEKALI dengan logika validasi.
         tambahPemasukanButton.setOnAction(event -> {
             if (validateFormAndShowAlert(deskripsiPemasukanField.getText(), tanggalPemasukanPicker.getValue(), jumlahPemasukanField.getText(), metodePembayaranPemasukanBox.getValue(), kategoriPemasukanBox.getValue())) {
-                pemasukanManager.handleTambah();
+                if (currentEditingTransaction != null && "Pemasukan".equals(currentEditingTransaction.getTransactionType())) {
+                    updateTransactionInDB(pemasukanManager);
+                } else {
+                    pemasukanManager.handleTambah();
+                }
             }
         });
 
         tambahPengeluaranButton.setOnAction(event -> {
             if (validateFormAndShowAlert(deskripsiPengeluaranField.getText(), tanggalPengeluaranPicker.getValue(), jumlahPengeluaranField.getText(), metodePembayaranPengeluaranBox.getValue(), kategoriPengeluaranBox.getValue())) {
-                pengeluaranManager.handleTambah();
+                if (currentEditingTransaction != null && "Pengeluaran".equals(currentEditingTransaction.getTransactionType())) {
+                    updateTransactionInDB(pengeluaranManager);
+                } else {
+                    pengeluaranManager.handleTambah();
+                }
             }
         });
-        
+
         tambahPenggajianButton.setOnAction(event -> {
             if (validateFormAndShowAlert(deskripsiPenggajianField.getText(), tanggalPenggajianPicker.getValue(), jumlahPenggajianField.getText(), metodePembayaranPenggajianBox.getValue(), kategoriPenggajianBox.getValue())) {
-                penggajianManager.handleTambah();
+                if (currentEditingTransaction != null && "Penggajian".equals(currentEditingTransaction.getTransactionType())) {
+                    updateTransactionInDB(penggajianManager);
+                } else {
+                    penggajianManager.handleTambah();
+                }
             }
         });
 
@@ -160,28 +171,28 @@ public class KeuanganController implements UserAwareController {
                 Arrays.asList("Bulan Ini", "Bulan Lalu", "Semua"), "Bulan Ini"
         );
         pemasukanManager.setupTable(TABLE_DATE_FORMATTER);
-        pemasukanManager.loadData();
-        
+
         pengeluaranManager.initializeTab(
                 Arrays.asList("Pakan Ternak", "Obat & Vaksin", "Operasional Kandang", "Perawatan Alat", "Transportasi", "Biaya Listrik/Air", "Lain-lain"),
                 Arrays.asList("Transfer Bank", "Tunai", "Dompet Digital", "Kas Peternakan"),
                 Arrays.asList("Bulan Ini", "Bulan Lalu", "Semua"), "Bulan Ini"
         );
         pengeluaranManager.setupTable(TABLE_DATE_FORMATTER);
-        pengeluaranManager.loadData();
-        
+
         penggajianManager.initializeTab(
                 Arrays.asList("Gaji Karyawan Tetap", "Gaji Karyawan Harian", "Bonus", "Tunjangan", "Lain-lain"),
                 Arrays.asList("Transfer Bank", "Tunai"),
                 Arrays.asList("Bulan Ini", "Bulan Lalu", "Semua"), "Bulan Ini"
         );
         penggajianManager.setupTable(TABLE_DATE_FORMATTER);
-        
+
         financeModel.getAllTransactions().addListener((ListChangeListener.Change<? extends TransactionModel> c) -> {
             System.out.println("DEBUG: Perubahan terdeteksi di FinanceModel, UI akan di-update.");
             updateLocalListsAndUI();
         });
 
+        // Load initial data
+        financeModel.loadAllTransactionsFromDB();
         keuanganTabPane.getSelectionModel().select(0);
     }
 
@@ -196,28 +207,28 @@ public class KeuanganController implements UserAwareController {
 
     private void updateLocalListsAndUI() {
         pemasukanList.setAll(
-            financeModel.getAllTransactions().stream()
-                .filter(t -> "Pemasukan".equalsIgnoreCase(t.getTransactionType()))
-                .collect(Collectors.toList())
+                financeModel.getAllTransactions().stream()
+                        .filter(t -> "Pemasukan".equalsIgnoreCase(t.getTransactionType()))
+                        .collect(Collectors.toList())
         );
 
         pengeluaranList.setAll(
-            financeModel.getAllTransactions().stream()
-                .filter(t -> "Pengeluaran".equalsIgnoreCase(t.getTransactionType()))
-                .collect(Collectors.toList())
+                financeModel.getAllTransactions().stream()
+                        .filter(t -> "Pengeluaran".equalsIgnoreCase(t.getTransactionType()))
+                        .collect(Collectors.toList())
         );
 
         penggajianList.setAll(
-            financeModel.getAllTransactions().stream()
-                .filter(t -> "Penggajian".equalsIgnoreCase(t.getTransactionType()))
-                .collect(Collectors.toList())
+                financeModel.getAllTransactions().stream()
+                        .filter(t -> "Penggajian".equalsIgnoreCase(t.getTransactionType()))
+                        .collect(Collectors.toList())
         );
     }
 
     @Override
     public void initData(UserModel user) {
         this.currentUser = user;
-        updateLocalListsAndUI();
+        updateLocalListsAndUI(); 
     }
 
     public UserModel getCurrentUser() {
@@ -249,7 +260,6 @@ public class KeuanganController implements UserAwareController {
                     }
                 }
                 financeModel.addTransaction(transaction);
-               
                 DatabaseManager.updateLastChangeTimestamp();
                 showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Data " + transaction.getTransactionType().toLowerCase() + " berhasil ditambahkan.");
             }
@@ -260,45 +270,10 @@ public class KeuanganController implements UserAwareController {
         }
     }
 
+    @Deprecated
     public void loadTransactionData(String transactionType, ObservableList<TransactionModel> targetList) {
-        targetList.clear();
-        String sql = "SELECT id, transaction_type, description, amount, category, date, payment_method, notes, user_id " +
-                     "FROM transactions WHERE transaction_type = ? ";
-        
-        if (currentUser != null) {
-            sql += "AND user_id = ? ";
-        }
-        sql += "ORDER BY date DESC";
-
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, transactionType);
-            if (currentUser != null) {
-                 pstmt.setInt(2, currentUser.getId());
-            }
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                LocalDate date = LocalDate.parse(rs.getString("date"), DB_DATE_FORMATTER);
-                targetList.add(new TransactionModel(
-                        rs.getInt("id"),
-                        rs.getString("transaction_type"),
-                        rs.getString("description"),
-                        rs.getDouble("amount"),
-                        rs.getString("category"),
-                        date,
-                        rs.getString("payment_method"),
-                        rs.getString("notes"),
-                        rs.getInt("user_id")
-                ));
-            }
-        } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal memuat data " + transactionType.toLowerCase() + ": " + e.getMessage());
-            e.printStackTrace();
-        }
     }
-    
+
     public void addAksiButtonsToTable(TableColumn<TransactionModel, Void> column, String type, TableView<TransactionModel> tableView) {
         column.setCellFactory(param -> new TableCell<>() {
             private final Button editButton = new Button();
@@ -339,23 +314,90 @@ public class KeuanganController implements UserAwareController {
     }
 
     public void handleEditTransaction(TransactionModel transaction, String type) {
+        this.currentEditingTransaction = transaction;
         TransactionTabManager managerToUse = null;
+
         switch (type) {
             case "Pemasukan":
                 managerToUse = pemasukanManager;
+                tambahPemasukanButton.setText("Update Transaksi");
+                keuanganTabPane.getSelectionModel().select(pemasukanTab);
                 break;
             case "Pengeluaran":
                 managerToUse = pengeluaranManager;
+                tambahPengeluaranButton.setText("Update Transaksi");
+                keuanganTabPane.getSelectionModel().select(pengeluaranTab);
                 break;
             case "Penggajian":
                 managerToUse = penggajianManager;
+                tambahPenggajianButton.setText("Update Transaksi");
+                keuanganTabPane.getSelectionModel().select(penggajianTab);
                 break;
         }
+
         if (managerToUse != null) {
             managerToUse.populateFormForEdit(transaction);
-            DatabaseManager.updateLastChangeTimestamp();
         }
-        showAlert(Alert.AlertType.INFORMATION, "Mode Edit (" + type + ")", "Silakan ubah data. Menyimpan akan membuat entri baru atau Anda perlu mengimplementasikan logic UPDATE jika ingin mengubah data yang ada.");
+    }
+
+    private void updateTransactionInDB(TransactionTabManager manager) {
+        String deskripsi = manager.getDeskripsiField().getText();
+        LocalDate tanggal = manager.getTanggalPicker().getValue();
+        double jumlah = Double.parseDouble(manager.getJumlahField().getText().replace(",", "."));
+        String kategori = manager.getKategoriBox().getValue();
+        String metode = manager.getMetodePembayaranBox().getValue();
+        String catatan = manager.getCatatanField().getText();
+
+
+        String sql = "UPDATE transactions SET description = ?, amount = ?, category = ?, date = ?, " +
+                     "payment_method = ?, notes = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, deskripsi);
+            pstmt.setDouble(2, jumlah);
+            pstmt.setString(3, kategori);
+            pstmt.setString(4, DB_DATE_FORMATTER.format(tanggal));
+            pstmt.setString(5, metode);
+            pstmt.setString(6, catatan);
+            pstmt.setInt(7, currentEditingTransaction.getId());
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows > 0) {
+
+                currentEditingTransaction.setDescription(deskripsi);
+                currentEditingTransaction.setAmount(jumlah);
+                currentEditingTransaction.setCategory(kategori);
+                currentEditingTransaction.setDate(tanggal);
+                currentEditingTransaction.setPaymentMethod(metode);
+                currentEditingTransaction.setNotes(catatan);
+
+                showAlert(Alert.AlertType.INFORMATION, "Sukses", "Data transaksi berhasil diperbarui.");
+                DatabaseManager.updateLastChangeTimestamp();
+                
+                pemasukanTableView.refresh();
+                pengeluaranTableView.refresh();
+                penggajianTableView.refresh();
+
+                clearFormAndResetEditMode(manager);
+
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal memperbarui data transaksi di database.");
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal memperbarui data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void clearFormAndResetEditMode(TransactionTabManager manager) {
+        if (manager != null) {
+            manager.clearForm();
+            manager.getTambahButton().setText("+ Tambah " + manager.getTransactionType());
+        }
+        this.currentEditingTransaction = null;
     }
 
     public void handleDeleteTransaction(TransactionModel transaction, String type) {
