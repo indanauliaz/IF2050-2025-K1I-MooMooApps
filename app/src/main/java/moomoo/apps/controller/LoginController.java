@@ -63,6 +63,7 @@ public class LoginController implements Initializable {
     private boolean passwordVisible = false;
     private UserModel loggedInUser; 
 
+    /* ========== INITIALIZE ========== */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         roleComboBoxLogin.setItems(FXCollections.observableArrayList("Pemilik", "Manajer"));
@@ -180,7 +181,6 @@ public class LoginController implements Initializable {
         String fxmlFile;
         String role = user.getRole();
 
-        // --- INI PERUBAHAN PENTING ---
         switch (role.toLowerCase()) {
             case "manajer":
                 fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; 

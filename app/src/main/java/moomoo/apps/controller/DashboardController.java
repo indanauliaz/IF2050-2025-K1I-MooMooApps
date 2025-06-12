@@ -74,6 +74,7 @@ public class DashboardController {
         });
     }
 
+    /* method untuk menavigasi logout apabila sudah dipastikan login*/
     @FXML
     public void handleLogoutAction() {
         try {
@@ -89,6 +90,7 @@ public class DashboardController {
         }
     }
 
+
     public void initData(UserModel user) {
         this.currentUser = user;
         if (user != null) {
@@ -98,6 +100,7 @@ public class DashboardController {
         PollingService.getInstance().start();
     }
 
+    /* method untuk updating semua fitur yang bersifat dinamis*/
     public void refreshDashboard() {
         updateProduksiKpi();
         updateKeuanganKpi();

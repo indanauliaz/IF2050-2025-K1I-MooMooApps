@@ -55,6 +55,7 @@ public class ProductionController implements UserAwareController {
     private UserModel currentUser;
     private ProductionRecord currentEditingRecord = null;
     
+    /* ========== INITIALIZE ========== */
     @FXML
     public void initialize() {
         this.productionModel = ProductionModel.getInstance();

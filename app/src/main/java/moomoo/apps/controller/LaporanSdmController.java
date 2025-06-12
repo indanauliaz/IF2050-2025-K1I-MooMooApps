@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 public class LaporanSdmController implements ILaporanKontenController {
 
-
     @FXML private Label totalKaryawanLabel;
     @FXML private ProgressBar totalKaryawanProgressBar;
     @FXML private Label totalKaryawanDescLabel;
@@ -60,23 +59,27 @@ public class LaporanSdmController implements ILaporanKontenController {
     @FXML private Button selanjutnyaButton;
 
     private SdmModel sdmModel;
-    private String currentPeriodeFilter = "Bulan Ini";
+    private String currentPeriodeFilter = "Tahun Ini";
     private String currentKehadiranChartFilter = "Hadir";
+    
     private XYChart.Series<String, Number> kehadiranSeries;
+    private final ObservableList<EmployeeModel> kinerjaData = FXCollections.observableArrayList();
+    private final ObservableList<PieChart.Data> distribusiData = FXCollections.observableArrayList();
 
     @Override
     public void inisialisasiKonten() {
         this.sdmModel = SdmModel.getInstance();
         setupTampilanAwalSdm();
         sdmModel.getAllEmployees().addListener((ListChangeListener<EmployeeModel>) c -> muatUlangDataLaporan());
+        muatUlangDataLaporan();
     }
 
     @Override
     public void terapkanFilterPeriode(String periode) {
-        this.currentPeriodeFilter = (periode == null || periode.isEmpty()) ? "Bulan Ini" : periode;
+        this.currentPeriodeFilter = (periode == null || periode.isEmpty()) ? "Tahun Ini" : periode;
         muatUlangDataLaporan();
     }
-    
+
     private void muatUlangDataLaporan() {
         if (sdmModel == null) return;
         
@@ -90,20 +93,18 @@ public class LaporanSdmController implements ILaporanKontenController {
                 .filter(r -> currentKehadiranChartFilter.equalsIgnoreCase(r.getStatusKehadiran()))
                 .collect(Collectors.toList());
 
-        List<Integer> employeeIdsInPeriod = catatanKehadiranTersaring.stream()
+        List<Integer> employeeIdsTersaring = catatanKehadiranTersaring.stream()
                 .map(r -> r.getKaryawan().getId())
                 .distinct()
                 .collect(Collectors.toList());
 
         List<EmployeeModel> karyawanTersaringUntukPieChart = semuaKaryawan.stream()
-                .filter(emp -> employeeIdsInPeriod.contains(emp.getId()))
+                .filter(emp -> employeeIdsTersaring.contains(emp.getId()))
                 .collect(Collectors.toList());
-
+        
         updateTabelDanKinerjaKaryawan(semuaKaryawan, semuaCatatanKehadiranDiPeriode, catatanTugas, dateRange);
         updateKartuStatistik(semuaKaryawan, semuaCatatanKehadiranDiPeriode);
-        
         updateGrafikDistribusi(karyawanTersaringUntukPieChart); 
-
         updateGrafikKehadiran(semuaCatatanKehadiranDiPeriode);
     }
 
@@ -113,15 +114,14 @@ public class LaporanSdmController implements ILaporanKontenController {
         long totalHariKerja = ChronoUnit.DAYS.between(dateRange[0], dateRange[1]) + 1;
         
         Map<Integer, Long> kehadiranPerKaryawan = kehadiranList.stream()
-            .filter(r -> "Hadir".equalsIgnoreCase(r.getStatusKehadiran()) || "Terlambat".equalsIgnoreCase(r.getStatusKehadiran()))
-            .collect(Collectors.groupingBy(r -> r.getKaryawan().getId(), Collectors.counting()));
-            
+                .filter(r -> "Hadir".equalsIgnoreCase(r.getStatusKehadiran()) || "Terlambat".equalsIgnoreCase(r.getStatusKehadiran()))
+                .collect(Collectors.groupingBy(r -> r.getKaryawan().getId(), Collectors.counting()));
+                
         Map<Integer, List<TaskModel>> tugasPerKaryawan = tugasList.stream()
-            .filter(t -> t.getEmployeeId() != null)
-            .collect(Collectors.groupingBy(TaskModel::getEmployeeId));
+                .filter(t -> t.getEmployeeId() != null)
+                .collect(Collectors.groupingBy(TaskModel::getEmployeeId));
 
         for (EmployeeModel emp : karyawanList) {
-
             long jumlahHadir = kehadiranPerKaryawan.getOrDefault(emp.getId(), 0L);
             double skorKehadiran = (totalHariKerja > 0) ? ((double) jumlahHadir / totalHariKerja) : 0.0;
             
@@ -143,12 +143,11 @@ public class LaporanSdmController implements ILaporanKontenController {
             emp.setPeringkatKinerja(peringkat);
         }
         
-        kinerjaTableView.setItems(FXCollections.observableArrayList(karyawanList));
-        tableSummaryLabel.setText("Menampilkan " + karyawanList.size() + " dari " + karyawanList.size() + " karyawan");
+        kinerjaData.setAll(karyawanList);
+        tableSummaryLabel.setText("Menampilkan " + kinerjaData.size() + " dari " + kinerjaData.size() + " karyawan");
     }
 
     private void updateKartuStatistik(List<EmployeeModel> karyawanList, List<AttendanceRecordModel> kehadiranList) {
-
         totalKaryawanLabel.setText(String.valueOf(karyawanList.size()));
         totalKaryawanProgressBar.setProgress(karyawanList.size() / 50.0);
         totalKaryawanDescLabel.setText("Total karyawan aktif");
@@ -158,13 +157,11 @@ public class LaporanSdmController implements ILaporanKontenController {
         kehadiranProgressBar.setProgress(avgKehadiran);
         tingkatKehadiranDescLabel.setText("Rata-rata periode " + currentPeriodeFilter);
 
-
         double avgProduktivitas = sdmModel.getKinerjaGabunganPeriodeIni(); 
         produktivitasLabel.setText(String.format("%.1f%%", avgProduktivitas * 100));
         produktivitasProgressBar.setProgress(avgProduktivitas);
         produktivitasDescLabel.setText("Kinerja gabungan");
-
-  
+ 
         biayaSdmLabel.setText("N/A");
         biayaSdmProgressBar.setProgress(0);
         biayaSdmDescLabel.setText("Data tidak tersedia");
@@ -178,6 +175,11 @@ public class LaporanSdmController implements ILaporanKontenController {
         kehadiranChart.setAnimated(false); 
         kehadiranSeries = new XYChart.Series<>();
         kehadiranChart.getData().add(kehadiranSeries);
+        
+        distribusiKaryawanChart.setAnimated(false);
+        distribusiKaryawanChart.setData(distribusiData);
+
+        kinerjaTableView.setItems(kinerjaData);
 
         karyawanColumn.setCellValueFactory(cellData -> cellData.getValue().namaLengkapProperty());
         departemenColumn.setCellValueFactory(cellData -> cellData.getValue().departemenProperty());
@@ -195,56 +197,43 @@ public class LaporanSdmController implements ILaporanKontenController {
                 } else {
                     setText(item);
                     switch (item) {
-                        case "A":
-                            setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-                            break;
-                        case "B":
-                            setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
-                            break;
-                        case "C":
-                            setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                            break;
-                        default:
-                            setStyle("-fx-text-fill: black;");
+                        case "A": setStyle("-fx-text-fill: green; -fx-font-weight: bold;"); break;
+                        case "B": setStyle("-fx-text-fill: orange; -fx-font-weight: bold;"); break;
+                        case "C": setStyle("-fx-text-fill: red; -fx-font-weight: bold;"); break;
+                        default: setStyle("-fx-text-fill: black;");
                     }
                 }
             }
         });
-
     }
     
     private void updateGrafikDistribusi(List<EmployeeModel> karyawanList) {
         if (distribusiKaryawanChart == null) return;
 
-
         Map<String, Long> distribusi = karyawanList.stream()
                 .filter(e -> e.getDepartemen() != null && !e.getDepartemen().isEmpty())
                 .collect(Collectors.groupingBy(EmployeeModel::getDepartemen, Collectors.counting()));
-
-
-        ObservableList<PieChart.Data> currentData = distribusiKaryawanChart.getData();
         
+        List<PieChart.Data> newData = distribusi.entrySet().stream()
+                .map(entry -> new PieChart.Data(entry.getKey() + " (" + entry.getValue() + ")", entry.getValue()))
+                .collect(Collectors.toList());
 
-        currentData.clear();
-        distribusi.forEach((dept, count) -> currentData.add(new PieChart.Data(dept + " (" + count + ")", count)));
-        
+        distribusiData.setAll(newData);
     }
     
     private void updateGrafikKehadiran(List<AttendanceRecordModel> kehadiranList) {
-
         if (kehadiranChart == null || kehadiranSeries == null) return;
 
         kehadiranSeries.getData().clear();
-        
         kehadiranSeries.setName(currentKehadiranChartFilter);
         
         Map<DayOfWeek, Long> dataGrafik = kehadiranList.stream()
                 .filter(r -> currentKehadiranChartFilter.equalsIgnoreCase(r.getStatusKehadiran()))
                 .collect(Collectors.groupingBy(r -> r.getTanggalAbsen().getDayOfWeek(), Collectors.counting()));
+                
         for (DayOfWeek day : DayOfWeek.values()) {
             kehadiranSeries.getData().add(new XYChart.Data<>(day.toString().substring(0, 3), dataGrafik.getOrDefault(day, 0L)));
         }
-        
     }
 
     @FXML
@@ -265,14 +254,27 @@ public class LaporanSdmController implements ILaporanKontenController {
     
     private LocalDate[] determineDateRange(String periodeFilter) {
         LocalDate startDate, endDate;
-        YearMonth currentYMonth = YearMonth.now();
+        LocalDate today = LocalDate.now();
+        YearMonth currentYMonth = YearMonth.from(today);
+        
         switch (periodeFilter) {
-            case "Minggu Ini": startDate = LocalDate.now().with(DayOfWeek.MONDAY); endDate = LocalDate.now().with(DayOfWeek.SUNDAY); break;
-            case "Hari Ini": startDate = LocalDate.now(); endDate = LocalDate.now(); break;
-            case "Tahun Ini": startDate = currentYMonth.withMonth(1).atDay(1); endDate = currentYMonth.withMonth(12).atEndOfMonth(); break;
-            default: startDate = currentYMonth.atDay(1); endDate = currentYMonth.atEndOfMonth(); break;
+            case "Minggu Ini":
+                startDate = today.with(DayOfWeek.MONDAY);
+                endDate = today.with(DayOfWeek.SUNDAY);
+                break;
+            case "Hari Ini":
+                startDate = today;
+                endDate = today;
+                break;
+            case "Tahun Ini":
+                startDate = today.withDayOfYear(1);
+                endDate = today.withDayOfYear(today.lengthOfYear());
+                break;
+            default: // "Bulan Ini"
+                startDate = currentYMonth.atDay(1);
+                endDate = currentYMonth.atEndOfMonth();
+                break;
         }
         return new LocalDate[]{startDate, endDate};
     }
-  
 }

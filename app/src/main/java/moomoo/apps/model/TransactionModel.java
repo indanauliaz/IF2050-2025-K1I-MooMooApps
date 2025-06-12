@@ -74,9 +74,13 @@ public class TransactionModel {
     public String getNotes() { return notes.get(); }
     public int getUserId() { return userId.get(); }
 
-    // Setters (jika diperlukan)
     public void setId(int id) { this.id.set(id); }
     public void setTransactionType(String type) { this.transactionType.set(type); }
     public void setDescription(String description) { this.description.set(description); }
-
+    public void setAmount(double amount) { this.amount.set(amount); }
+    public void setCategory(String category) { this.category.set(category); }
+    public void setDate(LocalDate date) { this.date.set(date); }
+    public void setPaymentMethod(String method) { this.paymentMethod.set(method); }
+    public void setNotes(String notes) { this.notes.set(notes); }
+    public void setUserId(int userId) { this.userId.set(userId); }
 }

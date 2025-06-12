@@ -46,7 +46,7 @@ public class DatabaseManager {
                                   + "role TEXT NOT NULL"
                                   + ");";
 
-     
+        // SQL untuk membuat tabel Transaksi
         String createTransactionsTableSQL = "CREATE TABLE IF NOT EXISTS transactions ("
                                           + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                           + "transaction_type TEXT NOT NULL," 
@@ -60,7 +60,7 @@ public class DatabaseManager {
                                           + "FOREIGN KEY (user_id) REFERENCES users(id)"
                                           + ");";
 
-        
+        // SQL untuk membuat tabel Produksi
         String createProductionsTableSQL = "CREATE TABLE IF NOT EXISTS productions ("
                                         + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                         + "kategori TEXT NOT NULL,"
@@ -72,6 +72,7 @@ public class DatabaseManager {
                                         + "catatan TEXT"
                                         + ");";
 
+        // SQL untuk membuat tabel Karyawan
         String createEmployeesTableSQL = "CREATE TABLE IF NOT EXISTS employees ("
                                        + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                        + "nama_lengkap TEXT NOT NULL,"
@@ -79,6 +80,7 @@ public class DatabaseManager {
                                        + "tim TEXT"
                                        + ");";
 
+        // SQL untuk membuat tabel Pemetaan Tugas
         String createTasksTableSQL = "CREATE TABLE IF NOT EXISTS tasks ("
                                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                 + "nama_tugas TEXT NOT NULL,"         
@@ -93,6 +95,7 @@ public class DatabaseManager {
                                 + "FOREIGN KEY (employee_id) REFERENCES employees(id)"
                                 + ");";
 
+        // SQL untuk membuat tabel Record absensi karyawan
         String createAttendanceRecordsTableSQL = "CREATE TABLE IF NOT EXISTS attendance_records ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "employee_id INTEGER NOT NULL,"
@@ -104,6 +107,7 @@ public class DatabaseManager {
                 + "FOREIGN KEY (employee_id) REFERENCES employees(id)"
                 + ");";
 
+        // SQL untuk menyimpan state timestamp
         String createStateTableSQL = "CREATE TABLE IF NOT EXISTS app_state ("
                                + "key TEXT PRIMARY KEY,"
                                + "value TEXT NOT NULL"
@@ -141,7 +145,7 @@ public class DatabaseManager {
 
 
             addInitialEmployeeData(conn);
-            addInitialTaskData(conn); // Tambahkan data tugas awal jika diperlukan
+            addInitialTaskData(conn);
 
         } catch (SQLException e) {
             System.err.println("Error saat inisialisasi database: " + e.getMessage());
@@ -149,6 +153,7 @@ public class DatabaseManager {
         }
     }
 
+    // Penambahan data dummy untuk karyawan
     private static void addInitialEmployeeData(Connection conn) {
 
         String checkEmptySQL = "SELECT COUNT(*) AS count FROM employees";
@@ -197,7 +202,7 @@ public class DatabaseManager {
 
     private static final String DB_FILE_NAME = "moomoo_apps.db"; 
 
-
+    // Penambahan data dummy untuk tugas karyawan
     private static void addInitialTaskData(Connection conn) {
         String checkEmptySQL = "SELECT COUNT(*) AS count FROM tasks";
         try (Statement stmt = conn.createStatement();
@@ -270,6 +275,9 @@ public class DatabaseManager {
     }
 
 
+    // --- Employee Management Methods ---
+
+    // method untuk mengembalikan semua task di database
     public static List<TaskModel> getAllTasks() {
         List<TaskModel> tasks = new ArrayList<>();
         String sql = "SELECT t.id, t.nama_tugas, t.deskripsi_tugas, t.employee_id, e.nama_lengkap AS nama_karyawan, " +
@@ -302,6 +310,7 @@ public class DatabaseManager {
         return tasks;
     }
 
+    // method untuk memasukkan data task baru ke database
     public static boolean insertTask(TaskModel task) {
         String sql = "INSERT INTO tasks(nama_tugas, deskripsi_tugas, employee_id, tanggal_tugas, waktu_tugas, prioritas, status, tanggal_selesai) " +
                      "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -337,6 +346,7 @@ public class DatabaseManager {
         }
     }
     
+    // method untuk updating task status ke database
     public static boolean updateTaskStatus(int taskId, String newStatus, LocalDate tanggalSelesai) {
         String sql = "UPDATE tasks SET status = ?, tanggal_selesai = ? WHERE id = ?";
         try (Connection conn = getConnection();
@@ -356,7 +366,7 @@ public class DatabaseManager {
         }
     }
 
-    // --- Employee Management Methods ---
+    // method untuk mengembalikan karyawan yang tercatat di database
     public static List<EmployeeModel> getAllEmployees() {
         List<EmployeeModel> employees = new ArrayList<>();
         String sql = "SELECT id, nama_lengkap, posisi FROM employees ORDER BY nama_lengkap";
@@ -373,7 +383,9 @@ public class DatabaseManager {
         return employees;
     }
 
-        public static List<AttendanceRecordModel> getAttendanceRecordsByDate(LocalDate date) {
+
+    // method untuk mengembalikan data absensi karyawan berdasarkan tanggal
+    public static List<AttendanceRecordModel> getAttendanceRecordsByDate(LocalDate date) {
         List<AttendanceRecordModel> records = new ArrayList<>();
         String sql = "SELECT ar.id, ar.employee_id, e.nama_lengkap, e.posisi, " +
                      "ar.attendance_date, ar.status, ar.clock_in_time, ar.clock_out_time, ar.notes " +
@@ -406,6 +418,7 @@ public class DatabaseManager {
         return records;
     }
 
+    // method untuk menambahkan data absensi karyawan
     public static boolean addAttendanceRecord(AttendanceRecordModel record) {
         String sql = "INSERT INTO attendance_records (employee_id, attendance_date, status, clock_in_time, clock_out_time, notes) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
@@ -435,6 +448,7 @@ public class DatabaseManager {
         }
     }
 
+    // method untuk updating data absensi di database
     public static boolean updateAttendanceRecord(AttendanceRecordModel record) {
         String sql = "UPDATE attendance_records SET employee_id = ?, attendance_date = ?, status = ?, " +
                      "clock_in_time = ?, clock_out_time = ?, notes = ? WHERE id = ?";
@@ -455,6 +469,7 @@ public class DatabaseManager {
         }
     }
 
+    // method untuk menghapus data absensi karyawan
     public static boolean deleteAttendanceRecord(int recordId) {
         String sql = "DELETE FROM attendance_records WHERE id = ?";
         try (Connection conn = getConnection();

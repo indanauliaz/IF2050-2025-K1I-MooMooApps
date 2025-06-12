@@ -27,7 +27,7 @@ public class LaporanController {
 
     private Map<String, ILaporanKontenController> loadedControllers = new HashMap<>();
 
-
+    /* ========== INITIALIZE ========== */
     @FXML
     public void initialize() {
         filterPeriodeComboBox.getItems().addAll("Bulan Ini", "Minggu Ini", "Hari Ini", "Tahun Ini");

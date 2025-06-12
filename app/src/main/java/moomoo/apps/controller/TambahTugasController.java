@@ -42,6 +42,7 @@ public class TambahTugasController implements Initializable {
     private boolean isSaved = false;
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
+    /* ========== INITIALIZE ========== */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

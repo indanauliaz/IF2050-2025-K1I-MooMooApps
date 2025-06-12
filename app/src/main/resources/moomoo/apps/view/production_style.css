@@ -99,7 +99,7 @@
 .table-view .table-cell {
     -fx-padding: 8px;
     -fx-font-size: 13px;
-    -fx-border-color: transparent #e0e0e0 transparent transparent; /* Garis vertikal antar sel */
+    -fx-border-color: transparent #e0e0e0 transparent transparent; 
 }
 
 /* Tombol Aksi di Tabel */
@@ -113,10 +113,10 @@
 }
 
 .action-button-edit .table-action-icon {
-    -fx-fill: #007bff; /* Biru untuk edit */
+    -fx-fill: #007bff;
 }
 .action-button-delete .table-action-icon {
-    -fx-fill: #dc3545; /* Merah untuk delete */
+    -fx-fill: #dc3545; 
 }
 
 .table-action-icon {

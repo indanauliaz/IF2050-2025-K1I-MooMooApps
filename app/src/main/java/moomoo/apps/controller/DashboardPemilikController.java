@@ -62,6 +62,7 @@ public class DashboardPemilikController {
     private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
     private final NumberFormat percentFormatter = NumberFormat.getPercentInstance(new Locale("id", "ID"));
 
+    /* ========== INITIALIZE ========== */
     @FXML
     public void initialize() {
         currencyFormatter.setMaximumFractionDigits(2);
@@ -72,6 +73,7 @@ public class DashboardPemilikController {
         });
     }
 
+    /* method handler ketika dasboard menu di klik */
     @FXML
     void handleDashboardMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Dashboard");
@@ -99,6 +101,7 @@ public class DashboardPemilikController {
         mainContentPane.setCenter(dashboardContent);
     }
 
+    /* ========== HELPER UNTUK DATA PRODUKSI DI DASHBOARD ========== */
     private HBox createProductionMetricsRow() {
         YearMonth currentMonth = YearMonth.now();
         YearMonth previousMonth = currentMonth.minusMonths(1);
@@ -155,7 +158,8 @@ public class DashboardPemilikController {
         autoRefreshTimeline.play();
         System.out.println("Refresh otomatis setiap 5 detik telah dimulai.");
     }
-    
+
+    /* ========== HELPER UNTUK DATA KEUANGAN DI DASHBOARD ========== */
     private HBox createBusinessSummaryRow() {
         YearMonth currentMonth = YearMonth.now();
         List < TransactionModel > transactionsThisMonth = FinanceModel.getInstance().getAllTransactions().stream().filter(t -> t.getDate() != null && YearMonth.from(t.getDate()).equals(currentMonth)).collect(Collectors.toList());
@@ -234,6 +238,7 @@ public class DashboardPemilikController {
         return String.format("%s%s dari bulan lalu", sign, percentFormatter.format(change));
     }
     
+    /* method refresh data untuk meninjau data terbaru */
     private void performRefresh(boolean isAutoRefresh) {
         System.out.println("Memulai proses refresh data... Dipicu oleh: " + (isAutoRefresh ? "Otomatis" : "Manual"));
         FinanceModel.getInstance().loadAllTransactionsFromDB();
@@ -278,6 +283,7 @@ public class DashboardPemilikController {
         return currencyFormatter.format(value / 1_000_000) + " jt";
     }
     
+    /* handler tombol refresh data */
     @FXML
     private void handleRefreshAction(ActionEvent event) {
         performRefresh(false);
@@ -297,6 +303,7 @@ public class DashboardPemilikController {
         }
     }
     
+    /* ========== HELPER UNTUK CLICKABLE BUTTON ========== */
     @FXML
     void handleTugasMenuClick(ActionEvent event) {
         headerTitleLabel.setText("Pengawasan Tugas");

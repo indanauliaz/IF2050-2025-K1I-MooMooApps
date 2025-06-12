@@ -35,7 +35,7 @@ public class TambahPresensiController {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     private final List<String> statusOptions = Arrays.asList("Hadir", "Terlambat", "Izin", "Sakit", "Absen");
 
-
+    /* ========== INITIALIZE ========== */
     @FXML
     public void initialize() {
         statusComboBox.setItems(FXCollections.observableArrayList(statusOptions));

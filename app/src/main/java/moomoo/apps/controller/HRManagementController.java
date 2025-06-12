@@ -78,7 +78,7 @@ public class HRManagementController {
     private DateTimeFormatter tanggalDisplayFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
     private boolean isSemuaTugasMode = false;
 
-
+    /* ========== INITIALIZE ========== */
     @FXML
     public void initialize() {
         DatabaseManager.initializeDatabase();
@@ -102,6 +102,7 @@ public class HRManagementController {
         });
     }
 
+    /* ========== DATABASE HELPER ========== */
     private void muatDaftarKaryawan() {
         semuaKaryawanList.clear();
         List<EmployeeModel> employeesFromDb = DatabaseManager.getAllEmployees();
@@ -130,7 +131,14 @@ public class HRManagementController {
         semuaTugasList.addAll(filteredTasks);
         tampilkanTugasDiKanban();
     }
-    
+
+    private void muatDataKehadiran(LocalDate tanggal) {
+        daftarKehadiranList.setAll(DatabaseManager.getAttendanceRecordsByDate(tanggal));
+        tabelKehadiran.setItems(daftarKehadiranList);
+        updateSummaryKehadiran();
+    }
+
+    /* ========== KANBAN BOARD HELPER ========== */
     private void tampilkanTugasDiKanban() {
         akanDilakukanListVBox.getChildren().clear();
         sedangDikerjakanListVBox.getChildren().clear();
@@ -180,6 +188,7 @@ public class HRManagementController {
         muatSemuaTugasDariDB();
     }
 
+    /* ========== HANDLER CLICKABLE BUTTON ========== */
     @FXML
     private void handleTambahTugasBaru(ActionEvent event) {
         try {
@@ -230,8 +239,109 @@ public class HRManagementController {
         refreshKanbanBoard();
     }
 
+    @FXML
+    private void handleTambahPresensi(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/moomoo/apps/view/TambahPresensiView.fxml"));
+            Parent root = loader.load();
+            TambahPresensiController controller = loader.getController();
+            
+            List<Integer> employeeIdsWithAttendance = daftarKehadiranList.stream().map(ar -> ar.getKaryawan().getId()).collect(Collectors.toList());
+            ObservableList<EmployeeModel> employeesForDialog = semuaKaryawanList.stream().filter(emp -> !employeeIdsWithAttendance.contains(emp.getId())).collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+            if(employeesForDialog.isEmpty() && !semuaKaryawanList.isEmpty()){
+                showPlaceholderDialog("Info", "Semua karyawan sudah memiliki catatan presensi untuk tanggal ini.");
+            }
+            controller.setDialogData(employeesForDialog, tanggalKehadiranSaatIni, null);
+
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.initOwner(tambahPresensiButton.getScene().getWindow());
+            modalStage.setTitle("Tambah Presensi Baru");
+            modalStage.setScene(new Scene(root));
+            modalStage.showAndWait();
+
+            AttendanceRecordModel newRecord = controller.getAttendanceRecord();
+            if (newRecord != null) {
+                if (DatabaseManager.addAttendanceRecord(newRecord)) {
+                    System.out.println("Presensi baru disimpan untuk: " + newRecord.getKaryawan().getNamaLengkap());
+                    muatDataKehadiran(tanggalKehadiranSaatIni); 
+                } else {
+                    showPlaceholderDialog("Error Simpan", "Gagal menyimpan data presensi ke database.");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showPlaceholderDialog("Error", "Tidak bisa membuka form tambah presensi.");
+        }
+    }
+    
+    @FXML 
+    private void handleHariSebelumnyaKehadiran(ActionEvent event) {
+        tanggalKehadiranSaatIni = tanggalKehadiranSaatIni.minusDays(1);
+        updateLabelTanggalKehadiran();
+        muatDataKehadiran(tanggalKehadiranSaatIni);
+    }
+
+    @FXML 
+    private void handleHariBerikutnyaKehadiran(ActionEvent event) {
+        tanggalKehadiranSaatIni = tanggalKehadiranSaatIni.plusDays(1);
+        updateLabelTanggalKehadiran();
+        muatDataKehadiran(tanggalKehadiranSaatIni);
+    }
+    
+    private void handleEditPresensi(AttendanceRecordModel recordToEdit) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/moomoo/apps/view/TambahPresensiView.fxml"));
+            Parent root = loader.load();
+            TambahPresensiController controller = loader.getController();
+            controller.setDialogData(FXCollections.observableArrayList(recordToEdit.getKaryawan()), recordToEdit.getTanggalAbsen(), recordToEdit);
+
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.initOwner(tabelKehadiran.getScene().getWindow());
+            modalStage.setTitle("Edit Presensi");
+            modalStage.setScene(new Scene(root));
+            modalStage.showAndWait();
+
+            AttendanceRecordModel updatedRecord = controller.getAttendanceRecord();
+            if (updatedRecord != null && DatabaseManager.updateAttendanceRecord(updatedRecord)) {
+                muatDataKehadiran(tanggalKehadiranSaatIni);
+            } else if (updatedRecord != null) {
+                showPlaceholderDialog("Error Update", "Gagal memperbarui data presensi di database.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleHapusPresensi(AttendanceRecordModel recordToDelete) {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION, "Apakah Anda yakin ingin menghapus data presensi untuk " + recordToDelete.getKaryawan().getNamaLengkap() + "?", ButtonType.OK, ButtonType.CANCEL);
+        confirmAlert.setTitle("Konfirmasi Hapus");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.initOwner(tabelKehadiran.getScene().getWindow());
+        
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                if (DatabaseManager.deleteAttendanceRecord(recordToDelete.getId())) {
+                    muatDataKehadiran(tanggalKehadiranSaatIni);
+                } else {
+                    showPlaceholderDialog("Error Hapus", "Gagal menghapus data presensi dari database.");
+                }
+            }
+        });
+    }
+
+    /* ========== HELPER UPDATE SETUP ========== */
     private void updateLabelTanggalKehadiran() {
         tanggalKehadiranLabel.setText(tanggalKehadiranSaatIni.format(tanggalDisplayFormatter));
+    }
+
+    private void updateSummaryKehadiran() {
+        long hadir = daftarKehadiranList.stream().filter(r -> "Hadir".equalsIgnoreCase(r.getStatusKehadiran())).count();
+        long terlambat = daftarKehadiranList.stream().filter(r -> "Terlambat".equalsIgnoreCase(r.getStatusKehadiran())).count();
+        long tidakHadir = daftarKehadiranList.stream().filter(r -> "Absen".equalsIgnoreCase(r.getStatusKehadiran()) || "Izin".equalsIgnoreCase(r.getStatusKehadiran()) || "Sakit".equalsIgnoreCase(r.getStatusKehadiran())).count();
+        summaryKehadiranLabel.setText(String.format("Hadir: %d | Terlambat: %d | Tidak Hadir: %d", hadir, terlambat, tidakHadir));
     }
 
     private void setupKolomTabelKehadiran() {
@@ -281,109 +391,8 @@ public class HRManagementController {
         kolomAksiKehadiran.setStyle("-fx-alignment: CENTER;");
     }
     
-    private void muatDataKehadiran(LocalDate tanggal) {
-        daftarKehadiranList.setAll(DatabaseManager.getAttendanceRecordsByDate(tanggal));
-        tabelKehadiran.setItems(daftarKehadiranList);
-        updateSummaryKehadiran();
-    }
 
-    private void updateSummaryKehadiran() {
-        long hadir = daftarKehadiranList.stream().filter(r -> "Hadir".equalsIgnoreCase(r.getStatusKehadiran())).count();
-        long terlambat = daftarKehadiranList.stream().filter(r -> "Terlambat".equalsIgnoreCase(r.getStatusKehadiran())).count();
-        long tidakHadir = daftarKehadiranList.stream().filter(r -> "Absen".equalsIgnoreCase(r.getStatusKehadiran()) || "Izin".equalsIgnoreCase(r.getStatusKehadiran()) || "Sakit".equalsIgnoreCase(r.getStatusKehadiran())).count();
-        summaryKehadiranLabel.setText(String.format("Hadir: %d | Terlambat: %d | Tidak Hadir: %d", hadir, terlambat, tidakHadir));
-    }
-
-    @FXML
-    private void handleTambahPresensi(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/moomoo/apps/view/TambahPresensiView.fxml"));
-            Parent root = loader.load();
-            TambahPresensiController controller = loader.getController();
-            
-            List<Integer> employeeIdsWithAttendance = daftarKehadiranList.stream().map(ar -> ar.getKaryawan().getId()).collect(Collectors.toList());
-            ObservableList<EmployeeModel> employeesForDialog = semuaKaryawanList.stream().filter(emp -> !employeeIdsWithAttendance.contains(emp.getId())).collect(Collectors.toCollection(FXCollections::observableArrayList));
-
-            if(employeesForDialog.isEmpty() && !semuaKaryawanList.isEmpty()){
-                showPlaceholderDialog("Info", "Semua karyawan sudah memiliki catatan presensi untuk tanggal ini.");
-            }
-            controller.setDialogData(employeesForDialog, tanggalKehadiranSaatIni, null);
-
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(tambahPresensiButton.getScene().getWindow());
-            modalStage.setTitle("Tambah Presensi Baru");
-            modalStage.setScene(new Scene(root));
-            modalStage.showAndWait();
-
-            AttendanceRecordModel newRecord = controller.getAttendanceRecord();
-            if (newRecord != null) {
-                if (DatabaseManager.addAttendanceRecord(newRecord)) {
-                    System.out.println("Presensi baru disimpan untuk: " + newRecord.getKaryawan().getNamaLengkap());
-                    muatDataKehadiran(tanggalKehadiranSaatIni); 
-                } else {
-                    showPlaceholderDialog("Error Simpan", "Gagal menyimpan data presensi ke database.");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            showPlaceholderDialog("Error", "Tidak bisa membuka form tambah presensi.");
-        }
-    }
-    
-    @FXML private void handleHariSebelumnyaKehadiran(ActionEvent event) {
-        tanggalKehadiranSaatIni = tanggalKehadiranSaatIni.minusDays(1);
-        updateLabelTanggalKehadiran();
-        muatDataKehadiran(tanggalKehadiranSaatIni);
-    }
-
-    @FXML private void handleHariBerikutnyaKehadiran(ActionEvent event) {
-        tanggalKehadiranSaatIni = tanggalKehadiranSaatIni.plusDays(1);
-        updateLabelTanggalKehadiran();
-        muatDataKehadiran(tanggalKehadiranSaatIni);
-    }
-    
-    private void handleEditPresensi(AttendanceRecordModel recordToEdit) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/moomoo/apps/view/TambahPresensiView.fxml"));
-            Parent root = loader.load();
-            TambahPresensiController controller = loader.getController();
-            controller.setDialogData(FXCollections.observableArrayList(recordToEdit.getKaryawan()), recordToEdit.getTanggalAbsen(), recordToEdit);
-
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(tabelKehadiran.getScene().getWindow());
-            modalStage.setTitle("Edit Presensi");
-            modalStage.setScene(new Scene(root));
-            modalStage.showAndWait();
-
-            AttendanceRecordModel updatedRecord = controller.getAttendanceRecord();
-            if (updatedRecord != null && DatabaseManager.updateAttendanceRecord(updatedRecord)) {
-                muatDataKehadiran(tanggalKehadiranSaatIni);
-            } else if (updatedRecord != null) {
-                showPlaceholderDialog("Error Update", "Gagal memperbarui data presensi di database.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handleHapusPresensi(AttendanceRecordModel recordToDelete) {
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION, "Apakah Anda yakin ingin menghapus data presensi untuk " + recordToDelete.getKaryawan().getNamaLengkap() + "?", ButtonType.OK, ButtonType.CANCEL);
-        confirmAlert.setTitle("Konfirmasi Hapus");
-        confirmAlert.setHeaderText(null);
-        confirmAlert.initOwner(tabelKehadiran.getScene().getWindow());
-        
-        confirmAlert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                if (DatabaseManager.deleteAttendanceRecord(recordToDelete.getId())) {
-                    muatDataKehadiran(tanggalKehadiranSaatIni);
-                } else {
-                    showPlaceholderDialog("Error Hapus", "Gagal menghapus data presensi dari database.");
-                }
-            }
-        });
-    }
+    /* ========== PLACEHOLDER SETUP ========== */
     
     public void showPlaceholderDialog(String title, String content) {
         Dialog<Void> dialog = new Dialog<>();
