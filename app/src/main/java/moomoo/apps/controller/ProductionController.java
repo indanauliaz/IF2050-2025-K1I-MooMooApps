@@ -22,7 +22,6 @@ import java.util.Optional;
 
 public class ProductionController implements UserAwareController {
 
-    // ... (Deklarasi FXML tetap sama) ...
     @FXML private ComboBox<String> kategoriComboBox;
     @FXML private DatePicker tanggalPicker;
     @FXML private TextField jumlahField;
@@ -88,7 +87,6 @@ public class ProductionController implements UserAwareController {
         String kualitas = kualitasComboBox.getValue();
         String catatan = catatanField.getText();
 
-        // ** PERUBAHAN UTAMA: Memanggil metode validasi terpusat **
         if (!ValidationUtils.validateProductionInput(kategori, tanggal, jumlahStr, satuan, lokasi, kualitas)) {
             showAlert(Alert.AlertType.ERROR, "Input Tidak Valid", "Harap isi semua kolom wajib dengan format yang benar. Jumlah harus berupa angka positif.");
             return;
@@ -113,7 +111,6 @@ public class ProductionController implements UserAwareController {
                 showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal memperbarui catatan produksi di database.");
             }
         } else {
-            // Logic untuk INSERT
             ProductionRecord newRecord = new ProductionRecord(kategori, jumlah, satuan, tanggal, lokasi, kualitas, catatan);
             if (productionModel.saveRecordToDB(newRecord)) {
                 clearForm();
@@ -129,12 +126,6 @@ public class ProductionController implements UserAwareController {
         handleCommonSaveLogic();
     }
     
-    // Metode handleUpdateCatatan sekarang digabung ke dalam handleCommonSaveLogic
-    // private void handleUpdateCatatan() { ... }
-
-    // Metode validateInput dan parseJumlah dihapus dari sini
-
-    // ... Sisa dari file ProductionController.java tetap sama ...
     private void setupTableColumns() {
         kategoriCol.setCellValueFactory(new PropertyValueFactory<>("kategori"));
         jumlahCol.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getJumlahDenganSatuan()));

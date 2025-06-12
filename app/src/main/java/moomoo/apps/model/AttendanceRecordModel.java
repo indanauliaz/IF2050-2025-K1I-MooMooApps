@@ -12,13 +12,13 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class AttendanceRecordModel {
-    private final IntegerProperty id; // ID unik untuk record kehadiran
-    private final ObjectProperty<EmployeeModel> karyawan; // Referensi ke EmployeeModel
-    private final StringProperty statusKehadiran; // "Hadir", "Terlambat", "Absen", "Izin"
+    private final IntegerProperty id; 
+    private final ObjectProperty<EmployeeModel> karyawan; 
+    private final StringProperty statusKehadiran; 
     private final ObjectProperty<LocalTime> waktuMasuk;
     private final ObjectProperty<LocalTime> waktuKeluar;
     private final StringProperty catatan;
-    private final ObjectProperty<LocalDate> tanggalAbsen; // Tanggal record ini
+    private final ObjectProperty<LocalDate> tanggalAbsen; 
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -36,7 +36,7 @@ public class AttendanceRecordModel {
 
     public AttendanceRecordModel(EmployeeModel karyawan, LocalDate tanggalAbsen, String statusKehadiran, 
                                  String waktuMasukStr, String waktuKeluarStr, String catatan) {
-        this.id = new SimpleIntegerProperty(0); // ID default, bisa di-generate DB
+        this.id = new SimpleIntegerProperty(0); 
         this.karyawan = new SimpleObjectProperty<>(karyawan);
         this.tanggalAbsen = new SimpleObjectProperty<>(tanggalAbsen);
         this.statusKehadiran = new SimpleStringProperty(statusKehadiran);
@@ -49,17 +49,17 @@ public class AttendanceRecordModel {
     // --- Getters untuk Properties ---
     public IntegerProperty idProperty() { return id; }
     public ObjectProperty<EmployeeModel> karyawanProperty() { return karyawan; }
-    public StringProperty namaKaryawanProperty() { // Helper untuk TableView
+    public StringProperty namaKaryawanProperty() { 
         return new SimpleStringProperty(karyawan.get() != null ? karyawan.get().getNamaLengkap() : "N/A");
     }
     public ObjectProperty<LocalDate> tanggalAbsenProperty() { return tanggalAbsen; }
     public StringProperty statusKehadiranProperty() { return statusKehadiran; }
     public ObjectProperty<LocalTime> waktuMasukProperty() { return waktuMasuk; }
-    public StringProperty waktuMasukFormattedProperty() { // Helper untuk TableView
+    public StringProperty waktuMasukFormattedProperty() { 
         return new SimpleStringProperty(getWaktuMasuk() != null ? getWaktuMasuk().format(TIME_FORMATTER) : "-");
     }
     public ObjectProperty<LocalTime> waktuKeluarProperty() { return waktuKeluar; }
-    public StringProperty waktuKeluarFormattedProperty() { // Helper untuk TableView
+    public StringProperty waktuKeluarFormattedProperty() { 
         return new SimpleStringProperty(getWaktuKeluar() != null ? getWaktuKeluar().format(TIME_FORMATTER) : "-");
     }
     public StringProperty catatanProperty() { return catatan; }

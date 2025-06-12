@@ -89,13 +89,6 @@ public class SdmModel {
         return records;
     }
     
-    /**
-     * Metode baru untuk mengambil data tugas dalam rentang tanggal tertentu.
-     * @param startDate Tanggal mulai.
-     * @param endDate Tanggal akhir.
-     * @return List dari TaskModel.
-     */
-
     public void loadAllTasksFromDB() {
         this.allTasks = DatabaseManager.getAllTasks(); 
         if (this.allTasks != null) {

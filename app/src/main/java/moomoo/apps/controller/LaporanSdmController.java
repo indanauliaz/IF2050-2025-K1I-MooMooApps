@@ -19,7 +19,7 @@ import moomoo.apps.interfaces.ILaporanKontenController;
 import moomoo.apps.model.AttendanceRecordModel;
 import moomoo.apps.model.EmployeeModel;
 import moomoo.apps.model.SdmModel;
-import moomoo.apps.model.TaskModel; // Import TaskModel
+import moomoo.apps.model.TaskModel;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class LaporanSdmController implements ILaporanKontenController {
 
-    //<editor-fold defaultstate="collapsed" desc="FXML Declarations">
+
     @FXML private Label totalKaryawanLabel;
     @FXML private ProgressBar totalKaryawanProgressBar;
     @FXML private Label totalKaryawanDescLabel;
@@ -58,11 +58,11 @@ public class LaporanSdmController implements ILaporanKontenController {
     @FXML private Label tableSummaryLabel;
     @FXML private Button sebelumnyaButton;
     @FXML private Button selanjutnyaButton;
-    //</editor-fold>
 
     private SdmModel sdmModel;
     private String currentPeriodeFilter = "Bulan Ini";
     private String currentKehadiranChartFilter = "Hadir";
+    private XYChart.Series<String, Number> kehadiranSeries;
 
     @Override
     public void inisialisasiKonten() {
@@ -83,23 +83,35 @@ public class LaporanSdmController implements ILaporanKontenController {
         LocalDate[] dateRange = determineDateRange(currentPeriodeFilter);
         
         ObservableList<EmployeeModel> semuaKaryawan = sdmModel.getAllEmployees();
-        List<AttendanceRecordModel> catatanKehadiran = sdmModel.getAttendanceRecordsByDateRange(dateRange[0], dateRange[1]);
-        // Ambil data tugas sesuai rentang periode
+        List<AttendanceRecordModel> semuaCatatanKehadiranDiPeriode = sdmModel.getAttendanceRecordsByDateRange(dateRange[0], dateRange[1]);
         List<TaskModel> catatanTugas = sdmModel.getTasksByDateRange(dateRange[0], dateRange[1]);
+
+        List<AttendanceRecordModel> catatanKehadiranTersaring = semuaCatatanKehadiranDiPeriode.stream()
+                .filter(r -> currentKehadiranChartFilter.equalsIgnoreCase(r.getStatusKehadiran()))
+                .collect(Collectors.toList());
+
+        List<Integer> employeeIdsInPeriod = catatanKehadiranTersaring.stream()
+                .map(r -> r.getKaryawan().getId())
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<EmployeeModel> karyawanTersaringUntukPieChart = semuaKaryawan.stream()
+                .filter(emp -> employeeIdsInPeriod.contains(emp.getId()))
+                .collect(Collectors.toList());
+
+        updateTabelDanKinerjaKaryawan(semuaKaryawan, semuaCatatanKehadiranDiPeriode, catatanTugas, dateRange);
+        updateKartuStatistik(semuaKaryawan, semuaCatatanKehadiranDiPeriode);
         
-        updateTabelDanKinerjaKaryawan(semuaKaryawan, catatanKehadiran, catatanTugas, dateRange);
-        updateKartuStatistik(semuaKaryawan, catatanKehadiran);
-        updateGrafikDistribusi(semuaKaryawan);
-        updateGrafikKehadiran(catatanKehadiran);
+        updateGrafikDistribusi(karyawanTersaringUntukPieChart); 
+
+        updateGrafikKehadiran(semuaCatatanKehadiranDiPeriode);
     }
 
     private void updateTabelDanKinerjaKaryawan(List<EmployeeModel> karyawanList, List<AttendanceRecordModel> kehadiranList, List<TaskModel> tugasList, LocalDate[] dateRange) {
         if (kinerjaTableView == null) return;
         
-        // 1. Hitung total hari kerja dalam periode
         long totalHariKerja = ChronoUnit.DAYS.between(dateRange[0], dateRange[1]) + 1;
         
-        // 2. Kelompokkan data kehadiran dan tugas per karyawan untuk efisiensi
         Map<Integer, Long> kehadiranPerKaryawan = kehadiranList.stream()
             .filter(r -> "Hadir".equalsIgnoreCase(r.getStatusKehadiran()) || "Terlambat".equalsIgnoreCase(r.getStatusKehadiran()))
             .collect(Collectors.groupingBy(r -> r.getKaryawan().getId(), Collectors.counting()));
@@ -108,7 +120,6 @@ public class LaporanSdmController implements ILaporanKontenController {
             .filter(t -> t.getEmployeeId() != null)
             .collect(Collectors.groupingBy(TaskModel::getEmployeeId));
 
-        // 3. Iterasi setiap karyawan untuk menghitung skor dan peringkat
         for (EmployeeModel emp : karyawanList) {
 
             long jumlahHadir = kehadiranPerKaryawan.getOrDefault(emp.getId(), 0L);
@@ -119,23 +130,19 @@ public class LaporanSdmController implements ILaporanKontenController {
             long tugasSelesai = tugasKaryawanIni.stream().filter(t -> "Selesai".equalsIgnoreCase(t.getStatus())).count();
             double skorTugas = (totalTugas > 0) ? ((double) tugasSelesai / totalTugas) : 1.0; 
 
-            // --- Kalkulasi Produktivitas Gabungan ---
             double produktivitas = (skorKehadiran * 0.6) + (skorTugas * 0.4);
 
-            // --- Penentuan Peringkat ---
             String peringkat;
             if (produktivitas >= 0.9) peringkat = "A+";
             else if (produktivitas >= 0.8) peringkat = "A";
             else if (produktivitas >= 0.7) peringkat = "B";
             else peringkat = "C";
 
-            // 4. Set properti pada EmployeeModel
             emp.setPersentaseKehadiran(skorKehadiran);
             emp.setPersentaseProduktivitas(produktivitas);
             emp.setPeringkatKinerja(peringkat);
         }
         
-        // 5. Tampilkan di tabel
         kinerjaTableView.setItems(FXCollections.observableArrayList(karyawanList));
         tableSummaryLabel.setText("Menampilkan " + karyawanList.size() + " dari " + karyawanList.size() + " karyawan");
     }
@@ -167,6 +174,10 @@ public class LaporanSdmController implements ILaporanKontenController {
         setFilterChartAktif(filterHadirButton);
         sebelumnyaButton.setDisable(true);
         selanjutnyaButton.setDisable(true);
+
+        kehadiranChart.setAnimated(false); 
+        kehadiranSeries = new XYChart.Series<>();
+        kehadiranChart.getData().add(kehadiranSeries);
 
         karyawanColumn.setCellValueFactory(cellData -> cellData.getValue().namaLengkapProperty());
         departemenColumn.setCellValueFactory(cellData -> cellData.getValue().departemenProperty());
@@ -204,27 +215,36 @@ public class LaporanSdmController implements ILaporanKontenController {
     
     private void updateGrafikDistribusi(List<EmployeeModel> karyawanList) {
         if (distribusiKaryawanChart == null) return;
-        distribusiKaryawanChart.getData().clear();
+
+
         Map<String, Long> distribusi = karyawanList.stream()
-            .filter(e -> e.getDepartemen() != null && !e.getDepartemen().isEmpty())
-            .collect(Collectors.groupingBy(EmployeeModel::getDepartemen, Collectors.counting()));
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-        distribusi.forEach((dept, count) -> pieChartData.add(new PieChart.Data(dept + " (" + count + ")", count)));
-        distribusiKaryawanChart.setData(pieChartData);
+                .filter(e -> e.getDepartemen() != null && !e.getDepartemen().isEmpty())
+                .collect(Collectors.groupingBy(EmployeeModel::getDepartemen, Collectors.counting()));
+
+
+        ObservableList<PieChart.Data> currentData = distribusiKaryawanChart.getData();
+        
+
+        currentData.clear();
+        distribusi.forEach((dept, count) -> currentData.add(new PieChart.Data(dept + " (" + count + ")", count)));
+        
     }
     
     private void updateGrafikKehadiran(List<AttendanceRecordModel> kehadiranList) {
-        if (kehadiranChart == null) return;
-        kehadiranChart.getData().clear();
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName(currentKehadiranChartFilter);
+
+        if (kehadiranChart == null || kehadiranSeries == null) return;
+
+        kehadiranSeries.getData().clear();
+        
+        kehadiranSeries.setName(currentKehadiranChartFilter);
+        
         Map<DayOfWeek, Long> dataGrafik = kehadiranList.stream()
-            .filter(r -> currentKehadiranChartFilter.equalsIgnoreCase(r.getStatusKehadiran()))
-            .collect(Collectors.groupingBy(r -> r.getTanggalAbsen().getDayOfWeek(), Collectors.counting()));
+                .filter(r -> currentKehadiranChartFilter.equalsIgnoreCase(r.getStatusKehadiran()))
+                .collect(Collectors.groupingBy(r -> r.getTanggalAbsen().getDayOfWeek(), Collectors.counting()));
         for (DayOfWeek day : DayOfWeek.values()) {
-            series.getData().add(new XYChart.Data<>(day.toString().substring(0, 3), dataGrafik.getOrDefault(day, 0L)));
+            kehadiranSeries.getData().add(new XYChart.Data<>(day.toString().substring(0, 3), dataGrafik.getOrDefault(day, 0L)));
         }
-        kehadiranChart.getData().add(series);
+        
     }
 
     @FXML
@@ -254,5 +274,5 @@ public class LaporanSdmController implements ILaporanKontenController {
         }
         return new LocalDate[]{startDate, endDate};
     }
-    //</editor-fold>
+  
 }

@@ -1,5 +1,7 @@
 package moomoo.apps.model;
 
+import java.util.Objects;
+
 public class UserModel {
     private int id; 
     private String username;
@@ -72,5 +74,24 @@ public class UserModel {
                ", email='" + email + '\'' +
                ", role='" + role + '\'' +
                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserModel userModel = (UserModel) o;
+        if (id != 0 && userModel.id != 0) {
+            return id == userModel.id;
+        }
+        return id == userModel.id &&
+                Objects.equals(username, userModel.username) &&
+                Objects.equals(email, userModel.email) &&
+                Objects.equals(role, userModel.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, role);
     }
 }

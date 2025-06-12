@@ -28,7 +28,6 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
 
     // FXML Components
     @FXML private TableView<TransactionModel> tabelPemasukan;
-    // DIUBAH: Tabel penggajian sekarang menggunakan TransactionModel
     @FXML private TableView<TransactionModel> tabelPengeluaran;
     @FXML private TableView<TransactionModel> tabelPenggajian; 
     
@@ -48,7 +47,6 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
     @FXML private TableColumn<TransactionModel, String> kolomMetodePengeluaran;
     @FXML private TableColumn<TransactionModel, String> kolomCatatanPengeluaran;
     
-    // DIUBAH: Semua kolom penggajian sekarang merujuk ke TransactionModel
     @FXML private TableColumn<TransactionModel, String> kolomDeskripsiGaji;
     @FXML private TableColumn<TransactionModel, String> kolomKategoriGaji;
     @FXML private TableColumn<TransactionModel, LocalDate> kolomTanggalGaji;

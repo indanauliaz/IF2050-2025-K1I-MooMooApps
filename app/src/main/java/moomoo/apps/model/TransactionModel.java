@@ -23,7 +23,7 @@ public class TransactionModel {
     private final StringProperty notes;
     private final IntegerProperty userId; 
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE; // YYYY-MM-DD
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE; 
 
     public TransactionModel(int id, String transactionType, String description, double amount, String category, 
                             LocalDate date, String paymentMethod, String notes, int userId) {
@@ -40,7 +40,7 @@ public class TransactionModel {
     
     public TransactionModel(String transactionType, String description, double amount, String category, 
                             LocalDate date, String paymentMethod, String notes, int userId) {
-        this.id = new SimpleIntegerProperty(0); // Default ID, DB akan generate
+        this.id = new SimpleIntegerProperty(0); 
         this.transactionType = new SimpleStringProperty(transactionType);
         this.description = new SimpleStringProperty(description);
         this.amount = new SimpleDoubleProperty(amount);
@@ -78,5 +78,5 @@ public class TransactionModel {
     public void setId(int id) { this.id.set(id); }
     public void setTransactionType(String type) { this.transactionType.set(type); }
     public void setDescription(String description) { this.description.set(description); }
-    // ... tambahkan setter lain jika perlu
+
 }

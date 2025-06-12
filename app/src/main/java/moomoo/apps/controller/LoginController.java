@@ -102,13 +102,11 @@ public class LoginController implements Initializable {
 
         boolean hasError = false;
 
-        // Reset styles
         usernameEmailField.getStyleClass().remove("error-field");
         passwordField.getStyleClass().remove("error-field");
         visiblePasswordField.getStyleClass().remove("error-field");
         roleComboBoxLogin.getStyleClass().remove("error-field");
 
-        // Validasi kosong
         if (usernameOrEmail.isEmpty()) {
             usernameEmailField.getStyleClass().add("error-field");
             hasError = true;
@@ -133,7 +131,6 @@ public class LoginController implements Initializable {
             return;
         }
 
-        // Hide error if all good
         errorMessageLabel.setVisible(false);
         errorMessageLabel.setManaged(false);
 
@@ -186,7 +183,7 @@ public class LoginController implements Initializable {
         // --- INI PERUBAHAN PENTING ---
         switch (role.toLowerCase()) {
             case "manajer":
-                fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; // FXML untuk manajer
+                fxmlFile = "/moomoo/apps/view/DashboardView.fxml"; 
                 break;
             case "pemilik":
                 fxmlFile = "/moomoo/apps/view/DashboardPemilikView.fxml"; 

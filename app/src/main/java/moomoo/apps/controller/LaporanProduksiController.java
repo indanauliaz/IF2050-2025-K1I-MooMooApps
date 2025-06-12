@@ -102,7 +102,7 @@ public class LaporanProduksiController implements ILaporanKontenController {
             )
         );
         kategoriTabelCol.setCellValueFactory(new PropertyValueFactory<>("kategori"));
-        volumeTabelCol.setCellValueFactory(new PropertyValueFactory<>("jumlah")); // Langsung ambil angka
+        volumeTabelCol.setCellValueFactory(new PropertyValueFactory<>("jumlah")); 
         satuanTabelCol.setCellValueFactory(new PropertyValueFactory<>("satuan"));
         lokasiTabelCol.setCellValueFactory(new PropertyValueFactory<>("lokasi"));
         kualitasTabelCol.setCellValueFactory(new PropertyValueFactory<>("kualitas"));
@@ -198,18 +198,16 @@ public class LaporanProduksiController implements ILaporanKontenController {
         peringkatKualitasDescLabel.setText(currentPeriodeFilter.toLowerCase());
 
         // INI FUNGSIONALITAS YANG BELUM DICEK(LEBIH KE BINGUNG, BISA DIAPUS KALO GAPERLU)
-        efisiensiOperasionalLabel.setText("87%"); 
-        efisiensiOperasionalDescLabel.setText("Target: 90%"); 
+        // efisiensiOperasionalLabel.setText("87%"); 
+        // efisiensiOperasionalDescLabel.setText("Target: 90%"); 
     }
 
     private void updateProduksiHarianLineChart() {
         produksiHarianLineChart.getData().clear();
         if (filteredProductionList.isEmpty()) return;
 
-        // Agregasi produksi harian per kategori (misal: Susu, Daging)
         Map<String, XYChart.Series<String, Number>> seriesMap = new HashMap<>();
 
-        // Kategori utama yang ingin ditampilkan di line chart
         List<String> kategoriUtama = List.of("Susu", "Daging"); 
 
         for (String kategori : kategoriUtama) {

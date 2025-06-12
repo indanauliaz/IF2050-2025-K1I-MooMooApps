@@ -44,13 +44,12 @@ public class TambahTugasController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Setup ComboBox Prioritas dan Status
+
         prioritasComboBox.setItems(FXCollections.observableArrayList("Rendah", "Normal", "Tinggi"));
         prioritasComboBox.setValue("Normal");
         statusComboBox.setItems(FXCollections.observableArrayList("Belum Dimulai", "Sedang Dikerjakan", "Tertunda"));
         statusComboBox.setValue("Belum Dimulai");
         
-        // Mengatur bagaimana nama karyawan ditampilkan di ComboBox
         karyawanComboBox.setConverter(new StringConverter<EmployeeModel>() {
             @Override
             public String toString(EmployeeModel employee) {
@@ -58,12 +57,11 @@ public class TambahTugasController implements Initializable {
             }
             @Override
             public EmployeeModel fromString(String string) {
-                // Tidak perlu implementasi untuk kasus ini
                 return null;
             }
         });
 
-        // Set tanggal default
+
         tanggalPicker.setValue(LocalDate.now());
     }
     

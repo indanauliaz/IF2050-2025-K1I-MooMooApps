@@ -20,6 +20,10 @@ public class PasswordUtils {
 
 
     public static String hashPassword(String password, byte[] salt) {
+
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password tidak boleh null atau kosong");
+        }
         try {
             int iterations = 10000; 
             int keyLength = 256; 
@@ -63,7 +67,6 @@ public class PasswordUtils {
         e.printStackTrace();
         return false;
     } catch (IllegalArgumentException e) {
-        // Ini terjadi jika format Base64 tidak valid
         System.err.println("Error decoding Base64: " + e.getMessage());
         return false;
     }

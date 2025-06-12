@@ -116,11 +116,6 @@ public class DashboardPemilikController {
         double produktivitasBulanIni = SdmModel.getInstance().getKinerjaGabungan(currentMonth);
         double produktivitasBulanLalu = SdmModel.getInstance().getKinerjaGabungan(previousMonth);
         String produktivitasChangeText = calculatePercentageChange(produktivitasBulanIni, produktivitasBulanLalu);
-      
-        double produktivitasTim = SdmModel.getInstance().getKinerjaGabunganPeriodeIni();
-
-    
-
         VBox cardProduksiSusu = createMetricCard("Produksi Susu", String.format("%,.0f L", susuBulanIni), susuChangeText, susuBulanIni / 20000.0);
         VBox cardProduksiDaging = createMetricCard("Produksi Daging", String.format("%,.0f Kg", dagingBulanIni), dagingChangeText, dagingBulanIni / 5000.0); 
         VBox cardProduktivitas = createMetricCard(
@@ -229,29 +224,6 @@ public class DashboardPemilikController {
         return pieChart;
     }
     
-    private double getMonthlyProductivity(YearMonth month) {
-        System.out.println("\n--- Menghitung produktivitas untuk bulan: " + month + " ---");
-
-        LocalDate startDate = month.atDay(1);
-        LocalDate endDate = month.atEndOfMonth();
-        List<TaskModel> tasks = SdmModel.getInstance().getTasksByDateRange(startDate, endDate);
-        
-        long totalTugas = tasks.size();
-        System.out.println("Total tugas ditemukan untuk rentang " + startDate + " s/d " + endDate + ": " + totalTugas);
-
-        long tugasSelesai = tasks.stream()
-                                .filter(t -> "Selesai".equalsIgnoreCase(t.getStatus())) 
-                                .count();
-        
-        System.out.println("Jumlah tugas dengan status 'Selesai' (case-insensitive): " + tugasSelesai);
-
-        // Kalkulasi produktivitas
-        double productivity = (totalTugas > 0) ? (double) tugasSelesai / totalTugas : 0.0;
-        System.out.println("Hasil kalkulasi produktivitas: " + productivity);
-        System.out.println("--- Selesai menghitung produktivitas ---\n");
-        
-        return productivity;
-    }
     
     private String calculatePercentageChange(double current, double previous) {
         if (previous == 0) {

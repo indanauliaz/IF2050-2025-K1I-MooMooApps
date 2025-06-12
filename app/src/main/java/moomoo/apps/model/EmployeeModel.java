@@ -72,8 +72,6 @@ public class EmployeeModel {
     public void setNamaLengkap(String namaLengkap) { this.namaLengkap.set(namaLengkap); }
     public void setPosisi(String posisi) { 
         this.posisi.set(posisi);
-        // Otomatis update departemen jika posisi berubah (opsional)
-        // this.departemen.set(determineDepartemenFromPosisi(posisi)); 
     }
     public void setDepartemen(String departemen) { this.departemen.set(departemen); }
     public void setPersentaseKehadiran(double persentaseKehadiran) { this.persentaseKehadiran.set(persentaseKehadiran); }

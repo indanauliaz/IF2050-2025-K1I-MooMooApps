@@ -71,11 +71,10 @@ public class ProductionModel {
             pstmt.setString(1, record.getKategori());
             pstmt.setDouble(2, record.getJumlah());
             pstmt.setString(3, record.getSatuan());
-            // Pastikan tanggal tidak null sebelum format
             if (record.getTanggal() != null) {
                 pstmt.setString(4, DB_DATE_FORMATTER.format(record.getTanggal()));
             } else {
-                pstmt.setNull(4, java.sql.Types.DATE); // Atau tangani sebagai error jika tanggal wajib
+                pstmt.setNull(4, java.sql.Types.DATE);
             }
             pstmt.setString(5, record.getLokasi());
             pstmt.setString(6, record.getKualitas());
@@ -88,14 +87,7 @@ public class ProductionModel {
                         record.setId(generatedKeys.getInt(1)); 
                     }
                 }
-                // Menambahkan ke awal list agar langsung terlihat jika diurutkan berdasarkan terbaru
-                // Namun, karena kita mengurutkan DESC saat load, penambahan di akhir lalu pengurutan ulang
-                // atau penambahan di awal dan memastikan listener merespons mungkin lebih konsisten.
-                // Untuk ObservableList, perubahan akan langsung memicu listener.
                 allProductionData.add(0, record); 
-                // Jika ingin mempertahankan urutan seperti di DB (tanggal DESC),
-                // mungkin lebih baik memuat ulang atau menyisipkan secara terurut.
-                // Untuk kesederhanaan, add(0) akan membuatnya muncul di atas di tabel jika tabel belum diurutkan ulang.
                 DatabaseManager.updateLastChangeTimestamp();
                 return true;
             }
@@ -125,7 +117,6 @@ public class ProductionModel {
             
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                // Refresh item di dalam list agar listener di UI terpicu dengan benar
                 int index = -1;
                 for(int i=0; i < allProductionData.size(); i++){
                     if(allProductionData.get(i).getId() == record.getId()){
@@ -134,7 +125,7 @@ public class ProductionModel {
                     }
                 }
                 if (index != -1) {
-                    allProductionData.set(index, record); // Ini akan memicu listener
+                    allProductionData.set(index, record); 
                 } else {
 
                     loadProductionDataFromDB(); 

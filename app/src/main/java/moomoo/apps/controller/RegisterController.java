@@ -68,7 +68,6 @@ public class RegisterController implements Initializable {
         String password = passwordField.getText();
         String role = roleComboBox.getValue();
 
-        // Reset state dulu
         resetFieldStyles();
 
         boolean hasError = false;

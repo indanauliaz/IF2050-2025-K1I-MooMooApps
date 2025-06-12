@@ -16,7 +16,6 @@ public class App extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        // DatabaseManager.deleteDatabaseFile();
         DatabaseManager.initializeDatabase();
     }
 

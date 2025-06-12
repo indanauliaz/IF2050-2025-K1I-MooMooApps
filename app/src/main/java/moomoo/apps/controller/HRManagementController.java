@@ -51,9 +51,7 @@ public class HRManagementController {
     @FXML private ScrollPane akanDilakukanScrollPane;
     @FXML private ScrollPane sedangDikerjakanScrollPane;
     @FXML private ScrollPane selesaiScrollPane;
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="FXML Injections untuk Kehadiran">
     @FXML private Tab kehadiranTab;
     @FXML private Label tanggalKehadiranLabel;
     @FXML private Button tambahPresensiButton;
@@ -63,7 +61,7 @@ public class HRManagementController {
     @FXML private TableColumn<AttendanceRecordModel, String> kolomMasukKehadiran;
     @FXML private TableColumn<AttendanceRecordModel, String> kolomKeluarKehadiran;
     @FXML private TableColumn<AttendanceRecordModel, String> kolomCatatanKehadiran;
-    @FXML private TableColumn<AttendanceRecordModel, Void> kolomAksiKehadiran; // Kolom untuk tombol
+    @FXML private TableColumn<AttendanceRecordModel, Void> kolomAksiKehadiran; 
     @FXML private Label summaryKehadiranLabel;
     @FXML private Button hariSebelumnyaButton;
     @FXML private Button hariBerikutnyaButton;
@@ -71,7 +69,6 @@ public class HRManagementController {
     @FXML private Label badgeTodo;
     @FXML private Label badgeInProgress;
     @FXML private Label badgeDone;
-    //</editor-fold>
 
     private ObservableList<TaskModel> semuaTugasList = FXCollections.observableArrayList();
     private ObservableList<AttendanceRecordModel> daftarKehadiranList = FXCollections.observableArrayList();
@@ -161,7 +158,7 @@ public class HRManagementController {
                     case "Selesai":
                         selesaiListVBox.getChildren().add(taskCardNode);
                         break;
-                    case "Tertunda": // Status baru
+                    case "Tertunda": 
                         akanDilakukanListVBox.getChildren().add(taskCardNode);
                         break;
                     default:
@@ -190,7 +187,6 @@ public class HRManagementController {
             Parent root = loader.load();
             TambahTugasController tambahTugasController = loader.getController();
             
-            // Mengirim daftar karyawan ke modal
             tambahTugasController.setKaryawanList(this.semuaKaryawanList);
 
             Stage modalStage = new Stage();
@@ -200,7 +196,6 @@ public class HRManagementController {
             modalStage.setScene(new Scene(root));
             modalStage.showAndWait();
 
-            // Cek apakah tugas berhasil disimpan dari dalam modal
             if (tambahTugasController.isTaskSaved()) {
                 System.out.println("Modal ditutup, tugas berhasil disimpan. Me-refresh Kanban...");
                 refreshKanbanBoard();
@@ -235,9 +230,6 @@ public class HRManagementController {
         refreshKanbanBoard();
     }
 
-    // =================================================================================
-    // Metode untuk Manajemen Kehadiran (tidak ada perubahan)
-    // =================================================================================
     private void updateLabelTanggalKehadiran() {
         tanggalKehadiranLabel.setText(tanggalKehadiranSaatIni.format(tanggalDisplayFormatter));
     }
@@ -399,7 +391,6 @@ public class HRManagementController {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setHeaderText(null);
 
-        // Label konten
         Label label = new Label(content);
         label.setWrapText(true);
         label.setStyle(
@@ -411,7 +402,7 @@ public class HRManagementController {
         VBox contentBox = new VBox(label);
         contentBox.setSpacing(10);
         contentBox.setStyle(
-            "-fx-background-color: #F8FAE5;" +    // warna kuning seperti desain
+            "-fx-background-color: #F8FAE5;" +  
             "-fx-padding: 20;" +
             "-fx-border-radius: 10;" +
             "-fx-background-radius: 10;"
@@ -432,9 +423,8 @@ public class HRManagementController {
             "-fx-cursor: hand;"
         );
 
-        // Style keseluruhan dialog
         dialog.getDialogPane().setStyle(
-            "-fx-background-color: #F8FAE5;" +  // latar kuning
+            "-fx-background-color: #F8FAE5;" +  
             "-fx-border-color: transparent;" +
             "-fx-background-radius: 10;"
         );

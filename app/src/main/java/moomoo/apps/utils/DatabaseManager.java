@@ -211,18 +211,18 @@ public class DatabaseManager {
                     // Tugas 1 (Juni - Selesai)
                     pstmt.setString(1, "Pemerahan Pagi Sesi 1");
                     pstmt.setString(2, "Sesi pemerahan susu pagi di kandang A");
-                    pstmt.setInt(3, 2); // Siti Aminah
-                    pstmt.setString(4, "2025-06-03"); // <-- TANGGAL JUNI
+                    pstmt.setInt(3, 2); 
+                    pstmt.setString(4, "2025-06-03"); 
                     pstmt.setString(5, "08:00");
                     pstmt.setString(6, "Tinggi");
-                    pstmt.setString(7, "Selesai"); // <-- STATUS SELESAI
+                    pstmt.setString(7, "Selesai"); 
                     pstmt.addBatch();
                     
                     // Tugas 2 (Juni - Dikerjakan)
                     pstmt.setString(1, "Pembersihan Kandang B");
                     pstmt.setString(2, "Membersihkan seluruh area kandang B");
                     pstmt.setInt(3, 3); // Agus Wijaya
-                    pstmt.setString(4, "2025-06-10"); // <-- TANGGAL JUNI
+                    pstmt.setString(4, "2025-06-10"); 
                     pstmt.setString(5, "10:00");
                     pstmt.setString(6, "Normal");
                     pstmt.setString(7, "Sedang Dikerjakan");
@@ -232,7 +232,7 @@ public class DatabaseManager {
                     pstmt.setString(1, "Pemeriksaan Kesehatan Rutin");
                     pstmt.setString(2, "Cek kesehatan sapi indukan oleh dokter hewan");
                     pstmt.setInt(3, 1); // Budi Santoso
-                    pstmt.setString(4, "2025-06-12"); // <-- TANGGAL JUNI
+                    pstmt.setString(4, "2025-06-12"); 
                     pstmt.setString(5, "14:00");
                     pstmt.setString(6, "Tinggi");
                     pstmt.setString(7, "Akan Dilakukan");
@@ -242,7 +242,7 @@ public class DatabaseManager {
                     pstmt.setString(1, "Distribusi Pakan Mei");
                     pstmt.setString(2, "Memberi makan sapi di semua kandang");
                     pstmt.setInt(3, 2); // Siti Aminah
-                    pstmt.setString(4, "2025-05-15"); // <-- TANGGAL MEI
+                    pstmt.setString(4, "2025-05-15"); 
                     pstmt.setString(5, "09:00");
                     pstmt.setString(6, "Sedang");
                     pstmt.setString(7, "Selesai");
@@ -252,7 +252,7 @@ public class DatabaseManager {
                     pstmt.setString(1, "Inventarisasi Stok Pakan Mei");
                     pstmt.setString(2, "Inventarisasi stok pakan di gudang");
                     pstmt.setInt(3, 4); // Dewi Lestari
-                    pstmt.setString(4, "2025-05-28"); // <-- TANGGAL MEI
+                    pstmt.setString(4, "2025-05-28"); 
                     pstmt.setString(5, "15:00");
                     pstmt.setString(6, "Rendah");
                     pstmt.setString(7, "Selesai");
@@ -269,7 +269,7 @@ public class DatabaseManager {
         }
     }
 
-    // METHOD getAllTasks() YANG SUDAH DIPERBARUI
+
     public static List<TaskModel> getAllTasks() {
         List<TaskModel> tasks = new ArrayList<>();
         String sql = "SELECT t.id, t.nama_tugas, t.deskripsi_tugas, t.employee_id, e.nama_lengkap AS nama_karyawan, " +
@@ -324,7 +324,7 @@ public class DatabaseManager {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        task.setId(generatedKeys.getInt(1)); // Set the auto-generated ID back to the model
+                        task.setId(generatedKeys.getInt(1)); 
                         return true;
                     }
                 }
@@ -481,7 +481,7 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println("Error getting employee by ID: " + e.getMessage());
         }
-        return null; // Or throw an exception
+        return null;
     }
 
     public static void deleteDatabaseFile() {
@@ -512,7 +512,6 @@ public class DatabaseManager {
         String sql = "UPDATE app_state SET value = ? WHERE key = 'last_update'";
         try (Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            // Menggunakan System.currentTimeMillis() untuk timestamp yang sederhana dan unik
             pstmt.setString(1, String.valueOf(System.currentTimeMillis()));
             pstmt.executeUpdate();
         } catch (SQLException e) {

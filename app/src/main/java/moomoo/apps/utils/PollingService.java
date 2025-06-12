@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-// Class ini dibuat sebagai Singleton untuk memastikan hanya ada satu service polling yang berjalan.
 public final class PollingService {
 
     private static PollingService instance;
@@ -21,10 +20,9 @@ public final class PollingService {
     private long lastCheckedTimestamp = 0;
 
     private PollingService() {
-        // Private constructor untuk mencegah instansiasi dari luar.
+ 
     }
 
-    // Metode untuk mendapatkan satu-satunya instance dari service ini.
     public static synchronized PollingService getInstance() {
         if (instance == null) {
             instance = new PollingService();
@@ -33,16 +31,14 @@ public final class PollingService {
     }
 
     public void start() {
-        // Hentikan dulu jika sudah ada yang berjalan untuk mencegah duplikasi
         if (pollingTimeline != null && pollingTimeline.getStatus() == Timeline.Status.RUNNING) {
             return;
         }
         
-        // Inisialisasi timestamp saat memulai
         this.lastCheckedTimestamp = System.currentTimeMillis();
 
         pollingTimeline = new Timeline(
-            new KeyFrame(Duration.seconds(3), event -> checkForUpdates()) // Cek setiap 3 detik
+            new KeyFrame(Duration.seconds(3), event -> checkForUpdates()) 
         );
         pollingTimeline.setCycleCount(Timeline.INDEFINITE);
         pollingTimeline.play();
@@ -69,13 +65,10 @@ public final class PollingService {
                     System.out.println("Perubahan baru terdeteksi di database! Memuat ulang semua model data...");
                     this.lastCheckedTimestamp = latestTimestamp;
                     
-                    // Gunakan Platform.runLater untuk memastikan update UI aman
                     Platform.runLater(() -> {
-                        // Perintahkan setiap model Singleton untuk me-refresh dirinya sendiri
                         FinanceModel.getInstance().loadAllTransactionsFromDB();
                         ProductionModel.getInstance().loadProductionDataFromDB();
                         SdmModel.getInstance().loadAllEmployeesFromDB();
-                        // Jika ada model lain, panggil method refresh-nya di sini.
                         
                         System.out.println("Semua model data telah diperbarui dari database.");
                     });

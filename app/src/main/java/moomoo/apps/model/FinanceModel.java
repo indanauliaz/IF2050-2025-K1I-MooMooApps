@@ -2,7 +2,7 @@ package moomoo.apps.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import moomoo.apps.utils.DatabaseManager; // Asumsi path
+import moomoo.apps.utils.DatabaseManager; 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,13 +16,12 @@ public class FinanceModel {
     private final ObservableList<TransactionModel> allTransactions;
     private static final DateTimeFormatter DB_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
-
+    // konstruktor 
     private FinanceModel() {
         allTransactions = FXCollections.observableArrayList();
         loadAllTransactionsFromDB(); 
     }
 
-    // Metode Singleton untuk mendapatkan satu-satunya instance
     public static synchronized FinanceModel getInstance() {
         if (instance == null) {
             instance = new FinanceModel();
@@ -30,7 +29,6 @@ public class FinanceModel {
         return instance;
     }
 
-    // Berikan akses ke list (tapi jangan biarkan controller lain mengubahnya langsung)
     public ObservableList<TransactionModel> getAllTransactions() {
         return allTransactions;
     }
@@ -52,7 +50,7 @@ public class FinanceModel {
     // Metode untuk memuat semua data dari database
     public void loadAllTransactionsFromDB() {
         allTransactions.clear();
-        String sql = "SELECT * FROM transactions ORDER BY date DESC"; // Ambil semua tipe
+        String sql = "SELECT * FROM transactions ORDER BY date DESC"; 
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);

@@ -3,6 +3,8 @@ package moomoo.apps;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
+
 import moomoo.apps.model.UserModel;
 
 /**
@@ -46,5 +48,38 @@ class UserModelTest {
         assertEquals(email, user.getEmail(), "Email dari konstruktor kedua harus benar.");
         assertEquals(password, user.getPassword(), "Password dari konstruktor kedua harus benar.");
         assertEquals(role, user.getRole(), "Role dari konstruktor kedua harus benar.");
+    }
+
+
+    @Test
+    @DisplayName("Setter: Mengubah properti pengguna harus berhasil")
+    void testSettersFunctionality() {
+        // Arrange
+        UserModel user = new UserModel(1, "initialUser", "initial@test.com", "Manajer");
+
+        // Act
+        String newUsername = "updatedUser";
+        user.setUsername(newUsername); 
+
+        String newRole = "Pemilik";
+        user.setRole(newRole);
+        // Assert
+        assertEquals(newUsername, user.getUsername(), "setUsername harus memperbarui username.");
+        assertEquals(newRole, user.getRole(), "setRole harus memperbarui role.");
+    }
+
+    @Test
+    @DisplayName("Equality: Dua objek pengguna dengan ID sama harus dianggap equal")
+    void testEqualsAndHashCode() {
+        // Arrange
+        UserModel user1 = new UserModel(1, "budi", "budi@mail.com", "Staf");
+        UserModel user2 = new UserModel(1, "budi", "budi@mail.com", "Staf"); // Objek identik
+        UserModel user3 = new UserModel(2, "andi", "andi@mail.com", "Staf"); // Objek berbeda
+
+        // Assert
+    
+        assertEquals(user1, user2, "Dua pengguna dengan data identik harus equal.");
+        assertEquals(user1.hashCode(), user2.hashCode(), "HashCode dari dua pengguna identik harus sama.");
+        assertNotEquals(user1, user3, "Dua pengguna dengan ID berbeda tidak boleh equal.");
     }
 }
