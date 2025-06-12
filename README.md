@@ -21,10 +21,10 @@ Untuk dapat menjalankan MooMooApps, ada beberapa hal yang perlu kamu siapkan dan
 
 #### Langkah-langkah Instalasi
 
-1.  **Clone Repositori Ini**\n
-    Pertama-tama, salin (clone) repositori ini ke dalam komputermu dengan membuka terminal/CMD dan mengetikkan perintah:
+1.  **Clone Repositori Ini**
+    Pertama-tama, salin (clone) repositori ini ke dalam komputer lokal dengan membuka terminal/CMD dan mengetikkan perintah:
     ```bash
-    git clone [https://github.com/indanauliaz/IF2050-2025-K1I-MooMooApps](https://github.com/indanauliaz/IF2050-2025-K1I-MooMooApps)
+    git clone https://github.com/indanauliaz/IF2050-2025-K1I-MooMooApps
     ```
 
 2.  **Navigasi ke Folder Proyek**
@@ -37,7 +37,7 @@ Untuk dapat menjalankan MooMooApps, ada beberapa hal yang perlu kamu siapkan dan
 3.  **Kompilasi dan Jalankan Proyek**
     Terakhir, jalankan perintah di bawah ini. Perintah ini akan secara otomatis mengompilasi kode sumber dan langsung menjalankan aplikasinya.
     ```bash
-    ./gradlew run
+    ./gradlew run atau 
     ```
 MooMooApps pun siap untuk digunakan.
 
