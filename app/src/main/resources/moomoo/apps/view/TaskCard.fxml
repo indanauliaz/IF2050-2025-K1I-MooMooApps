@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox fx:id="rootTaskCardVBox" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="moomoo.apps.controller.TaskCardController"
+      spacing="10"
+      stylesheets="@task_management_style.css"
+      styleClass="task-card"
+      maxWidth="Infinity">
+
+    <!-- HEADER: Nama + Prioritas -->
+    <HBox alignment="CENTER_LEFT" spacing="8" styleClass="task-card-header">
+        <Label fx:id="namaTugasLabel"
+               text="Nama Tugas Placeholder"
+               wrapText="true"
+               styleClass="task-name"
+               HBox.hgrow="ALWAYS" />
+        <Label fx:id="prioritasLabel"
+               text="Normal"
+               styleClass="task-priority-badge task-priority-normal" />
+        <Circle fx:id="prioritasIndicator"
+                radius="6" />
+    </HBox>
+
+    <!-- DESKRIPSI -->
+    <Label fx:id="deskripsiLabel"
+           text="Deskripsi singkat tugas akan muncul di sini..."
+           styleClass="task-description"
+           wrapText="true" />
+
+    <!-- DITUGASKAN KE -->
+    <HBox alignment="CENTER_LEFT" spacing="5" styleClass="task-footer">
+        <Label text="Untuk:" styleClass="task-time"/>
+        <Label fx:id="ditugaskanKeLabel"
+               text="Belum Ditugaskan"
+               styleClass="task-assigned-to"/>
+    </HBox>
+
+    <!-- ACTIONS -->
+    <HBox spacing="8" alignment="CENTER_RIGHT" styleClass="task-actions">
+        <Button fx:id="detailButton"
+                text="Detail"
+                onAction="#handleDetailTugas"
+                styleClass="button-link-small"/>
+        <Button fx:id="tundaButton"
+                text="Tunda"
+                onAction="#handleTundaTugas"
+                styleClass="button-outline-small"/>
+        <Button fx:id="selesaikanButton"
+                text="Selesaikan"
+                onAction="#handleSelesaikanTugas"
+                styleClass="button-selesai"/>
+    </HBox>
+
+</VBox>

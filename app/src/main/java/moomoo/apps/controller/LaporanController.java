@@ -27,7 +27,7 @@ public class LaporanController {
 
     private Map<String, ILaporanKontenController> loadedControllers = new HashMap<>();
 
-
+    /* ========== INITIALIZE ========== */
     @FXML
     public void initialize() {
         filterPeriodeComboBox.getItems().addAll("Bulan Ini", "Minggu Ini", "Hari Ini", "Tahun Ini");
@@ -42,6 +42,8 @@ public class LaporanController {
         handleSdmTabAction(null); 
     }
 
+
+    /* ========== HANDLER CLICKABLE BUTTON ========== */
     @FXML
     private void handleProduksiTabAction(ActionEvent event) {
         setTabAktif(produksiTabButton);

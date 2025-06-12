@@ -1,9 +1,10 @@
 package moomoo.apps.utils;
-
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 public class PasswordUtils {
 
@@ -17,43 +18,58 @@ public class PasswordUtils {
         return salt;
     }
 
-
+    // Method untuk hashing password input
     public static String hashPassword(String password, byte[] salt) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(salt);
-            byte[] hashedPassword = md.digest(password.getBytes());
 
-          
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password tidak boleh null atau kosong");
+        }
+        try {
+            int iterations = 10000; 
+            int keyLength = 256; 
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, keyLength);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] hashedPassword = skf.generateSecret(spec).getEncoded();
+
             String encodedSalt = Base64.getEncoder().encodeToString(salt);
             String encodedHashedPassword = Base64.getEncoder().encodeToString(hashedPassword);
             
             return encodedSalt + ":" + encodedHashedPassword; 
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error hashing password", e);
         }
     }
 
-
+    
+    // Method untuk verifikasi password input
     public static boolean verifyPassword(String plainPassword, String storedPasswordHash) {
-        try {
-            String[] parts = storedPasswordHash.split(":");
-            if (parts.length != 2) {
-                // Format hash tidak sesuai
-                System.err.println("Format storedPasswordHash tidak valid.");
-                return false;
-            }
-            byte[] salt = Base64.getDecoder().decode(parts[0]);
-
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(salt);
-            byte[] hashedAttempt = md.digest(plainPassword.getBytes());
-            String encodedHashedAttempt = Base64.getEncoder().encodeToString(hashedAttempt);
-
-            return encodedHashedAttempt.equals(parts[1]);
-        } catch (NoSuchAlgorithmException | IllegalArgumentException e) {
-            System.err.println("Error verifying password: " + e.getMessage());
+    try {
+        String[] parts = storedPasswordHash.split(":");
+        if (parts.length != 2) {
+            System.err.println("Format storedPasswordHash tidak valid.");
             return false;
         }
+        
+        byte[] salt = Base64.getDecoder().decode(parts[0]);
+        String storedHashedPassword = parts[1];
+
+        int iterations = 10000;
+        int keyLength = 256;
+        PBEKeySpec spec = new PBEKeySpec(plainPassword.toCharArray(), salt, iterations, keyLength);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        byte[] attemptHashedPasswordBytes = skf.generateSecret(spec).getEncoded();
+    
+        String attemptHashedPassword = Base64.getEncoder().encodeToString(attemptHashedPasswordBytes);
+
+        return attemptHashedPassword.equals(storedHashedPassword);
+
+    } catch (java.security.spec.InvalidKeySpecException | NoSuchAlgorithmException e) {
+        System.err.println("Error saat memverifikasi password: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    } catch (IllegalArgumentException e) {
+        System.err.println("Error decoding Base64: " + e.getMessage());
+        return false;
     }
+}
 }

@@ -1,22 +1,23 @@
 package moomoo.apps.controller;
 
-import moomoo.apps.model.*; // Assuming UserModel is here
-import moomoo.apps.utils.*; // Assuming DatabaseManager and PasswordUtils are here
+import moomoo.apps.utils.*;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable; // Added for clarity
+import javafx.fxml.Initializable; 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label; // Changed from Text to Label
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView; // Added for logoView, if needed by controller
+import javafx.scene.image.ImageView; 
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -39,13 +40,15 @@ public class RegisterController implements Initializable {
     @FXML private Button registerButton; 
     @FXML private Label hideLabel;      
     @FXML private Button loginLinkButton; 
+    @FXML private Label errorMessageLabel; 
 
     private boolean isPasswordVisible = false;
 
-    @Override // Added Override annotation
+    /* ========== INITIALIZE ========== */
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         roleComboBox.setItems(FXCollections.observableArrayList("Pemilik", "Manajer")); 
-        roleComboBox.setValue("Pegawai Biasa"); 
+        roleComboBox.setValue("Pemilik"); 
 
         passwordTextField.managedProperty().bind(passwordTextField.visibleProperty());
         passwordTextField.visibleProperty().bind(passwordField.visibleProperty().not()); 
@@ -59,6 +62,7 @@ public class RegisterController implements Initializable {
         hideLabel.setText("Show"); 
     }
 
+    /* ========== HANDLER CLICKABLE BUTTON ========== */
     @FXML
     void handleRegisterButtonAction (ActionEvent event){
         String username = usernameField.getText();
@@ -66,21 +70,45 @@ public class RegisterController implements Initializable {
         String password = passwordField.getText();
         String role = roleComboBox.getValue();
 
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || role == null){
-            showAlert(Alert.AlertType.ERROR, "Form Error!", "Harap isi semua kolom");
-            return;
-        }
- 
-        if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-            showAlert(Alert.AlertType.ERROR, "Email Error!", "Format email tidak valid.");
-            return;
-        }
-        if (password.length() < 6){ 
-            showAlert(Alert.AlertType.ERROR,"Password error!","Password minimal 6 karakter.");
-            return;
-        }
-        if (isUserExists(username, email)){
+        resetFieldStyles();
 
+        boolean hasError = false;
+        
+        if (username.isEmpty()) {
+            usernameField.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+        if (email.isEmpty()) {
+            emailField.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+        if (password.isEmpty()) {
+            passwordField.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+        if (role == null || role.isEmpty()) {
+            roleComboBox.setStyle("-fx-border-color: red;");
+            hasError = true;
+        }
+
+        if (hasError) {
+            showInlineError("Harap isi semua kolom dengan benar.");
+            return;
+        }
+
+        if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            emailField.setStyle("-fx-border-color: red;");
+            showInlineError("Format email tidak valid.");
+            return;
+        }
+
+        if (password.length() < 6) {
+            passwordField.setStyle("-fx-border-color: red;");
+            showInlineError("Password minimal 6 karakter.");
+            return;
+        }
+
+        if (isUserExists(username, email)) {
             return;
         }
 
@@ -106,25 +134,6 @@ public class RegisterController implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Database Error!", "Gagal menyimpan pengguna: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private boolean isUserExists(String username, String email) {
-        String sqlCheck = "SELECT id FROM users WHERE username = ? OR email = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmtCheck = conn.prepareStatement(sqlCheck)) {
-            pstmtCheck.setString(1, username);
-            pstmtCheck.setString(2, email);
-            ResultSet rs = pstmtCheck.executeQuery();
-            if (rs.next()) {
-                showAlert(Alert.AlertType.ERROR, "Registrasi Gagal", "Username atau Email sudah digunakan.");
-                return true;
-            }
-        } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal memeriksa pengguna: " + e.getMessage());
-            e.printStackTrace();
-            return true; 
-        }
-        return false;
     }
 
     @FXML
@@ -158,6 +167,26 @@ public class RegisterController implements Initializable {
         }
     }
 
+    private boolean isUserExists(String username, String email) {
+        String sqlCheck = "SELECT id FROM users WHERE username = ? OR email = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmtCheck = conn.prepareStatement(sqlCheck)) {
+            pstmtCheck.setString(1, username);
+            pstmtCheck.setString(2, email);
+            ResultSet rs = pstmtCheck.executeQuery();
+            if (rs.next()) {
+                showAlert(Alert.AlertType.ERROR, "Registrasi Gagal", "Username atau Email sudah digunakan.");
+                return true;
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal memeriksa pengguna: " + e.getMessage());
+            e.printStackTrace();
+            return true; 
+        }
+        return false;
+    }
+
+
     private void clearFields() {
         usernameField.clear();
         emailField.clear();
@@ -166,6 +195,8 @@ public class RegisterController implements Initializable {
         if (!roleComboBox.getItems().isEmpty()) {
             roleComboBox.setValue(roleComboBox.getItems().get(0)); 
         }
+
+        resetFieldStyles();
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -173,8 +204,45 @@ public class RegisterController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("""
+            -fx-background-color: #FAF8F0;
+            -fx-background-radius: 10px;
+            -fx-font-family: 'Poppins Medium';
+            -fx-font-size: 14px;
+        """);
+
+        Button okButton = (Button) dialogPane.lookupButton(ButtonType.OK);
+        okButton.setStyle("""
+            -fx-background-color: #4A7C7A;
+            -fx-text-fill: white;
+            -fx-font-weight: bold;
+            -fx-font-size: 13px;
+            -fx-background-radius: 8px;
+            -fx-cursor: hand;
+        """);
+
         alert.showAndWait();
     }
+
+    private void showInlineError(String message) {
+        errorMessageLabel.setText(message);
+        errorMessageLabel.setVisible(true);
+        errorMessageLabel.setManaged(true);
+    }
+
+    private void resetFieldStyles() {
+        errorMessageLabel.setVisible(false);
+        errorMessageLabel.setManaged(false);
+        errorMessageLabel.setText("");
+
+        usernameField.setStyle(null);
+        emailField.setStyle(null);
+        passwordField.setStyle(null);
+        roleComboBox.setStyle(null);
+    }
+
     
     @FXML
     void togglePasswordVisibility(MouseEvent event) {

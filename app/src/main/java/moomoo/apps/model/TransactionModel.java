@@ -14,16 +14,16 @@ import javafx.beans.property.StringProperty;
 
 public class TransactionModel {
     private final IntegerProperty id;
-    private final StringProperty transactionType; // "Pemasukan", "Pengeluaran"
+    private final StringProperty transactionType; 
     private final StringProperty description;
     private final DoubleProperty amount;
     private final StringProperty category;
     private final ObjectProperty<LocalDate> date;
     private final StringProperty paymentMethod;
     private final StringProperty notes;
-    private final IntegerProperty userId; // Jika perlu melacak user_id
+    private final IntegerProperty userId; 
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE; // YYYY-MM-DD
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE; 
 
     public TransactionModel(int id, String transactionType, String description, double amount, String category, 
                             LocalDate date, String paymentMethod, String notes, int userId) {
@@ -38,10 +38,9 @@ public class TransactionModel {
         this.userId = new SimpleIntegerProperty(userId);
     }
     
-    // Constructor tanpa ID (untuk data baru sebelum disimpan ke DB)
     public TransactionModel(String transactionType, String description, double amount, String category, 
                             LocalDate date, String paymentMethod, String notes, int userId) {
-        this.id = new SimpleIntegerProperty(0); // Default ID, DB akan generate
+        this.id = new SimpleIntegerProperty(0); 
         this.transactionType = new SimpleStringProperty(transactionType);
         this.description = new SimpleStringProperty(description);
         this.amount = new SimpleDoubleProperty(amount);
@@ -63,7 +62,7 @@ public class TransactionModel {
     public StringProperty notesProperty() { return notes; }
     public IntegerProperty userIdProperty() { return userId; }
 
-    // Getters for values
+    // Setter getter standard
     public int getId() { return id.get(); }
     public String getTransactionType() { return transactionType.get(); }
     public String getDescription() { return description.get(); }
@@ -75,9 +74,13 @@ public class TransactionModel {
     public String getNotes() { return notes.get(); }
     public int getUserId() { return userId.get(); }
 
-    // Setters (jika diperlukan)
     public void setId(int id) { this.id.set(id); }
     public void setTransactionType(String type) { this.transactionType.set(type); }
     public void setDescription(String description) { this.description.set(description); }
-    // ... tambahkan setter lain jika perlu
+    public void setAmount(double amount) { this.amount.set(amount); }
+    public void setCategory(String category) { this.category.set(category); }
+    public void setDate(LocalDate date) { this.date.set(date); }
+    public void setPaymentMethod(String method) { this.paymentMethod.set(method); }
+    public void setNotes(String notes) { this.notes.set(notes); }
+    public void setUserId(int userId) { this.userId.set(userId); }
 }

@@ -1,249 +1,241 @@
-/* dashboard_style.css */
+/* ==== GLOBAL ==== */
+.root {
+    -fx-font-family: 'Poppins';
+    -fx-background-color: #F8FAEB;
+}
 
+/* ==== SIDEBAR ==== */
 .sidebar {
-    -fx-background-color: #4A7C59; /* Dark Teal */
-    -fx-padding: 0;
+    -fx-background-color: #43766C;
+    -fx-padding: 20;
 }
 
 .logo-container {
-    /* -fx-border-color: white; 
-    -fx-border-width: 0 0 1 0; */ /* Optional bottom border */
+    -fx-background-color: transparent;
 }
 
 .app-name-sidebar {
     -fx-font-size: 18px;
-    -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
-.sidebar-button, .sidebar-button-util {
+/* ==== MENU BUTTONS ==== */
+.menu-button-icon {
     -fx-background-color: transparent;
-    -fx-text-fill: #E0E0E0; /* Light gray text */
+    -fx-text-fill: #F8FAE5;
     -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 240px;
     -fx-alignment: CENTER_LEFT;
-    -fx-padding: 12px 15px; /* Vertical, Horizontal padding */
-    -fx-pref-width: 250px; /* Fill width */
-    -fx-background-radius: 8px;
-    -fx-graphic-text-gap: 12px;
+    -fx-graphic-text-gap: 10;
+    -fx-padding: 10 20;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
 }
 
-.sidebar-button:hover, .sidebar-button-util:hover {
-    -fx-background-color: #5A8C69; /* Slightly lighter teal for hover */
+.menu-button-icon:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+.menu-button-icon:selected,
+.menu-button-icon:selected:hover {
+    -fx-background-color: #F8FAE5;
+    -fx-text-fill: #43766C;
+    -fx-font-weight: bold;
+}
+
+/* ==== SETTINGS & LOGOUT (look like regular menu) ==== */
+.menu-button-icon.logout,
+.menu-button-icon.settings {
+    -fx-text-fill: #F8FAE5;
+    -fx-font-weight: bold;
+    -fx-background-color: transparent;
+}
+
+.menu-button-icon.logout:hover,
+.menu-button-icon.settings:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ==== HEADER ==== */
+.welcome-label {
+    -fx-font-size: 20px;
+    -fx-text-fill: #5C4033;
+    -fx-font-weight: bold;
+}
+
+/* ==== METRIC CARDS ==== */
+.card {
+    -fx-background-color: white;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
+    -fx-min-width: 200px;
+    -fx-spacing: 5px;
+}
+
+.card-title {
+    -fx-font-family: 'Poppins ExtraBold';
+    -fx-text-fill: #333333;
+    -fx-font-size: 13px;
+}
+
+.card-value {
+    -fx-text-fill: #333333;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* ==== CHART ==== */
+.chart-card, .table-card {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
+}
+
+/* ==== TASK SECTION ==== */
+.task-list-card {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-text-fill: #37704C;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Poppins ExtraBold';
+}
+
+.task-label {
+    -fx-text-fill: #444;
+    -fx-font-size: 14px;
+    -fx-padding: 0 0 5 0;
+}
+
+/* ==== TASK BUTTONS ==== */
+.task-button {
+    -fx-font-size: 12px;
+    -fx-background-radius: 20;
+    -fx-padding: 5 15;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.task-button.done {
+    -fx-background-color: #88C9BF;
     -fx-text-fill: white;
 }
 
-.sidebar-button:selected, .sidebar-button:pressed {
-    -fx-background-color: white;
-    -fx-text-fill: #4A7C59; /* Dark Teal text */
-}
-.sidebar-button:selected .sidebar-icon, .sidebar-button:pressed .sidebar-icon {
-    -fx-fill: #4A7C59;
+.task-button.progress {
+    -fx-background-color: #E6C78F;
+    -fx-text-fill: white;
 }
 
-.sidebar-icon {
-    -fx-fill: #E0E0E0; /* Light gray icon */
-    -fx-pref-width: 18px;
-    -fx-pref-height: 18px;
-}
-
-.sidebar-button:hover .sidebar-icon, .sidebar-button-util:hover .sidebar-icon {
-     -fx-fill: white;
-}
-
-
-/* Top Bar */
-.top-bar {
-    -fx-background-color: #FFFFFF; /* White background for top bar */
-    -fx-border-color: #E0E0E0;
-    -fx-border-width: 0 0 1 0; /* Bottom border */
-    -fx-padding: 0 20px;
-}
-
-.hamburger-button {
-    -fx-background-color: transparent;
-    -fx-padding: 8px;
-}
-.hamburger-button SVGPath {
-    -fx-fill: #555555;
-}
-
-.search-bar-container {
-    -fx-background-color: #F0F0F0; /* Light gray for search bar background */
-    -fx-background-radius: 20px; /* Rounded corners for search bar */
-    -fx-padding: 5px 10px;
-    -fx-max-width: 300px;
-}
-
-.search-field {
-    -fx-background-color: transparent;
-    -fx-prompt-text-fill: #888888;
-    -fx-text-fill: #333333;
-    -fx-border-width: 0;
-    -fx-pref-width: 250px;
-}
-
-.search-icon {
-    -fx-fill: #888888; /* Icon color for search */
-}
-
-.profile-section .user-name {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-}
-
-.profile-section .user-role {
-    -fx-font-size: 12px;
-    -fx-text-fill: #777777;
-}
-
-.profile-section ImageView { /* For user avatar */
-    /* Add styling for rounded avatar if image itself is not round */
-    /* Example: using a clip, or if ImageView can have border-radius effects in your JavaFX version */
-}
-.transparent-button {
-    -fx-background-color: transparent;
-}
-.transparent-button SVGPath{
-    -fx-fill: #555555;
-}
-
-
-/* Main Content Area */
-.main-area-container {
-     -fx-background-color: #FFFDF5; /* Very light cream for main area */
-}
-.main-content-scrollpane {
-    -fx-background-color: transparent; /* Make scrollpane bg transparent */
-    -fx-hbar-policy: NEVER; /* Optional: hide horizontal scrollbar */
-}
-
-.main-content-area {
-    -fx-background-color: transparent; /* Ensure VBox inside scrollpane is also transparent */
+.task-button.pending {
+    -fx-background-color: #D96E6E;
+    -fx-text-fill: white;
 }
 
 .dashboard-title {
-    -fx-font-size: 28px;
+    -fx-font-family: 'Poppins ExtraBold';
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #43766C;
 }
 
-.welcome-message {
-    -fx-font-size: 16px;
-    -fx-text-fill: #555555;
+.welcome-subtext {
+    -fx-font-size: 14px;
+    -fx-text-fill: #C28D4B;
 }
 
-/* ... (style yang sudah ada sebelumnya) ... */
-
-.section-title {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+.card-subtext {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7C9A92;
 }
 
-/* Styling untuk TabPane agar mirip tombol */
-.custom-tab-pane .tab-header-area .tab-header-background {
-    -fx-background-color: transparent;
+.progress-bar .track {
+    -fx-background-color: #E0E0E0;
+    -fx-background-radius: 5;
 }
 
-.custom-tab-pane .tab {
-    -fx-background-color: #E0E0E0; /* Warna default tab */
-    -fx-padding: 8px 15px;
-    -fx-background-radius: 5px 5px 0 0; /* Rounded corners di atas */
-    -fx-cursor: hand;
-    -fx-margin-right: 5px; /* Memberi spasi antar tab */
-}
-.custom-tab-pane .tab:hover {
-    -fx-background-color: #D0D0D0;
+.progress-bar .bar {
+    -fx-background-color: #43766C;
+    -fx-background-radius: 5;
 }
 
-.custom-tab-pane .tab:selected {
-    -fx-background-color: white; /* Warna tab aktif */
-    -fx-border-color: #4A7C59; /* Border bawah warna sidebar */
-    -fx-border-width: 0 0 3 0;
-    -fx-padding: 8px 15px 6px 15px; /* Adjust padding agar border terlihat bagus */
+.main-content {
+    -fx-background-color: #F8FAE5;
+    -fx-padding: 20;
+    -fx-background-radius: 10;
 }
 
-.custom-tab-pane .tab .tab-label {
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold;
-}
-.custom-tab-pane .tab:selected .tab-label {
-    -fx-text-fill: #4A7C59; /* Warna teks label tab aktif */
-}
-
-/* Tombol Aksi di TableView */
-.action-button {
-    -fx-background-color: transparent;
-    -fx-padding: 3px;
-    -fx-cursor: hand;
-}
-.action-button-edit SVGPath {
-    -fx-fill: #007bff; /* Biru untuk edit */
-}
-.action-button-delete SVGPath {
-    -fx-fill: #dc3545; /* Merah untuk delete */
-}
-
-/* Tombol Sukses */
-.button-success {
-    -fx-background-color: #4A7C59; /* Warna sidebar */
+.status-done {
+    -fx-background-color: #63B5AF;
     -fx-text-fill: white;
+    -fx-padding: 5 15;
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-background-radius: 5px;
-    -fx-padding: 8px 15px;
-}
-.button-success:hover {
-    -fx-background-color: #5A8C69; /* Sedikit lebih terang saat hover */
-}
-.button-icon { /* Untuk ikon di dalam tombol sukses */
-    -fx-fill: white;
-}
-.button-icon-dark { /* Untuk ikon di tombol dengan background terang */
-    -fx-fill: #333333;
 }
 
-/* Styling untuk GridPane Form */
-.keuanganRootPane GridPane {
-    -fx-padding: 10px;
-    /* -fx-border-color: #E0E0E0;
-    -fx-border-width: 1px;
-    -fx-background-radius: 5px; */ /* Opsional: border untuk form */
-}
-
-.keuanganRootPane GridPane Label {
-    -fx-font-size: 13px;
-    -fx-padding: 5px 0 0 0; /* Align text better with fields */
-}
-
-.keuanganRootPane TextField, 
-.keuanganRootPane ComboBox, 
-.keuanganRootPane DatePicker {
-    -fx-pref-height: 35px;
-    -fx-font-size: 13px;
-}
-.keuanganRootPane ComboBox .arrow,
-.keuanganRootPane DatePicker .arrow-button .arrow {
-    -fx-background-color: #4A7C59;
-}
-
-/* TableView Styling */
-.table-view .column-header-background {
-    -fx-background-color: #F0F0F0; /* Header abu-abu muda */
-}
-.table-view .column-header .label {
-    -fx-text-fill: #333333; /* Teks header gelap */
+.status-progress {
+    -fx-background-color: #B19166;
+    -fx-text-fill: white;
+    -fx-padding: 5 15;
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-padding: 8px;
 }
-.table-view .table-cell {
-    -fx-padding: 8px;
+
+.status-pending {
+    -fx-background-color: transparent;
+    -fx-border-color: #7F4C3C;
+    -fx-text-fill: #7F4C3C;
+    -fx-padding: 5 15;
+    -fx-border-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.card-title-brown {
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5D4037; /* warna coklat earthy */
 }
-/* Alternating row colors (opsional) */
-.table-view .table-row-cell:odd {
-    -fx-background-color: #FFFFFF;
+
+/* ==== FILTER BUTTONS FOR CHART ==== */
+.chart-filter-button {
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-background-color: #F4F4F4;
+    -fx-text-fill: #333;
+    -fx-padding: 4 12;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 1, 0, 0, 1);
 }
-.table-view .table-row-cell:even {
-    -fx-background-color: #F9F9F9;
+
+.chart-filter-button:hover {
+    -fx-background-color: #DADADA;
 }
+
+/* Jika ingin tombol aktif tampil beda */
+.chart-filter-button:focused {
+    -fx-background-color: #B0BEC5;
+    -fx-text-fill: white;
+}
+
+.card-sub {
+    -fx-font-size: 11px;
+    -fx-font-family: 'Poppins';
+    -fx-text-fill: #6B6B6B;
+}
+

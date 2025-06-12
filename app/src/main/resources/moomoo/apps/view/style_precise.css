@@ -1,227 +1,198 @@
-/* styles_precise.css */
+@font-face {
+    font-family: "Poppins Regular";
+    src: url("/fonts/Poppins-Regular.ttf");
+}
+@font-face {
+    font-family: "Poppins Medium";
+    src: url("/fonts/Poppins-Medium.ttf");
+}
+@font-face {
+    font-family: "Poppins ExtraBold";
+    src: url("/fonts/Poppins-ExtraBold.ttf");
+}
 
-/* Definisikan warna utama dari palet Anda */
 .root {
-    -primary-green: #4A7C7A; /* Warna utama hijau/teal dari palet teks */
-    -background-cream: #FAF8F0; /* Warna latar belakang utama halaman (kanan) */
-    -panel-white: #FFFFFF; /* Warna panel form, atau #FCFBF5 jika ingin sedikit off-white */
-    -accent-brown: #C8A57C; /* Warna untuk tombol login sekunder */
-    -text-dark-gray: #3F3F3F; /* Warna teks umum yang lebih gelap */
-    -text-medium-gray: #5D6976; /* Warna teks untuk label form */
-    -text-light-gray: #788490; /* Warna teks untuk subtitle atau placeholder */
-    -input-border-color: #D0D5DD; /* Warna border untuk input field */
-    -input-focus-border-color: #4A7C7A; /* Warna border saat input field fokus */
+    -fx-font-family: "Poppins Regular";
+    -fx-background-color: #FAF8F0;
+    -primary-green: #4A7C7A; /* Define the custom property here */
 }
 
 .main-background {
-    -fx-background-color: -background-cream;
-    -fx-font-family: "Poppins Regular"; /* Default font, akan di-override */
+    -fx-background-color: #FAF8F0;
 }
 
 .left-sidebar {
-    -fx-background-color: -primary-green;
-    /* Untuk pola gelombang, Anda perlu menggunakan -fx-background-image dengan path ke gambar/SVG */
+    -fx-background-color: #4A7C7A;
+    -fx-background-image: url("/images/bg_pattern.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
 }
 
 .form-panel {
-    -fx-background-color: -panel-white;
-    -fx-background-radius: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5); /* Bayangan halus */
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 4);
+    -fx-padding: 30px 35px;
 }
 
 .app-name-text {
     -fx-font-family: "Poppins Medium";
-    -fx-font-size: 20px; /* Content/S */
-    -fx-text-fill: -text-dark-gray;
+    -fx-font-size: 20px;
+    -fx-text-fill: #3F3F3F;
 }
 
-.register-title-text {
-    -fx-font-family: "Poppins Medium";
-    -fx-font-size: 22px; /* Content/M */
-    -fx-text-fill: -text-dark-gray; /* Di gambar terlihat gelap */
-    -fx-font-weight: 600; /* SemiBold atau Medium, tergantung ketersediaan */
+.register-title-text, .login-title-text {
+    -fx-font-family: "Poppins ExtraBold";
+    -fx-font-size: 22px;
+    -fx-text-fill: #4A7C7A;
+    -fx-padding: 10px 0 5px 0;
 }
 
-.register-subtitle-text {
-    -fx-font-family: "Poppins Regular"; /* Atau Poppins X-Small jika tersedia */
-    -fx-font-size: 15px; /* Sedikit di bawah Content/XS */
-    -fx-text-fill: -text-light-gray;
-    -fx-line-spacing: 3px;
-}
-
-.form-field-container {
-    -fx-padding: 5px 0px; /* Sedikit padding antar field */
+.register-subtitle-text, .login-subtitle-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #788490;
 }
 
 .form-label-text {
-    -fx-font-family: "Poppins Regular"; /* Atau Poppins X-Small */
-    -fx-font-size: 15px; /* Antara X-Small dan Small */
-    -fx-text-fill: -text-medium-gray;
-    -fx-padding: 0 0 3px 0;
+    -fx-font-size: 14px;
+    -fx-text-fill: #5D6976;
+    -fx-padding: 6px 0 2px 0;
 }
 
 .form-text-field {
-    -fx-font-family: "Poppins Regular";
-    -fx-font-size: 15px;
-    -fx-pref-height: 45px;
-    -fx-background-radius: 8px;
+    -fx-background-color: white;
+    -fx-border-color: #D0D5DD;
     -fx-border-radius: 8px;
-    -fx-border-color: -input-border-color;
-    -fx-border-width: 1px;
-    -fx-padding: 0 12px;
+    -fx-background-radius: 8px;
+    -fx-padding: 0 10px;
+    -fx-pref-height: 42px;
+    -fx-font-size: 14px;
 }
 
 .form-text-field:focused {
-    -fx-border-color: -input-focus-border-color;
+    -fx-border-color: #4A7C7A;
     -fx-border-width: 1.5px;
 }
 
-.form-combo-box {
-    -fx-font-family: "Poppins Regular";
-    -fx-font-size: 15px;
-    -fx-pref-height: 45px;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px; /* Ini mungkin tidak berlaku langsung ke ComboBox, styling ComboBox lebih kompleks */
-    /* Styling ComboBox agar mirip TextField bisa rumit, ini dasar */
-}
-.form-combo-box .list-cell { /* Styling item di dropdown */
-    -fx-font-family: "Poppins Regular";
-    -fx-font-size: 15px;
+.form-text-field.error {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
 }
 
+.error-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: red;
+    -fx-padding: 2px 0 4px 0;
+}
+
+.form-combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #D0D5DD;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-pref-height: 42px;
+    -fx-padding: 0 10px;
+}
+
+.form-combo-box .list-cell {
+    -fx-font-size: 14px;
+}
+
+.form-checkbox {
+    -fx-font-size: 14px;
+    -fx-text-fill: #3F3F3F;
+}
+
+.form-checkbox .box {
+    -fx-border-color: #D0D5DD;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.form-checkbox:selected .box {
+    -fx-border-color: #4A7C7A;
+}
+
+.form-checkbox:selected .mark {
+    -fx-background-color: #4A7C7A;
+}
 
 .hide-password-label {
-    -fx-font-family: "Poppins Regular";
-    -fx-font-size: 14px;
-    -fx-text-fill: -text-medium-gray; /* Atau -primary-green */
+    -fx-font-size: 13px;
+    -fx-text-fill: #5D6976;
     -fx-cursor: hand;
+    -fx-padding: 7 0 0 0;
 }
+
 .hide-password-label:hover {
     -fx-underline: true;
 }
 
-
-.daftar-button {
-    -fx-background-color: -primary-green;
+.button-primary {
+    -fx-background-color: #4A7C7A;
     -fx-text-fill: white;
-    -fx-font-family: "Poppins Medium"; /* Atau Poppins Small */
-    -fx-font-size: 18px; /* Antara Small dan Medium */
-    -fx-font-weight: 500;
-    -fx-pref-height: 50px;
-    -fx-background-radius: 10px;
+    -fx-font-size: 16px;
+    -fx-font-family: "Poppins Medium";
+    -fx-pref-height: 44px;
+    -fx-background-radius: 20px;
     -fx-cursor: hand;
 }
-.daftar-button:hover {
-    -fx-background-color: derive(-primary-green, -10%); /* Sedikit lebih gelap saat hover */
-}
 
-.login-link-label {
-    -fx-font-family: "Poppins Regular"; /* Atau Poppins X-Small */
-    -fx-font-size: 15px;
-    -fx-text-fill: -text-medium-gray;
-}
-
-.login-link-button {
-    -fx-background-color: -accent-brown;
-    -fx-text-fill: -panel-white; /* Atau warna teks yang kontras dengan accent-brown */
-    -fx-font-family: "Poppins Medium"; /* Atau Poppins X-Small/Small */
-    -fx-font-size: 15px;
-    -fx-font-weight: 500;
-    -fx-pref-height: 38px;
-    -fx-padding: 0 20px;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
-}
-.login-link-button:hover {
-    -fx-background-color: derive(-accent-brown, -10%);
-}
-
-/* Untuk ComboBox agar dropdown arrow terlihat */
-.combo-box .arrow-button .arrow {
-    -fx-background-color: -text-medium-gray;
-}
-
-/* styles_precise.css */
-
-/* ... (Definisi warna root dan style lain yang sudah ada seperti .main-background, .left-sidebar, .form-panel) ... */
-
-.app-name-text-login { /* Style jika nama aplikasi di halaman login berbeda dari registrasi */
-    -fx-font-family: "Poppins Medium";
-    -fx-font-size: 18px; /* Sedikit lebih kecil atau sesuai gambar */
-    -fx-text-fill: -text-dark-gray;
-    -fx-padding-bottom: 5px; /* Sedikit jarak ke judul Login */
-}
-
-.login-title-text { /* Bisa sama dengan .register-title-text jika font dan ukuran sama */
-    -fx-font-family: "Poppins Medium";
-    -fx-font-size: 22px; /* Content/M */
-    -fx-text-fill: -text-dark-gray;
-    -fx-font-weight: 600; 
-}
-
-.login-subtitle-text { /* Bisa sama dengan .register-subtitle-text */
-    -fx-font-family: "Poppins Regular";
-    -fx-font-size: 15px;
-    -fx-text-fill: -text-light-gray;
-    -fx-line-spacing: 3px;
-}
-
-/* Style untuk form-label-text, form-text-field, form-combo-box, hide-password-label sudah ada dan bisa digunakan kembali */
-
-.form-checkbox {
-    -fx-font-family: "Poppins Regular";
-    -fx-font-size: 14px;
-    -fx-text-fill: -text-medium-gray;
-}
-
-.form-checkbox .box { /* Styling kotak checkbox */
-    -fx-border-color: -input-border-color;
-    -fx-border-width: 1px;
-    -fx-background-radius: 3px;
-    -fx-border-radius: 3px;
-}
-
-.form-checkbox:selected .mark { /* Styling tanda centang */
-    -fx-background-color: -primary-green;
-}
-.form-checkbox:selected .box {
-     -fx-background-color: white; /* Latar belakang kotak saat tercentang */
-     -fx-border-color: -primary-green; /* Border kotak saat tercentang */
-}
-
-
-/* Ganti nama .daftar-button menjadi .button-primary agar lebih generik */
-.button-primary { 
-    -fx-background-color: -primary-green;
-    -fx-text-fill: white;
-    -fx-font-family: "Poppins Medium";
-    -fx-font-size: 18px;
-    -fx-font-weight: 500;
-    -fx-pref-height: 50px;
-    -fx-background-radius: 10px;
-    -fx-cursor: hand;
-}
 .button-primary:hover {
-    -fx-background-color: derive(-primary-green, -10%);
+    -fx-background-color: derive(#4A7C7A, -10%);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
 }
 
-/* Style untuk link sekunder jika diperlukan (misal, "Daftar" dari halaman login) */
-/* .button-secondary-link { 
-    -fx-background-color: -accent-brown;
-    -fx-text-fill: -panel-white; 
+.button-secondary {
+    -fx-background-color: #C8A57C;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
     -fx-font-family: "Poppins Medium";
-    -fx-font-size: 15px;
-    -fx-font-weight: 500;
-    -fx-pref-height: 38px;
-    -fx-padding: 0 20px;
-    -fx-background-radius: 8px;
+    -fx-background-radius: 16px;
+    -fx-padding: 6px 18px;
     -fx-cursor: hand;
 }
-.button-secondary-link:hover {
-    -fx-background-color: derive(-accent-brown, -10%);
-} */
+.button-secondary:hover {
+    -fx-background-color: derive(#C8A57C, -10%);
+}
 
-/* ... (style lain yang sudah ada seperti .login-link-label) ... */
+.auth-switch-container {
+    -fx-alignment: center;
+    -fx-padding: 20px 0 0 0;
+}
+
+.auth-switch-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #3F3F3F;
+}
+
+.auth-switch-button {
+    -fx-font-size: 13px;
+    -fx-text-fill: #C8A57C;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+.auth-switch-button:hover {
+    -fx-underline: true;
+}
+
+.error-label {
+    -fx-text-fill: #D94141;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 0 0;
+}
+
+.error-field {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+
+
 
 /* In your application's CSS file */
 .summary-card {
@@ -288,3 +259,448 @@
 .default-color0.chart-pie { -fx-pie-color: #FF9800; } /* Category 1 */
 .default-color1.chart-pie { -fx-pie-color: #2196F3; } /* Category 2 */
 /* ... add more for other categories */
+
+
+
+/* In your application's CSS file */
+.summary-card {
+    -fx-background-color: #FFFFFF; /* Or your card color */
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    /* Add more padding/margin as needed internally or via VBox/HBox spacing */
+}
+
+.summary-card-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: normal;
+}
+
+.summary-card-value {
+    -fx-font-size: 20px; /* Or larger as in image */
+    -fx-font-weight: bold;
+    -fx-text-fill: #222222;
+    -fx-padding-top: 2px;
+}
+.summary-card-percentage {
+    -fx-font-size: 11px;
+    -fx-text-fill: #008000; /* Green for positive, red for negative */
+    -fx-padding-top: 2px;
+}
+.summary-card-date {
+    -fx-font-size: 11px;
+    -fx-text-fill: #777777;
+    -fx-padding-top: 2px;
+}
+
+
+.chart-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.section-title-medium {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding-bottom: 10px;
+}
+
+.legend-dot-pemasukan:before {
+    -fx-content: "●"; /* Unicode circle */
+    -fx-text-fill: #4CAF50; /* Example color for Pemasukan */
+    -fx-padding-right: 5px;
+}
+
+.legend-dot-pengeluaran:before {
+    -fx-content: "●"; /* Unicode circle */
+    -fx-text-fill: #F44336; /* Example color for Pengeluaran */
+    -fx-padding-right: 5px;
+}
+
+/* Bar Chart Customization (Example - match your image's colors) */
+.default-color0.chart-bar { -fx-bar-fill: #4CAF50; } /* Pemasukan */
+.default-color1.chart-bar { -fx-bar-fill: #F44336; } /* Pengeluaran */
+
+/* Pie Chart Customization (Example) */
+.default-color0.chart-pie { -fx-pie-color: #FF9800; } /* Category 1 */
+.default-color1.chart-pie { -fx-pie-color: #2196F3; } /* Category 2 */
+/* ... add more for other categories */
+
+
+.form-checkbox:selected .mark { /* Styling tanda centang */
+    -fx-background-color: -primary-green;
+}
+.form-checkbox:selected .box {
+     -fx-background-color: white; /* Latar belakang kotak saat tercentang */
+     -fx-border-color: -primary-green; /* Border kotak saat tercentang */
+}
+
+
+/* Ganti nama .daftar-button menjadi .button-primary agar lebih generik */
+.button-primary { 
+    -fx-background-color: -primary-green;
+    -fx-text-fill: white;
+    -fx-font-family: "Poppins Medium";
+    -fx-font-size: 18px;
+    -fx-font-weight: 500;
+    -fx-pref-height: 50px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+}
+.button-primary:hover {
+    -fx-background-color: derive(-primary-green, -10%);
+}
+
+.button-outline-laporan {
+    -fx-background-color: white;
+    -fx-text-fill: #555;
+    -fx-border-color: #D0D0D0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6px 12px;
+}
+.button-outline-laporan:hover {
+    -fx-background-color: #F5F5F5;
+}
+.button-primary-laporan {
+    -fx-background-color: #4F8A8B; /* Warna tema primer */
+    -fx-text-fill: white;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6px 12px;
+}
+.button-primary-laporan:hover {
+    -fx-background-color: #457A7B;
+}
+
+/* Tombol Tab Laporan */
+.tab-container-laporan {
+    /* -fx-border-width: 0 0 2 0;
+    -fx-border-color: #E0E0E0; */ /* Garis bawah jika diinginkan */
+}
+.tab-button-laporan {
+    -fx-background-color: transparent;
+    -fx-text-fill: #555555;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 15px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 3 0; /* Border bawah tipis */
+    -fx-background-radius: 0;
+}
+.tab-button-laporan:hover {
+    -fx-border-color: #A0A0A0; /* Border bawah saat hover */
+    -fx-text-fill: #333333;
+}
+.tab-button-laporan-active {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4F8A8B; /* Warna tema primer */
+    -fx-font-weight: bold;
+    -fx-padding: 8px 15px;
+    -fx-border-color: #4F8A8B; /* Border bawah aktif */
+    -fx-border-width: 0 0 3 0;
+    -fx-background-radius: 0;
+}
+
+/* Tombol Filter Chart */
+.filter-chart-button-laporan {
+    -fx-background-color: #F0F0F0;
+    -fx-text-fill: #555;
+    -fx-font-size: 10px;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 15px; /* Tombol bulat */
+    -fx-border-color: transparent;
+}
+.filter-chart-button-laporan:hover {
+    -fx-background-color: #E0E0E0;
+}
+.filter-chart-button-laporan-active {
+    -fx-background-color: #D32F2F; /* Warna merah untuk "Absen" atau filter aktif lainnya */
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 15px;
+    -fx-border-color: transparent;
+}
+
+/* Tombol Paginasi Tabel */
+.button-pagination-laporan {
+    -fx-background-color: white;
+    -fx-text-fill: #555;
+    -fx-border-color: #D0D0D0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 12px;
+}
+.button-pagination-laporan:hover {
+    -fx-background-color: #F5F5F5;
+}
+.button-pagination-laporan-primary {
+    -fx-background-color: #4F8A8B;
+    -fx-text-fill: white;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 12px;
+}
+.button-pagination-laporan-primary:hover {
+    -fx-background-color: #457A7B;
+}
+
+/* Styling untuk peringkat di TableView */
+.peringkat-a-plus { -fx-text-fill: #2E7D32; -fx-font-weight: bold; }
+.peringkat-a { -fx-text-fill: #4CAF50; }
+.peringkat-b { -fx-text-fill: #FF9800; }
+/* ...dan seterusnya untuk peringkat lain */
+
+/* Chart Styling */
+.custom-barchart .chart-bar {
+    -fx-bar-fill: #4CAF50; /* Warna default bar, bisa di-override per series dari kode */
+    /* Atur radius jika ingin bar melengkung ujungnya */
+    /* -fx-background-radius: 3; */
+}
+.custom-piechart .default-color0.chart-pie { -fx-pie-color: #0288D1; } /* Biru untuk Produksi */
+.custom-piechart .default-color1.chart-pie { -fx-pie-color: #FBC02D; } /* Kuning untuk Pemasaran */
+.custom-piechart .default-color2.chart-pie { -fx-pie-color: #E64A19; } /* Oranye Tua untuk Peternakan */
+.custom-piechart .default-color3.chart-pie { -fx-pie-color: #5D4037; } /* Coklat untuk Administrasi */
+.custom-piechart .default-color4.chart-pie { -fx-pie-color: #78909C; } /* Abu-abu untuk Lainnya */
+
+.custom-barchart .axis, .custom-piechart .axis {
+    -fx-tick-label-fill: #777;
+    -fx-font-size: 10px;
+}
+.custom-barchart .chart-plot-background, .custom-piechart .chart-plot-background {
+    -fx-background-color: transparent; /* Atau #FDFBF6 jika ingin sama dengan VBox */
+}
+.custom-barchart .chart-vertical-grid-lines, .custom-barchart .chart-horizontal-grid-lines {
+    -fx-stroke: #ECECEC; /* Garis grid tipis */
+}
+.custom-piechart .chart-legend {
+    -fx-background-color: transparent;
+    -fx-font-size: 11px;
+}
+.custom-piechart .chart-legend-item {
+    -fx-text-fill: #555;
+}
+
+/* Progress Bar Styling (lebih detail jika perlu) */
+.progress-bar > .bar {
+    -fx-background-insets: 1 1 1 1;
+    -fx-padding: 0.15em; /* Sedikit padding agar track terlihat */
+    -fx-background-radius: 3;
+}
+.progress-bar > .track {
+    -fx-background-color: #E0E0E0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3;
+}
+
+.peringkat-a-plus {
+    -fx-text-fill: #2E7D32; /* Hijau tua */
+    -fx-font-weight: bold;
+}
+.peringkat-a {
+    -fx-text-fill: #4CAF50; /* Hijau */
+}
+.peringkat-b {
+    -fx-text-fill: #FF9800; /* Oranye */
+}
+/* ...dan seterusnya */
+
+/* Styling Bar Chart (jika warna bar seragam) */
+.chart-bar {
+    -fx-bar-fill: #4CAF50; /* Warna default bar */
+    -fx-background-radius: 3;
+    -fx-background-insets: 0 0 -1 0; /* Slight adjustment for bar appearance */
+}
+
+/* Styling Pie Chart Slices (jika ingin override default) */
+.chart-pie.default-color0 { -fx-pie-color: #0288D1; } /* Biru untuk Produksi */
+.chart-pie.default-color1 { -fx-pie-color: #FBC02D; } /* Kuning untuk Pemasaran */
+.chart-pie.default-color2 { -fx-pie-color: #E64A19; } /* Oranye Tua untuk Peternakan */
+.chart-pie.default-color3 { -fx-pie-color: #5D4037; } /* Coklat untuk Administrasi */
+.chart-pie.default-color4 { -fx-pie-color: #78909C; } /* Abu-abu untuk Lainnya */
+
+/* Menghilangkan garis pada chart */
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: transparent;
+}
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+.chart-content {
+    -fx-padding: 10px; /* Sesuaikan padding dalam chart */
+}
+.axis { /* Styling untuk sumbu X dan Y jika perlu */
+    -fx-tick-label-fill: #555;
+    -fx-font-size: 0.8em; /* Ukuran font label sumbu */
+}
+
+/* Styling untuk peringkat di TableView */
+.peringkat-a-plus {
+    -fx-text-fill: #2E7D32; /* Hijau tua */
+    -fx-font-weight: bold;
+}
+.peringkat-a {
+    -fx-text-fill: #4CAF50; /* Hijau */
+}
+.peringkat-b {
+    -fx-text-fill: #FF9800; /* Oranye */
+}
+.peringkat-c {
+    -fx-text-fill: #F44336; /* Merah */
+}
+.peringkat-default {
+    -fx-text-fill: #555555; /* Warna default jika tidak ada peringkat khusus */
+}
+
+/* Style untuk Label Prioritas di TaskCard */
+.prioritas-tinggi {
+    -fx-background-color: #FFEBEE; /* Merah sangat muda */
+    -fx-text-fill: #B71C1C; /* Merah tua */
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+}
+.prioritas-normal {
+    -fx-background-color: #FFF3E0; /* Oranye sangat muda */
+    -fx-text-fill: #E65100; /* Oranye tua */
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+}
+.prioritas-rendah {
+    -fx-background-color: #E8F5E9; /* Hijau sangat muda */
+    -fx-text-fill: #1B5E20; /* Hijau tua */
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+}
+.prioritas-default {
+    -fx-background-color: #ECEFF1; /* Abu-abu sangat muda */
+    -fx-text-fill: #37474F; /* Abu-abu tua */
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+}
+
+/* Style untuk VBox Root TaskCard berdasarkan Status */
+/* Kamu bisa gunakan border kiri berwarna atau background header yang berbeda */
+
+.task-card .label { /* Biar semua label di kartu tidak terlalu tebal kecuali di-override */
+    -fx-font-weight: normal;
+}
+.task-card .label-nama-tugas { /* Jika mau spesifik untuk nama tugas */
+    -fx-font-weight: bold;
+}
+
+
+/* Contoh pewarnaan border kiri untuk status */
+.status-akan-dilakukan {
+    -fx-border-color: #90A4AE transparent transparent transparent; /* Abu-abu untuk border kiri */
+    -fx-border-width: 0 0 0 4; /* Lebar border kiri 4px */
+}
+.status-sedang-dikerjakan {
+    -fx-border-color: #FFB74D transparent transparent transparent; /* Oranye muda untuk border kiri */
+    -fx-border-width: 0 0 0 4;
+}
+.status-selesai {
+    -fx-border-color: #81C784 transparent transparent transparent; /* Hijau muda untuk border kiri */
+    -fx-border-width: 0 0 0 4;
+}
+
+/* Styling untuk tombol kecil di kartu (jika belum ada) */
+.button-link-small {
+    -fx-background-color: transparent;
+    -fx-text-fill: #007bff; /* Biru link */
+    -fx-font-size: 11px;
+    -fx-padding: 3px 6px;
+    -fx-border-color: transparent;
+}
+.button-link-small:hover {
+    -fx-underline: true;
+}
+
+.button-outline-small {
+    -fx-background-color: white;
+    -fx-text-fill: #555;
+    -fx-border-color: #D0D0D0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 3px 8px;
+    -fx-font-size: 11px;
+}
+.button-outline-small:hover {
+    -fx-background-color: #F5F5F5;
+}
+
+.button-primary-small {
+    -fx-background-color: #4F8A8B; /* Warna tema primer */
+    -fx-text-fill: white;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 3px 8px;
+    -fx-font-size: 11px;
+}
+.button-primary-small:hover {
+    -fx-background-color: #457A7B;
+}
+
+/* ... (CSS yang sudah ada sebelumnya) ... */
+
+/* Style untuk status kehadiran di tabel */
+.status-hadir .text { /* Target teks di dalam sel */
+    -fx-fill: #2E7D32; /* Hijau tua */
+    -fx-font-weight: bold;
+}
+.status-terlambat .text {
+    -fx-fill: #E65100; /* Oranye tua */
+    -fx-font-weight: bold;
+}
+.status-absen .text {
+    -fx-fill: #B71C1C; /* Merah tua */
+    -fx-font-weight: bold;
+}
+.status-izin .text {
+    -fx-fill: #0277BD; /* Biru tua */
+    -fx-font-weight: bold;
+}
+
+/* Style untuk tombol aksi di tabel kehadiran */
+.button-aksi-tabel {
+    -fx-background-color: transparent;
+    -fx-padding: 3px;
+    -fx-font-size: 14px; /* Sesuaikan ukuran emoji */
+    -fx-text-fill: #007bff; /* Biru untuk edit */
+}
+.button-aksi-tabel:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.button-aksi-tabel-merah {
+    -fx-background-color: transparent;
+    -fx-padding: 3px;
+    -fx-font-size: 14px; /* Sesuaikan ukuran emoji */
+    -fx-text-fill: #dc3545; /* Merah untuk hapus */
+}
+.button-aksi-tabel-merah:hover {
+    -fx-background-color: #e9ecef;
+}
+
+/* Styling untuk judul kolom Kanban (jika belum ada) */
+.kanban-column-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+.kanban-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.kanban-column {
+    -fx-background-color: #F0F2F5;
+    -fx-padding: 10;
+    -fx-background-radius: 8;
+}
