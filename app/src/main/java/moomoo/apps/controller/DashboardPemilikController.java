@@ -35,7 +35,6 @@ import moomoo.apps.utils.PollingService;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -59,8 +58,12 @@ public class DashboardPemilikController {
 
     private UserModel currentUser;
     private Timeline autoRefreshTimeline;
-    private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
-    private final NumberFormat percentFormatter = NumberFormat.getPercentInstance(new Locale("id", "ID"));
+    Locale localeDenganBuilder = new Locale.Builder()
+                                 .setLanguage("id")
+                                 .setRegion("ID")
+                                 .build();
+    private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(localeDenganBuilder);
+    private final NumberFormat percentFormatter = NumberFormat.getPercentInstance(localeDenganBuilder);
 
     /* ========== INITIALIZE ========== */
     @FXML
@@ -206,7 +209,7 @@ public class DashboardPemilikController {
         List < TransactionModel > allTransactions = FinanceModel.getInstance().getAllTransactions();
         for (int i = 5; i >= 0; i--) {
             YearMonth month = YearMonth.now().minusMonths(i);
-            String monthName = month.getMonth().getDisplayName(TextStyle.SHORT, new Locale("id", "ID"));
+            String monthName = month.getMonth().getDisplayName(TextStyle.SHORT, localeDenganBuilder);
             double pendapatan = allTransactions.stream().filter(t -> t.getDate() != null && YearMonth.from(t.getDate()).equals(month) && "Pemasukan".equalsIgnoreCase(t.getTransactionType())).mapToDouble(TransactionModel::getAmount).sum();
             double pengeluaran = allTransactions.stream().filter(t -> t.getDate() != null && YearMonth.from(t.getDate()).equals(month) && ("Pengeluaran".equalsIgnoreCase(t.getTransactionType()) || "Penggajian".equalsIgnoreCase(t.getTransactionType()))).mapToDouble(TransactionModel::getAmount).sum();
             seriesPendapatan.getData().add(new XYChart.Data < > (monthName, pendapatan / 1_000_000));

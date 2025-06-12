@@ -62,6 +62,7 @@ public class RegisterController implements Initializable {
         hideLabel.setText("Show"); 
     }
 
+    /* ========== HANDLER CLICKABLE BUTTON ========== */
     @FXML
     void handleRegisterButtonAction (ActionEvent event){
         String username = usernameField.getText();
@@ -72,8 +73,7 @@ public class RegisterController implements Initializable {
         resetFieldStyles();
 
         boolean hasError = false;
-        StringBuilder errorMsg = new StringBuilder();
-
+        
         if (username.isEmpty()) {
             usernameField.setStyle("-fx-border-color: red;");
             hasError = true;
@@ -136,25 +136,6 @@ public class RegisterController implements Initializable {
         }
     }
 
-    private boolean isUserExists(String username, String email) {
-        String sqlCheck = "SELECT id FROM users WHERE username = ? OR email = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmtCheck = conn.prepareStatement(sqlCheck)) {
-            pstmtCheck.setString(1, username);
-            pstmtCheck.setString(2, email);
-            ResultSet rs = pstmtCheck.executeQuery();
-            if (rs.next()) {
-                showAlert(Alert.AlertType.ERROR, "Registrasi Gagal", "Username atau Email sudah digunakan.");
-                return true;
-            }
-        } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal memeriksa pengguna: " + e.getMessage());
-            e.printStackTrace();
-            return true; 
-        }
-        return false;
-    }
-
     @FXML
     void handleLoginLinkAction(ActionEvent event) {
 
@@ -185,6 +166,26 @@ public class RegisterController implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Load Error", "Gagal memuat halaman login: " + e.getMessage());
         }
     }
+
+    private boolean isUserExists(String username, String email) {
+        String sqlCheck = "SELECT id FROM users WHERE username = ? OR email = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmtCheck = conn.prepareStatement(sqlCheck)) {
+            pstmtCheck.setString(1, username);
+            pstmtCheck.setString(2, email);
+            ResultSet rs = pstmtCheck.executeQuery();
+            if (rs.next()) {
+                showAlert(Alert.AlertType.ERROR, "Registrasi Gagal", "Username atau Email sudah digunakan.");
+                return true;
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Gagal memeriksa pengguna: " + e.getMessage());
+            e.printStackTrace();
+            return true; 
+        }
+        return false;
+    }
+
 
     private void clearFields() {
         usernameField.clear();

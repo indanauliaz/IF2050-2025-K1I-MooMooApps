@@ -74,6 +74,8 @@ public class LoginController implements Initializable {
         hideLabel.setText("Show");
     }
 
+
+    /* ========== HANDLER CLICKABLE BUTTON ========== */
     @FXML
     void togglePasswordVisibility(MouseEvent event) {
         passwordVisible = !passwordVisible;
@@ -172,6 +174,19 @@ public class LoginController implements Initializable {
         }
     }
 
+    @FXML
+    void handleRegisterLinkAction(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/moomoo/apps/view/RegisterView.fxml"));
+            Stage stage = (Stage) registerLink.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    /* ========== METHOD NAVIGASI KE DASHBOARD ========== */
     private void navigateToDashboard(UserModel user) {
         if (user == null) {
             showAlert(Alert.AlertType.ERROR, "Navigasi Gagal", "Data pengguna tidak valid.");
@@ -207,17 +222,6 @@ public class LoginController implements Initializable {
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error Memuat UI", "Gagal memuat halaman dashboard: " + fxmlFile + "\nPastikan file ada dan path sudah benar.");
-        }
-    }
-
-    @FXML
-    void handleRegisterLinkAction(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/moomoo/apps/view/RegisterView.fxml"));
-            Stage stage = (Stage) registerLink.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

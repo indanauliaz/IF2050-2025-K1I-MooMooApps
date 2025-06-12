@@ -12,16 +12,8 @@ import moomoo.apps.model.EmployeeModel;
  */
 public class ValidationUtils {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-    /**
-     * Memvalidasi input untuk transaksi keuangan.
-     * Metode ini bersifat 'static' agar bisa diuji tanpa perlu membuat instance.
-     * * @param deskripsi Deskripsi transaksi.
-     * @param tanggal Tanggal transaksi.
-     * @param jumlahStr Jumlah dalam bentuk String.
-     * @param metode Metode pembayaran.
-     * @param kategori Kategori transaksi.
-     * @return true jika semua input valid, false jika sebaliknya.
-     */
+
+    // method validasi input keuangan
     public static boolean validateTransactionInput(String deskripsi, LocalDate tanggal, String jumlahStr, String metode, String kategori) {
         if (deskripsi == null || deskripsi.trim().isEmpty() || 
             tanggal == null || 
@@ -47,6 +39,7 @@ public class ValidationUtils {
         return true;
     }
 
+    // method validasi input tugas
     public static boolean validateNewTaskInput(String namaTugas, LocalDate tanggal, EmployeeModel karyawan, String waktuStr) {
         if (namaTugas == null || namaTugas.trim().isEmpty() || tanggal == null || karyawan == null) {
             return false;
@@ -61,6 +54,7 @@ public class ValidationUtils {
         return true;
     }
 
+    // method validasi input absensi
     public static boolean validateNewAttendanceInput(EmployeeModel karyawan, LocalDate tanggal, String status, String waktuMasukStr, String waktuKeluarStr) {
         if (karyawan == null || tanggal == null || status == null || status.trim().isEmpty()) {
             return false;
@@ -87,6 +81,7 @@ public class ValidationUtils {
         return true;
     }
 
+    // method validasi input produksi
     public static boolean validateProductionInput(String kategori, LocalDate tanggal, String jumlahStr, String satuan, String lokasi, String kualitas) {
         if (kategori == null || kategori.trim().isEmpty() ||
             tanggal == null ||

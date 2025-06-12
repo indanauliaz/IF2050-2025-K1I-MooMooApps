@@ -106,8 +106,7 @@ public class TransactionTabManager {
         tableView.setItems(transactionList);
     }
 
-    // Metode ini tidak lagi dipanggil dari KeuanganController setelah modifikasi,
-    // karena data dimuat secara terpusat oleh FinanceModel.
+
     public void loadData() {
         mainController.loadTransactionData(transactionType, transactionList);
     }
@@ -135,20 +134,19 @@ public class TransactionTabManager {
         metodePembayaranBox.getSelectionModel().clearSelection();
         kategoriBox.getSelectionModel().clearSelection();
         catatanField.clear();
-        deskripsiField.requestFocus(); // Tambahan untuk UX
+        deskripsiField.requestFocus(); 
     }
 
     public void populateFormForEdit(TransactionModel transaction) {
         deskripsiField.setText(transaction.getDescription());
         tanggalPicker.setValue(transaction.getDate());
-        // Format angka ke string dengan koma sebagai desimal untuk konsistensi
         jumlahField.setText(String.format("%,.2f", transaction.getAmount()).replace(".", ","));
         metodePembayaranBox.setValue(transaction.getPaymentMethod());
         kategoriBox.setValue(transaction.getCategory());
         catatanField.setText(transaction.getNotes());
     }
-
-    // *** PERUBAHAN DI SINI: MENAMBAHKAN GETTERS ***
+    
+    // setter getter
     public String getTransactionType() {
         return transactionType;
     }

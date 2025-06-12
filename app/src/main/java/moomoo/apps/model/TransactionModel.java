@@ -62,7 +62,7 @@ public class TransactionModel {
     public StringProperty notesProperty() { return notes; }
     public IntegerProperty userIdProperty() { return userId; }
 
-    // Getters for values
+    // Setter getter standard
     public int getId() { return id.get(); }
     public String getTransactionType() { return transactionType.get(); }
     public String getDescription() { return description.get(); }

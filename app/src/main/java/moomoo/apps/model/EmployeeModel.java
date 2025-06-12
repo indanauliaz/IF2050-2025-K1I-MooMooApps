@@ -50,6 +50,7 @@ public class EmployeeModel {
     }
 
 
+
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty namaLengkapProperty() { return namaLengkap; }
     public SimpleStringProperty posisiProperty() { return posisi; }
@@ -59,6 +60,7 @@ public class EmployeeModel {
     public SimpleStringProperty peringkatKinerjaProperty() { return peringkatKinerja; }
 
 
+    // Setter getter standard
     public int getId() { return id.get(); }
     public String getNamaLengkap() { return namaLengkap.get(); }
     public String getPosisi() { return posisi.get(); }

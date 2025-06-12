@@ -18,7 +18,7 @@ public class PasswordUtils {
         return salt;
     }
 
-
+    // Method untuk hashing password input
     public static String hashPassword(String password, byte[] salt) {
 
         if (password == null || password.isEmpty()) {
@@ -40,7 +40,8 @@ public class PasswordUtils {
         }
     }
 
-
+    
+    // Method untuk verifikasi password input
     public static boolean verifyPassword(String plainPassword, String storedPasswordHash) {
     try {
         String[] parts = storedPasswordHash.split(":");

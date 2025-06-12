@@ -42,6 +42,8 @@ public class LaporanController {
         handleSdmTabAction(null); 
     }
 
+
+    /* ========== HANDLER CLICKABLE BUTTON ========== */
     @FXML
     private void handleProduksiTabAction(ActionEvent event) {
         setTabAktif(produksiTabButton);

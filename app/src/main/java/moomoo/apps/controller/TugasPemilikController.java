@@ -7,7 +7,6 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import moomoo.apps.model.TaskModel;
 import moomoo.apps.utils.DatabaseManager;
 import java.time.format.DateTimeFormatter;

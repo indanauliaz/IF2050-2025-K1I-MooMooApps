@@ -191,7 +191,7 @@ public class KeuanganController implements UserAwareController {
             updateLocalListsAndUI();
         });
 
-        // Load initial data
+
         financeModel.loadAllTransactionsFromDB();
         keuanganTabPane.getSelectionModel().select(0);
     }

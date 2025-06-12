@@ -63,6 +63,11 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
     private UserModel currentUser;
     private FinanceModel financeModel;
 
+    Locale localeDenganBuilder = new Locale.Builder()
+                                 .setLanguage("id")
+                                 .setRegion("ID")
+                                 .build();
+
     /**
      * Metode inisialisasi yang dipanggil secara otomatis oleh JavaFX setelah file FXML dimuat.
      * Metode ini menyiapkan model keuangan, mengkonfigurasi kolom tabel, mengatur item untuk TableView,
@@ -180,7 +185,7 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
      */
     private TableCell<TransactionModel, LocalDate> createDateCell() {
         // Formatter tanggal dengan nama bulan lengkap dalam Bahasa Indonesia
-        final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMMM yyyy", new Locale("id", "ID"));
+        final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMMM yyyy", localeDenganBuilder);
         return new TableCell<>() {
             @Override
             protected void updateItem(LocalDate item, boolean empty) {
@@ -198,7 +203,7 @@ public class KeuanganPemilikController implements Initializable, UserAwareContro
      */
     private TableCell<TransactionModel, Double> createCurrencyCell() {
         // Formatter mata uang untuk lokal Indonesia (IDR)
-        final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        final NumberFormat CURRENCY_FORMATTER = NumberFormat.getCurrencyInstance(localeDenganBuilder);
         return new TableCell<>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
