@@ -37,7 +37,7 @@ Untuk dapat menjalankan MooMooApps, ada beberapa hal yang perlu kamu siapkan dan
 3.  **Kompilasi dan Jalankan Proyek**
     Terakhir, jalankan perintah di bawah ini. Perintah ini akan secara otomatis mengompilasi kode sumber dan langsung menjalankan aplikasinya.
     ```bash
-    ./gradlew run atau 
+    ./gradlew run
     ```
 MooMooApps pun siap untuk digunakan.
 
